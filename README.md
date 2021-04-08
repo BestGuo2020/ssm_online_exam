@@ -1,16 +1,3 @@
----
-title: 基于ssm的在线考试系统的设计与实现
-date: 2021-07-02 19:00:00
-tags: 
-  - java
-  - spring
-  - springmvc
-  - mybatis
-  - git
-category:
-  - 小赫赫的项目日志
----
-
 ## 所需技术
 
 本次期末项目采用以下技术，其中又分为前端部分和后端部分
