@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!-- 读取配置文件 -->
+    <context:property-placeholder location="classpath:db.properties" />
+
+    <!-- 设置包扫描，不要扫描到 Controller 注解 -->
+    <context:component-scan base-package="top.bestguo">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+
+    <!-- 创建连接池，使用 Spring 的连接池 -->
+    <bean class="org.springframework.jdbc.datasource.DriverManagerDataSource" id="dataSource">
+        <property name="url" value="${mysqldb.url}" />
+        <property name="username" value="${mysqldb.username}" />
+        <property name="password" value="${mysqldb.password}" />
+        <property name="driverClassName" value="${mysqldb.driver}" />
+    </bean>
+
+    <!-- 配置 mybatis 持久层 -->
+    <bean class="org.mybatis.spring.SqlSessionFactoryBean" id="sqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="typeAliasesPackage" value="top.bestguo.entity" />
+        <property name="mapperLocations" value="classpath:top/bestguo/dao/*.xml" />
+    </bean>
+
+    <!-- 配置 Mybatis mapper 扫描器 -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer" id="mapperScanner">
+        <property name="basePackage" value="top.bestguo.dao" />
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactoryBean" />
+    </bean>
+
+</beans>
