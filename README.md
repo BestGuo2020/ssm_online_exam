@@ -74,12 +74,36 @@ git push origin master
 git push origin XXX
 ```
 
-#### 如果你是已经加入的组员
+1、首先获取最新的项目（XXX 代表你的工作区）：
 
-1、
+```
+git pull origin master
+git pull origin XXX
+```
 
+2、切换到你的工作区
 
+```
+git checkout XXX
+```
 
-### 问题
+3、重复上一节的 3~6 步骤
 
-1、如何将其它分支合并到master分支
+4、推送到远程仓库之前，再将 gitee 上的远程代码拉取下来
+
+```
+git pull origin master
+git pull origin XXX
+```
+
+5、重复上一节的 8 步骤
+
+### 可能出现的问题
+
+在进行协作的时候，可能会出现代码冲突等等问题，后续出现了问题就在此进行记录吧
+
+## 系统用例
+
+本次期末项目分析了一下此次的用例图，一个用例对应着一个模块。该项目的整个用例图如下所示。
+
+![](https://www.bestguo.top/2021/07/02/ssm-online-exam/QQ%E6%88%AA%E5%9B%BE20210410232613.jpg)
