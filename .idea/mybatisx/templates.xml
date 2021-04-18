@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="TemplatesSettings">
+    <option name="templateConfigs">
+      <TemplateContext>
+        <option name="generateConfig">
+          <GenerateConfig>
+            <option name="annotationType" value="NONE" />
+            <option name="basePackage" value="top.bestguo" />
+            <option name="basePath" value="src/main/java" />
+            <option name="domainObjectName" value="Questype" />
+            <option name="encoding" value="UTF-8" />
+            <option name="extraTemplateNames">
+              <list>
+                <option value="mapperInterface" />
+                <option value="mapperXml" />
+              </list>
+            </option>
+            <option name="moduleName" value="ssm_online_exam" />
+            <option name="modulePath" value="$PROJECT_DIR$/" />
+            <option name="needToStringHashcodeEquals" value="true" />
+            <option name="needsComment" value="true" />
+            <option name="relativePackage" value="entity" />
+            <option name="rootClass" value="" />
+            <option name="tableName" value="questype" />
+            <option name="targetProject" value="$PROJECT_DIR$" />
+            <option name="templatesName" value="mybatis-plus3" />
+          </GenerateConfig>
+        </option>
+        <option name="projectPath" value="$PROJECT_DIR$" />
+      </TemplateContext>
+    </option>
+  </component>
+</project>

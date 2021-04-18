@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.bestguo.mapper.ClassesMapper">
+
+    <resultMap id="BaseResultMap" type="top.bestguo.entity.Classes">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="classcode" column="classCode" jdbcType="VARCHAR"/>
+            <result property="classname" column="className" jdbcType="VARCHAR"/>
+            <result property="classimage" column="classImage" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,classCode,className,
+        classImage
+    </sql>
+</mapper>

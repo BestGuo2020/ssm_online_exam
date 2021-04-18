@@ -22,15 +22,15 @@
     </bean>
 
     <!-- 配置 mybatis 持久层 -->
-    <bean class="org.mybatis.spring.SqlSessionFactoryBean" id="sqlSessionFactoryBean">
+    <bean class="com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean" id="sqlSessionFactoryBean">
         <property name="dataSource" ref="dataSource" />
         <property name="typeAliasesPackage" value="top.bestguo.entity" />
-        <property name="mapperLocations" value="classpath:top/bestguo/dao/*.xml" />
+        <property name="mapperLocations" value="classpath:mapper/*Mapper.xml" />
     </bean>
 
     <!-- 配置 Mybatis mapper 扫描器 -->
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer" id="mapperScanner">
-        <property name="basePackage" value="top.bestguo.dao" />
+        <property name="basePackage" value="top.bestguo.mapper" />
         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactoryBean" />
     </bean>
 

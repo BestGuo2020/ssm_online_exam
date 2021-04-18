@@ -46,11 +46,10 @@
       <artifactId>mysql-connector-java</artifactId>
       <version>5.1.47</version>
     </dependency>
-    <!-- https://mvnrepository.com/artifact/org.mybatis/mybatis -->
     <dependency>
-      <groupId>org.mybatis</groupId>
-      <artifactId>mybatis</artifactId>
-      <version>3.5.5</version>
+      <groupId>com.baomidou</groupId>
+      <artifactId>mybatis-plus</artifactId>
+      <version>3.4.1</version>
     </dependency>
     <!-- https://mvnrepository.com/artifact/org.springframework/spring-jdbc -->
     <dependency>
@@ -58,11 +57,10 @@
       <artifactId>spring-jdbc</artifactId>
       <version>5.2.12.RELEASE</version>
     </dependency>
-    <!-- https://mvnrepository.com/artifact/org.mybatis/mybatis-spring -->
     <dependency>
-      <groupId>org.mybatis</groupId>
-      <artifactId>mybatis-spring</artifactId>
-      <version>2.0.5</version>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-log4j12</artifactId>
+      <version>1.7.2</version>
     </dependency>
 
     <!-- 文档处理 -->
@@ -72,16 +70,6 @@
       <artifactId>poi</artifactId>
       <version>4.1.2</version>
     </dependency>
-
-    <!-- 分页 -->
-    <!-- https://mvnrepository.com/artifact/com.github.pagehelper/pagehelper -->
-    <dependency>
-      <groupId>com.github.pagehelper</groupId>
-      <artifactId>pagehelper</artifactId>
-      <version>5.2.0</version>
-    </dependency>
-
-
 
   </dependencies>
 

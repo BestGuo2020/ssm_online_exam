@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.bestguo.mapper.RecordMapper">
+
+    <resultMap id="BaseResultMap" type="top.bestguo.entity.Record">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="paperid" column="paperId" jdbcType="INTEGER"/>
+            <result property="stuid" column="stuId" jdbcType="INTEGER"/>
+            <result property="selectans" column="selectAns" jdbcType="VARCHAR"/>
+            <result property="fillans" column="fillAns" jdbcType="VARCHAR"/>
+            <result property="score" column="score" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,paperId,stuId,
+        selectAns,fillAns,score
+    </sql>
+</mapper>

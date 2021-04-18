@@ -1,12 +1,12 @@
-package top.bestguo.dao;
+package top.bestguo.mapper;
 
 import org.springframework.stereotype.Repository;
 import top.bestguo.entity.Demo;
 
 import java.util.List;
 
-@Repository("demoDao")
-public interface IDemoDao {
+@Repository
+public interface DemoMapper {
 
     List<Demo> findAll();
 

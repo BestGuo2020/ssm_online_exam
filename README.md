@@ -106,4 +106,4 @@ git pull origin XXX
 
 本次期末项目分析了一下此次的用例图，一个用例对应着一个模块。该项目的整个用例图如下所示。
 
-![](https://www.bestguo.top/2021/07/02/ssm-online-exam/QQ%E6%88%AA%E5%9B%BE20210410232613.jpg)
+![](https://www.bestguo.top/2021/07/02/ssm-online-exam/QQ%E5%9B%BE%E7%89%8720210412090615.png)

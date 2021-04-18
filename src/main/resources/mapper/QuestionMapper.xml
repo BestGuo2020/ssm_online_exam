@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.bestguo.mapper.QuestionMapper">
+
+    <resultMap id="BaseResultMap" type="top.bestguo.entity.Question">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="questionname" column="questionName" jdbcType="VARCHAR"/>
+            <result property="questiontype" column="questionType" jdbcType="INTEGER"/>
+            <result property="isselect" column="isSelect" jdbcType="BOOLEAN"/>
+            <result property="isfill" column="isFill" jdbcType="BOOLEAN"/>
+            <result property="isfillautocheck" column="isFillAutoCheck" jdbcType="BOOLEAN"/>
+            <result property="option1" column="option1" jdbcType="VARCHAR"/>
+            <result property="option2" column="option2" jdbcType="VARCHAR"/>
+            <result property="option3" column="option3" jdbcType="VARCHAR"/>
+            <result property="option4" column="option4" jdbcType="VARCHAR"/>
+            <result property="option5" column="option5" jdbcType="VARCHAR"/>
+            <result property="answer" column="answer" jdbcType="VARCHAR"/>
+            <result property="reason" column="reason" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,questionName,questionType,
+        isSelect,isFill,isFillAutoCheck,
+        option1,option2,option3,
+        option4,option5,answer,
+        reason
+    </sql>
+</mapper>
