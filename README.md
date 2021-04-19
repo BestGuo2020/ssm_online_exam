@@ -120,7 +120,7 @@ git pull origin XXX
 
 本次在线考试系统的系统用例图如下（越画越离谱）
 
-![](ssm-online-exam/QQ截图20210417222207.png)
+![](https://www.bestguo.top/2021/04/06/ssm-online-exam/QQ%E6%88%AA%E5%9B%BE20210417222207.png)
 
 在线考试参与者说明如下
 
@@ -347,4 +347,4 @@ git pull origin XXX
 
 该系统中的数据库表和表之间的关系，以及单个表中的字段和属性
 
-![](D:\MyWeb\mywebsite2\source\_posts\ssm-online-exam\Diagram1.png)
+![](https://www.bestguo.top/2021/04/06/ssm-online-exam/Diagram1.png)
