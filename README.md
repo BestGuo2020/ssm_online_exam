@@ -18,6 +18,10 @@
 
 项目协作的部分使用 git，使用 gitee 作为代码仓库。在使用 git 作为多人协作会可能出现以下的问题，一个是不会用，另一个是会用之后，不知该如何去合并。
 
+gitee 账号创建完成之后，需要配置 SSH，SSH 的配置可以参考下面的链接。
+
+[如何管理你的多个 SSH key](https://www.bestguo.top/2021/04/19/How-do-you-configure-ssh-in-your-pc/)
+
 ### 如何操作
 
 #### 如果你是新加入的组员
