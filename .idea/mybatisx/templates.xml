@@ -8,7 +8,7 @@
             <option name="annotationType" value="NONE" />
             <option name="basePackage" value="top.bestguo" />
             <option name="basePath" value="src/main/java" />
-            <option name="domainObjectName" value="Question" />
+            <option name="domainObjectName" value="Questionset" />
             <option name="encoding" value="UTF-8" />
             <option name="extraTemplateNames">
               <list>
@@ -22,7 +22,7 @@
             <option name="needsComment" value="true" />
             <option name="relativePackage" value="entity" />
             <option name="rootClass" value="" />
-            <option name="tableName" value="question" />
+            <option name="tableName" value="questionset" />
             <option name="targetProject" value="$PROJECT_DIR$" />
             <option name="templatesName" value="mybatis-plus3" />
           </GenerateConfig>
