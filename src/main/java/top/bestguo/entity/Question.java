@@ -18,11 +18,6 @@ public class Question implements Serializable {
     private String questionname;
 
     /**
-     * 问题分类
-     */
-    private Integer questiontype;
-
-    /**
      * 是否为选择题？1为是，0为否
      */
     private Boolean isselect;
@@ -100,20 +95,6 @@ public class Question implements Serializable {
      */
     public void setQuestionname(String questionname) {
         this.questionname = questionname;
-    }
-
-    /**
-     * 问题分类
-     */
-    public Integer getQuestiontype() {
-        return questiontype;
-    }
-
-    /**
-     * 问题分类
-     */
-    public void setQuestiontype(Integer questiontype) {
-        this.questiontype = questiontype;
     }
 
     /**
@@ -270,7 +251,6 @@ public class Question implements Serializable {
         Question other = (Question) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
             && (this.getQuestionname() == null ? other.getQuestionname() == null : this.getQuestionname().equals(other.getQuestionname()))
-            && (this.getQuestiontype() == null ? other.getQuestiontype() == null : this.getQuestiontype().equals(other.getQuestiontype()))
             && (this.getIsselect() == null ? other.getIsselect() == null : this.getIsselect().equals(other.getIsselect()))
             && (this.getIsfill() == null ? other.getIsfill() == null : this.getIsfill().equals(other.getIsfill()))
             && (this.getIsfillautocheck() == null ? other.getIsfillautocheck() == null : this.getIsfillautocheck().equals(other.getIsfillautocheck()))
@@ -289,7 +269,6 @@ public class Question implements Serializable {
         int result = 1;
         result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
         result = prime * result + ((getQuestionname() == null) ? 0 : getQuestionname().hashCode());
-        result = prime * result + ((getQuestiontype() == null) ? 0 : getQuestiontype().hashCode());
         result = prime * result + ((getIsselect() == null) ? 0 : getIsselect().hashCode());
         result = prime * result + ((getIsfill() == null) ? 0 : getIsfill().hashCode());
         result = prime * result + ((getIsfillautocheck() == null) ? 0 : getIsfillautocheck().hashCode());
@@ -311,7 +290,6 @@ public class Question implements Serializable {
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(id);
         sb.append(", questionname=").append(questionname);
-        sb.append(", questiontype=").append(questiontype);
         sb.append(", isselect=").append(isselect);
         sb.append(", isfill=").append(isfill);
         sb.append(", isfillautocheck=").append(isfillautocheck);

@@ -7,7 +7,6 @@
     <resultMap id="BaseResultMap" type="top.bestguo.entity.Question">
             <id property="id" column="id" jdbcType="INTEGER"/>
             <result property="questionname" column="questionName" jdbcType="VARCHAR"/>
-            <result property="questiontype" column="questionType" jdbcType="INTEGER"/>
             <result property="isselect" column="isSelect" jdbcType="BOOLEAN"/>
             <result property="isfill" column="isFill" jdbcType="BOOLEAN"/>
             <result property="isfillautocheck" column="isFillAutoCheck" jdbcType="BOOLEAN"/>
@@ -21,10 +20,9 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,questionName,questionType,
-        isSelect,isFill,isFillAutoCheck,
-        option1,option2,option3,
-        option4,option5,answer,
-        reason
+        id,questionName,isSelect,
+        isFill,isFillAutoCheck,option1,
+        option2,option3,option4,
+        option5,answer,reason
     </sql>
 </mapper>

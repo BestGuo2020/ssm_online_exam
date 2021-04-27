@@ -4,47 +4,66 @@ import java.io.Serializable;
 
 /**
  * 
- * @TableName questype
+ * @TableName questionset
  */
-public class Questype implements Serializable {
+public class Questionset implements Serializable {
     /**
-     * 主键自增
+     * 
      */
     private Integer id;
 
     /**
-     * 题库类别名称
+     * 
      */
-    private String typename;
+    private Integer questionid;
+
+    /**
+     * 
+     */
+    private Integer classesid;
 
     private static final long serialVersionUID = 1L;
 
     /**
-     * 主键自增
+     * 
      */
     public Integer getId() {
         return id;
     }
 
     /**
-     * 主键自增
+     * 
      */
     public void setId(Integer id) {
         this.id = id;
     }
 
     /**
-     * 题库类别名称
+     * 
      */
-    public String getTypename() {
-        return typename;
+    public Integer getQuestionid() {
+        return questionid;
     }
 
     /**
-     * 题库类别名称
+     * 
      */
-    public void setTypename(String typename) {
-        this.typename = typename;
+    public void setQuestionid(Integer questionid) {
+        this.questionid = questionid;
+    }
+
+    /**
+     * 
+     */
+    public Integer getClassesid() {
+        return classesid;
+    }
+
+    /**
+     * 
+     */
+    public void setClassesid(Integer classesid) {
+        this.classesid = classesid;
     }
 
     @Override
@@ -58,9 +77,10 @@ public class Questype implements Serializable {
         if (getClass() != that.getClass()) {
             return false;
         }
-        Questype other = (Questype) that;
+        Questionset other = (Questionset) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getTypename() == null ? other.getTypename() == null : this.getTypename().equals(other.getTypename()));
+            && (this.getQuestionid() == null ? other.getQuestionid() == null : this.getQuestionid().equals(other.getQuestionid()))
+            && (this.getClassesid() == null ? other.getClassesid() == null : this.getClassesid().equals(other.getClassesid()));
     }
 
     @Override
@@ -68,7 +88,8 @@ public class Questype implements Serializable {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
-        result = prime * result + ((getTypename() == null) ? 0 : getTypename().hashCode());
+        result = prime * result + ((getQuestionid() == null) ? 0 : getQuestionid().hashCode());
+        result = prime * result + ((getClassesid() == null) ? 0 : getClassesid().hashCode());
         return result;
     }
 
@@ -79,7 +100,8 @@ public class Questype implements Serializable {
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(id);
-        sb.append(", typename=").append(typename);
+        sb.append(", questionid=").append(questionid);
+        sb.append(", classesid=").append(classesid);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();
