@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import top.bestguo.service.impl.DemoServiceImpl;
 
 @Controller
+@RequestMapping("/test")
 public class DemoController {
 
     @Autowired
@@ -17,7 +18,12 @@ public class DemoController {
     @RequestMapping("/demo")
     public String demo(){
         demoService.findAllService();
-        return "demo";
+        return "test/demo";
+    }
+
+    @RequestMapping("/answer")
+    public String answer() {
+        return "test/answer_card";
     }
 
 }

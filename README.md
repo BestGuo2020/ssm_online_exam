@@ -12,7 +12,8 @@
 ### 前端部分
 
 1. layUI
-2. jQuery（暂定）
+2. jQuery
+3. Axios
 
 ## 项目协作
 
@@ -23,6 +24,8 @@ gitee 账号创建完成之后，需要配置 SSH，SSH 的配置可以参考下
 [如何管理你的多个 SSH key](https://www.bestguo.top/2021/04/19/How-do-you-configure-ssh-in-your-pc/)
 
 ### 如何操作
+
+clone 之后配置好项目，访问这个页面 http://localhost:8080/ssm_online_exam/test/demo ，能访问到就说明配置成功了。
 
 #### 如果你是新加入的组员
 
@@ -77,6 +80,8 @@ git pull origin master
 git push origin master
 git push origin XXX
 ```
+
+#### 如果你是已加入的组员
 
 1、首先获取最新的项目（XXX 代表你的工作区）：
 
