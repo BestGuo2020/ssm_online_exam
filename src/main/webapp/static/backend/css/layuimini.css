@@ -497,7 +497,7 @@
 
 /**自定义滚动条样式 */
 ::-webkit-scrollbar {
-    display: none
+    display: none;
 }
 
 
@@ -650,7 +650,7 @@
     top: 36px;
     bottom: 0px;
     width: 100%;
-    background: rgb(255, 255, 255,0);
+    background: rgba(255, 255, 255, 0);
     padding: 0px;
     overflow: hidden;
 }

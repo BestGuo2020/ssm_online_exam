@@ -35,7 +35,7 @@
         },
         {
           "title": "试卷管理",
-          "href": "/ssm_online_exam/teacher/examManage",
+          "href": "/ssm_online_exam/teacher/paperManage",
           "icon": "fa fa-gears",
           "target": "_self"
         },

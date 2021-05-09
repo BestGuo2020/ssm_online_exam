@@ -63,11 +63,7 @@ public class TeacherController {
      */
     @RequestMapping("/classAdd")
     public String classAdd(Model model, @RequestParam String modify) {
-        if("true".equals(modify)) {
-            model.addAttribute("modify", "true");
-        } else {
-            model.addAttribute("modify", "false");
-        }
+        isModify(model, modify);
         return "teacher/class_add";
     }
 
@@ -81,21 +77,22 @@ public class TeacherController {
     }
 
     /**
-     * 考试管理界面
+     * 试卷管理界面
      * @return
      */
-    @RequestMapping("/examManage")
-    public String examManage() {
-        return "teacher/exam_manage";
+    @RequestMapping("/paperManage")
+    public String paperManage() {
+        return "teacher/paper_manage";
     }
 
     /**
-     * 考试添加界面
+     * 试卷添加界面
      * @return
      */
-    @RequestMapping("/examAdd")
-    public String examAdd() {
-        return "teacher/exam_add";
+    @RequestMapping("/paperAdd")
+    public String paperAdd(Model model, @RequestParam String modify) {
+        isModify(model, modify);
+        return "teacher/paper_add";
     }
 
     /**
@@ -113,12 +110,16 @@ public class TeacherController {
      */
     @RequestMapping("/tikuAdd")
     public String tikuAdd(Model model, @RequestParam String modify) {
-        if("true".equals(modify)) {
+        isModify(model, modify);
+        return "teacher/tiku_add";
+    }
+
+    private void isModify(Model model, @RequestParam String modify) {
+        if ("true".equals(modify)) {
             model.addAttribute("modify", "true");
         } else {
             model.addAttribute("modify", "false");
         }
-        return "teacher/tiku_add";
     }
 
     /**

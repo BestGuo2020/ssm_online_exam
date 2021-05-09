@@ -5,7 +5,8 @@
   Time: 22:52
   To change this template use File | Settings | File Templates.
 --%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" isELIgnored="false" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
     <jsp:include page="../commons/metas.jsp" />
@@ -15,15 +16,24 @@
 <body>
 <div class="layuimini-container">
     <div class="layuimini-main">
-        <blockquote class="layui-elem-quote layui-text">
-            <p>添加题目有两种方式：</p>
-            <p>
-                1. 手动录入题目到题库 <br>
-                2. 通过 excel 表格的方式导入题目到题库
-            </p>
-        </blockquote>
+        <c:if test="${modify eq 'false'}">
+            <blockquote class="layui-elem-quote layui-text">
+                <p>添加题目有两种方式：</p>
+                <p>
+                    1. 手动录入题目到题库 <br>
+                    2. 通过 excel 表格的方式导入题目到题库
+                </p>
+            </blockquote>
+        </c:if>
         <fieldset class="table-search-fieldset" style="margin-top: 20px;">
-            <legend>手动录入题目</legend>
+            <c:choose>
+                <c:when test="${modify eq 'false'}">
+                    <legend>手动录入题目</legend>
+                </c:when>
+                <c:otherwise>
+                    <legend>修改题目</legend>
+                </c:otherwise>
+            </c:choose>
             <form class="layui-form layui-form-pane" action="" lay-filter="example">
 
                 <div class="layui-form-item layui-form-text">
@@ -91,24 +101,28 @@
                 </div>
 
                 <div class="layui-form-item">
-                    <button class="layui-btn" lay-submit="" lay-filter="demo1">创建班级</button>
+                    <button class="layui-btn" lay-submit="" lay-filter="demo1">提交题目</button>
                 </div>
             </form>
         </fieldset>
-        <fieldset class="table-search-fieldset" style="margin-top: 20px;">
-            <legend>通过 excel 表格导入</legend>
-            <a type="button" class="layui-btn layui-btn-sm layui-btn-normal" href="#" target="_blank">点此下载导入模板</a>
-            <button type="button" class="layui-btn" id="test1">
-                <i class="layui-icon">&#xe67c;</i> 导入题目
-            </button>
-        </fieldset>
+        <c:if test="${modify eq 'false'}">
+            <fieldset class="table-search-fieldset" style="margin-top: 20px;">
+                <legend>通过 excel 表格导入</legend>
+                <a type="button" class="layui-btn layui-btn-sm layui-btn-normal" href="#" target="_blank">点此下载导入模板</a>
+                <button type="button" class="layui-btn" id="test1">
+                    <i class="layui-icon">&#xe67c;</i> 导入题目
+                </button>
+            </fieldset>
+        </c:if>
     </div>
 </div>
 <jsp:include page="../commons/scripts.jsp" />
 <script>
+
     layui.use('upload', function(){
         var upload = layui.upload;
-        //执行实例
+        <c:if test="${modify eq 'false'}">
+        // 文档上传
         var uploadInst = upload.render({
             elem: '#test1' //绑定元素
             ,url: '/upload/' //上传接口
@@ -128,6 +142,7 @@
                 //请求异常回调
             }
         });
+        </c:if>
     });
 </script>
 </body>

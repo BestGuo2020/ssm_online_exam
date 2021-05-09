@@ -143,7 +143,7 @@
                     maxmin:true,
                     shadeClose: true,
                     area: ['100%', '100%'],
-                    content: '/ssm_online_exam/teacher/classAdd?modify=false',
+                    content: '/ssm_online_exam/teacher/paperAdd?modify=false',
                 });
                 $(window).on("resize", function () {
                     layer.full(index);
@@ -171,7 +171,7 @@
                     maxmin:true,
                     shadeClose: true,
                     area: ['100%', '100%'],
-                    content: '/ssm_online_exam/teacher/classAdd?modify=true',
+                    content: '/ssm_online_exam/teacher/paperAdd?modify=true',
                 });
                 $(window).on("resize", function () {
                     layer.full(index);

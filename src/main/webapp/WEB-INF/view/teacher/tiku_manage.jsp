@@ -70,7 +70,7 @@
         <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
 
         <script type="text/html" id="currentTableBar">
-            <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="edit">概况</a>
+            <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="edit">修改</a>
             <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除</a>
         </script>
 
@@ -78,10 +78,11 @@
 </div>
 <jsp:include page="../commons/scripts.jsp" />
 <script>
-    layui.use(['form', 'table'], function () {
+    layui.use(['form', 'table', 'layer'], function () {
         var $ = layui.jquery,
             form = layui.form,
-            table = layui.table;
+            table = layui.table,
+            layer = layui.layer;
 
         table.render({
             elem: '#currentTableId',
@@ -140,7 +141,7 @@
                     title: '添加题目',
                     type: 2,
                     shade: 0.2,
-                    maxmin:true,
+                    maxmin:false,
                     shadeClose: true,
                     area: ['100%', '100%'],
                     content: '/ssm_online_exam/teacher/tikuAdd?modify=false',
@@ -165,10 +166,10 @@
             if (obj.event === 'edit') {
 
                 var index = layer.open({
-                    title: '修改班级信息',
+                    title: '修改题目',
                     type: 2,
                     shade: 0.2,
-                    maxmin:true,
+                    maxmin:false,
                     shadeClose: true,
                     area: ['100%', '100%'],
                     content: '/ssm_online_exam/teacher/tikuAdd?modify=true',
