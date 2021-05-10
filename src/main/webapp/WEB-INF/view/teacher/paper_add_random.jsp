@@ -16,15 +16,18 @@
         .layui-form-checkbox {
             margin-top: 6px !important;
         }
+        .layui-carousel {
+            height: 538px !important;
+        }
     </style>
 </head>
 <body>
-<div class="layuimini-container">
+<div class="layuimini-container" style="height: 100%;">
     <div class="layuimini-main">
         <div class="layui-fluid">
             <div class="layui-card">
                 <div class="layui-card-body" style="padding-top: 40px;">
-                    <div class="layui-carousel" id="stepForm" lay-filter="stepForm" style="margin: 0 auto;">
+                    <div class="layui-carousel" id="stepForm" lay-filter="stepForm" style="margin: 0 auto; ">
                         <div carousel-item>
                             <div>
                                 <form class="layui-form" style="margin: 0 auto;max-width: 460px;padding-top: 40px;">
@@ -62,21 +65,25 @@
                                 </form>
                             </div>
                             <div>
-                                <form class="layui-form" style="margin: 0 auto;max-width: 660px;padding-top: 40px;">
-                                    <div class="layui-form-item">
-                                        <label class="layui-form-label">选择题目</label>
-                                        <div class="layui-input-inline" style="width: 465px;">
-                                            <input type="text" name="questionIds" id="questionIds" placeholder="选择完成的题目题号将显示出来" autocomplete="off" class="layui-input" id="demo" ts-selected="">
-                                        </div>
-                                    </div>
-                                    <div class="layui-form-item">
-                                        <div class="layui-input-block">
-                                            <button class="layui-btn" lay-submit lay-filter="formStep">
-                                                &emsp;选题完成，下一步&emsp;
-                                            </button>
+                                <form class="layui-form layui-form-pane" action="">
+                                    <div class="layui-form-item" style="margin-top: 10px;">
+                                        <div class="layui-inline">
+                                            <label class="layui-form-label">题目数</label>
+                                            <div class="layui-input-inline" style="width: 300px;">
+                                                <input type="text" name="questionIds" id="questionIds" placeholder="请输入随机抽题的个数，题目生成之后展示在表格中" autocomplete="off" class="layui-input" id="demo" ts-selected="">
+                                            </div>
+                                            <div class="layui-inline">
+                                                <button type="submit" class="layui-btn layui-btn-primary"  lay-submit lay-filter="data-search-btn"> 开始抽题 </button>
+                                            </div>
+                                            <div class="layui-inline">
+                                                <button class="layui-btn" lay-submit lay-filter="formStep">
+                                                    &emsp;抽题完成，下一步&emsp;
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 </form>
+                                <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
                             </div>
                             <div>
                                 <div style="text-align: center;margin-top: 90px;">
@@ -150,28 +157,29 @@
             step.next('#stepForm');
         });
 
-        tableSelect.render({
-            elem: '#questionIds',
-            searchKey: 'my',
-            checkedKey: 'id',
-            searchPlaceholder: '自定义文字和name',
-            table: {
-                url: '${pageContext.request.contextPath}/static/backend/api/tableSelect.json',
-                cols: [[
-                    { type: 'checkbox' },
-                    { field: 'id', title: 'ID', width: 100 },
-                    { field: 'username', title: '姓名', width: 300 },
-                    { field: 'sex', title: '性别', width: 100 }
-                ]]
-            },
-            done: function (elem, data) {
-                var NEWJSON = []
-                layui.each(data.data, function (index, item) {
-                    NEWJSON.push(item.id)
-                })
-                elem.val(NEWJSON.join(","))
-            }
-        })
+        table.render({
+            elem: '#currentTableId',
+            url: '${pageContext.request.contextPath}/static/backend/api/table.json',
+            cols: [[
+                {type: "checkbox", width: 50},
+                {field: 'id', width: 80, title: 'ID', sort: true},
+                {field: 'username', width: 80, title: '用户名'},
+                {field: 'sex', width: 80, title: '性别', sort: true},
+                {field: 'city', width: 80, title: '城市'},
+                {field: 'sign', title: '签名', minWidth: 150},
+                {field: 'experience', width: 80, title: '积分', sort: true},
+                {field: 'score', width: 80, title: '评分', sort: true},
+                {field: 'classify', width: 80, title: '职业'},
+                {field: 'wealth', width: 135, title: '财富', sort: true},
+                {title: '操作', minWidth: 150, toolbar: '#currentTableBar', align: "center"}
+            ]],
+            limits: [10, 15, 20, 25, 50, 100],
+            limit: 15,
+            page: true,
+            skin: 'line'
+        });
+
+
     })
 </script>
 </body>

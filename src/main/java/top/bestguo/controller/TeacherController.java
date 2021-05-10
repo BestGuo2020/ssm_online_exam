@@ -86,13 +86,21 @@ public class TeacherController {
     }
 
     /**
-     * 试卷添加界面
+     * 自组选题界面
      * @return
      */
     @RequestMapping("/paperAdd")
-    public String paperAdd(Model model, @RequestParam String modify) {
-        isModify(model, modify);
+    public String paperAdd() {
         return "teacher/paper_add";
+    }
+
+    /**
+     * 随机选题界面
+     * @return
+     */
+    @RequestMapping("/paperAddRandom")
+    public String paperAddRandom() {
+        return "teacher/paper_add_random";
     }
 
     /**
