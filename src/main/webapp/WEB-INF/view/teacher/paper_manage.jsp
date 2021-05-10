@@ -8,9 +8,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" isELIgnored="false" %>
 <html>
 <head>
-    <jsp:include page="../commons/metas.jsp" />
+    <jsp:include page="../commons/metas.jsp"/>
     <title>Title</title>
-    <jsp:include page="../commons/styles.jsp" />
+    <jsp:include page="../commons/styles.jsp"/>
     <style>
         .layui-form-checkbox {
             margin-top: 6px !important;
@@ -53,7 +53,9 @@
                             </div>
                         </div>
                         <div class="layui-inline">
-                            <button type="submit" class="layui-btn layui-btn-primary"  lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
+                            <button type="submit" class="layui-btn layui-btn-primary" lay-submit
+                                    lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索
+                            </button>
                         </div>
                     </div>
                 </form>
@@ -62,26 +64,29 @@
 
         <script type="text/html" id="toolbarDemo">
             <div class="layui-btn-container">
-                <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add"> 添加试卷 </button>
-                <button class="layui-btn layui-btn-sm layui-btn-danger data-delete-btn" lay-event="delete"> 删除 </button>
+                <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add"> 自主选题 </button>
+                <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add_random"> 随机抽题 </button>
+                <button class="layui-btn layui-btn-sm layui-btn-danger data-delete-btn" lay-event="delete"> 删除</button>
             </div>
         </script>
 
         <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
 
         <script type="text/html" id="currentTableBar">
-            <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="edit">概况</a>
+            <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="edit">管理试题</a>
+            <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="show">查看试卷</a>
             <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除</a>
         </script>
 
     </div>
 </div>
-<jsp:include page="../commons/scripts.jsp" />
+<jsp:include page="../commons/scripts.jsp"/>
 <script>
-    layui.use(['form', 'table'], function () {
+    layui.use(['form', 'table', 'layer'], function () {
         var $ = layui.jquery,
             form = layui.form,
-            table = layui.table;
+            table = layui.table,
+            layer = layui.layer;
 
         table.render({
             elem: '#currentTableId',
@@ -137,13 +142,26 @@
         table.on('toolbar(currentTableFilter)', function (obj) {
             if (obj.event === 'add') {  // 监听添加操作
                 var index = layer.open({
-                    title: '创建班级',
+                    title: '自主选题',
                     type: 2,
                     shade: 0.2,
-                    maxmin:true,
+                    maxmin: true,
                     shadeClose: true,
                     area: ['100%', '100%'],
-                    content: '/ssm_online_exam/teacher/paperAdd?modify=false',
+                    content: '/ssm_online_exam/teacher/paperAdd',
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+            } else if (obj.event === 'add_random') {  // 监听添加操作
+                var index = layer.open({
+                    title: '随机抽题',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin: true,
+                    shadeClose: true,
+                    area: ['100%', '100%'],
+                    content: '/ssm_online_exam/teacher/paperAddRandom',
                 });
                 $(window).on("resize", function () {
                     layer.full(index);
@@ -157,7 +175,9 @@
 
         //监听表格复选框选择
         table.on('checkbox(currentTableFilter)', function (obj) {
-            console.log(obj)
+            console.log(obj);
+            var checkStatus = table.checkStatus('currentTableId'); //idTest 即为基础参数 id 对应的值
+            console.log(checkStatus.data) //获取选中行的数据
         });
 
         table.on('tool(currentTableFilter)', function (obj) {
@@ -165,10 +185,10 @@
             if (obj.event === 'edit') {
 
                 var index = layer.open({
-                    title: '修改班级信息',
+                    title: '管理试题',
                     type: 2,
                     shade: 0.2,
-                    maxmin:true,
+                    maxmin: true,
                     shadeClose: true,
                     area: ['100%', '100%'],
                     content: '/ssm_online_exam/teacher/paperAdd?modify=true',
@@ -177,6 +197,8 @@
                     layer.full(index);
                 });
                 return false;
+            } else if (obj.event === 'show') {
+                console.log("查看试卷");
             } else if (obj.event === 'delete') {
                 layer.confirm('真的删除行么', function (index) {
                     obj.del();
