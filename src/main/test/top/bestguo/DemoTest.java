@@ -20,4 +20,14 @@ public class DemoTest {
         System.out.println(teacherMapper.findOneByEmail("111@qq.com"));
     }
 
+    @Test
+    public void test2() {
+
+        ApplicationContext applicationContext = new ClassPathXmlApplicationContext("beans.xml");
+
+        IDemoService demoDao = (IDemoService) applicationContext.getBean("demoService");
+
+        demoDao.findAllService();
+    }
+
 }
