@@ -1,15 +1,21 @@
 package top.bestguo.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 
 /**
  * 
  * @TableName record
  */
+@TableName(value ="record")
 public class Record implements Serializable {
     /**
      * 自增id
      */
+    @TableId
     private Integer id;
 
     /**
@@ -37,6 +43,7 @@ public class Record implements Serializable {
      */
     private String score;
 
+    @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 
     /**

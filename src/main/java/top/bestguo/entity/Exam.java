@@ -1,5 +1,9 @@
 package top.bestguo.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -7,10 +11,12 @@ import java.util.Date;
  * 
  * @TableName exam
  */
+@TableName(value ="exam")
 public class Exam implements Serializable {
     /**
      * 自增id
      */
+    @TableId(type = IdType.AUTO)
     private Integer id;
 
     /**
@@ -43,6 +49,7 @@ public class Exam implements Serializable {
      */
     private Integer score;
 
+    @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 
     /**

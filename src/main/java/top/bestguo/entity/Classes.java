@@ -1,19 +1,25 @@
 package top.bestguo.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 
 /**
  * 
  * @TableName classes
  */
+@TableName(value ="classes")
 public class Classes implements Serializable {
     /**
      * 自增id
      */
+    @TableId(type = IdType.AUTO)
     private Integer id;
 
     /**
-     * 12位的班级码
+     * 8位的班级码
      */
     private String classcode;
 
@@ -23,10 +29,11 @@ public class Classes implements Serializable {
     private String classname;
 
     /**
-     * 班级图片
+     * 班级描述
      */
-    private String classimage;
+    private String classdesc;
 
+    @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 
     /**
@@ -44,14 +51,14 @@ public class Classes implements Serializable {
     }
 
     /**
-     * 12位的班级码
+     * 8位的班级码
      */
     public String getClasscode() {
         return classcode;
     }
 
     /**
-     * 12位的班级码
+     * 8位的班级码
      */
     public void setClasscode(String classcode) {
         this.classcode = classcode;
@@ -72,17 +79,17 @@ public class Classes implements Serializable {
     }
 
     /**
-     * 班级图片
+     * 班级描述
      */
-    public String getClassimage() {
-        return classimage;
+    public String getClassdesc() {
+        return classdesc;
     }
 
     /**
-     * 班级图片
+     * 班级描述
      */
-    public void setClassimage(String classimage) {
-        this.classimage = classimage;
+    public void setClassdesc(String classdesc) {
+        this.classdesc = classdesc;
     }
 
     @Override
@@ -100,7 +107,7 @@ public class Classes implements Serializable {
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
             && (this.getClasscode() == null ? other.getClasscode() == null : this.getClasscode().equals(other.getClasscode()))
             && (this.getClassname() == null ? other.getClassname() == null : this.getClassname().equals(other.getClassname()))
-            && (this.getClassimage() == null ? other.getClassimage() == null : this.getClassimage().equals(other.getClassimage()));
+            && (this.getClassdesc() == null ? other.getClassdesc() == null : this.getClassdesc().equals(other.getClassdesc()));
     }
 
     @Override
@@ -110,7 +117,7 @@ public class Classes implements Serializable {
         result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
         result = prime * result + ((getClasscode() == null) ? 0 : getClasscode().hashCode());
         result = prime * result + ((getClassname() == null) ? 0 : getClassname().hashCode());
-        result = prime * result + ((getClassimage() == null) ? 0 : getClassimage().hashCode());
+        result = prime * result + ((getClassdesc() == null) ? 0 : getClassdesc().hashCode());
         return result;
     }
 
@@ -123,7 +130,7 @@ public class Classes implements Serializable {
         sb.append(", id=").append(id);
         sb.append(", classcode=").append(classcode);
         sb.append(", classname=").append(classname);
-        sb.append(", classimage=").append(classimage);
+        sb.append(", classdesc=").append(classdesc);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();
