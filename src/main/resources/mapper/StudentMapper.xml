@@ -17,4 +17,11 @@
         id,email,stuId,
         username,password,gender
     </sql>
+<!-- 查询学生用户进行登录-->
+    <select id="findStudent" parameterType="String" resultType="student">
+        select <include refid="Base_Column_List"/> from student where
+        email=#{email} and password=#{password}
+
+    </select>
+
 </mapper>

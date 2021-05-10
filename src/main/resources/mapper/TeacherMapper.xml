@@ -25,4 +25,11 @@
         where
         email = #{email,jdbcType=VARCHAR}
     </select>
+    <!-- 查询老师用户进行登录-->
+    <select id="findTeacher" parameterType="String" resultType="teacher">
+        select <include refid="Base_Column_List"/> from teacher where
+        email=#{email} and password=#{password}
+
+    </select>
+
 </mapper>
