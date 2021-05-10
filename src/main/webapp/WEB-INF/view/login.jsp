@@ -114,16 +114,16 @@
                     type: "POST",
                     success: function (result) {
 
-                       if(result=="student"){
-                           layer.msg(result);
-                           window.location.href="index.jsp";
-                       }
-                       if(result=="fail"){
-                           layer.msg("登录失败");
-                       }
+                        if(result=="student"){
+                            layer.msg("登录成功");
+                            window.location.href="student";
+                        }
+                        if(result=="fail"){
+                            layer.msg("登录失败");
+                        }
                         if(result=="teacher"){
-                            layer.msg(result);
-                            window.location.href="index.jsp";
+                            layer.msg("登录成功");
+                            window.location.href="teacher";
                         }
                     },
                     beforeSend: function () {
