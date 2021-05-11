@@ -50,7 +50,7 @@
                 <div class="layui-row layui-col-space15">
                     <div class="layui-col-md12">
                         <blockquote class="layui-elem-quote layui-text">
-                            欢迎您：admin
+                            欢迎您：${teacher.username}
                         </blockquote>
                     </div>
                 </div>

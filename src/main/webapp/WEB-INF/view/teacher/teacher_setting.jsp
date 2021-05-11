@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" isELIgnored="false" %>
 <!DOCTYPE html>
 <html>
@@ -18,35 +19,37 @@
     <div class="layuimini-main">
 
         <div class="layui-form layuimini-form">
-            <div class="layui-form-item">
-                <label class="layui-form-label required">管理账号</label>
-                <div class="layui-input-block">
-                    <input type="text" name="username" lay-verify="required" lay-reqtext="管理账号不能为空" placeholder="请输入管理账号"  value="admin" class="layui-input">
-                    <tip>填写自己管理账号的名称。</tip>
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label required">手机</label>
-                <div class="layui-input-block">
-                    <input type="number" name="phone" lay-verify="required" lay-reqtext="手机不能为空" placeholder="请输入手机"  value="" class="layui-input">
-                </div>
-            </div>
+            <input type="hidden" name="id" value="${teacher.id}" />
             <div class="layui-form-item">
                 <label class="layui-form-label">邮箱</label>
                 <div class="layui-input-block">
-                    <input type="email" name="email"  placeholder="请输入邮箱"  value="" class="layui-input">
+                    <input type="email" name="email" lay-verify="email" placeholder="请输入邮箱" value="${teacher.email}" class="layui-input">
                 </div>
             </div>
-            <div class="layui-form-item layui-form-text">
-                <label class="layui-form-label">备注信息</label>
+            <div class="layui-form-item">
+                <label class="layui-form-label">用户名</label>
                 <div class="layui-input-block">
-                    <textarea name="remark" class="layui-textarea" placeholder="请输入备注信息"></textarea>
+                    <input type="text" name="username" placeholder="用户名" lay-verify="username" required value="${teacher.username}" class="layui-input">
                 </div>
             </div>
-
+            <div class="layui-form-item" pane="">
+                <label class="layui-form-label">性别</label>
+                <div class="layui-input-block">
+                    <c:choose>
+                        <c:when test="${teacher.gender == 0}">
+                            <input type="radio" name="gender" value="0" title="男" checked="">
+                            <input type="radio" name="gender" value="1" title="女">
+                        </c:when>
+                        <c:otherwise>
+                            <input type="radio" name="gender" value="0" title="男">
+                            <input type="radio" name="gender" value="1" title="女" checked="">
+                        </c:otherwise>
+                    </c:choose>
+                </div>
+            </div>
             <div class="layui-form-item">
                 <div class="layui-input-block">
-                    <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认保存</button>
+                    <button class="layui-btn layui-btn-normal" lay-submit="" lay-filter="saveBtn">确认保存</button>
                 </div>
             </div>
         </div>
@@ -58,15 +61,42 @@
     layui.use(['form','miniTab'], function () {
         var form = layui.form,
             layer = layui.layer,
-            miniTab = layui.miniTab;
+            miniTab = layui.miniTab,
+            $ = layui.jquery;
+
+        form.verify({
+            username: function (value) {
+                if (value.length < 3) {
+                    return '至少得3个字符啊';
+                }
+            }
+            , pass: [
+                /^[\S]{6,12}$/
+                , '密码必须6到12位，且不能出现空格'
+            ]
+        });
 
         //监听提交
         form.on('submit(saveBtn)', function (data) {
-            var index = layer.alert(JSON.stringify(data.field), {
-                title: '最终的提交信息'
-            }, function () {
-                layer.close(index);
-                miniTab.deleteCurrentByIframe();
+            console.log(data);
+            $.ajax({
+                type: "POST",
+                url: "${pageContext.request.contextPath}/teacher/teacherInfo_do",
+                data: {
+                    id: data.field.id,
+                    email: data.field.email,
+                    username: data.field.username,
+                    gender: data.field.gender
+                },
+                success: function(data){
+                    layer.msg(data.message);
+                    if(data.code === 0) {
+                        setTimeout(function() {
+                            miniTab.deleteCurrentByIframe();
+                            top.location.reload();
+                        }, 2000);
+                    }
+                }
             });
             return false;
         });

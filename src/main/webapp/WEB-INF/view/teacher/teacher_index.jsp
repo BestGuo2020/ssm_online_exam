@@ -47,15 +47,18 @@
             </ul>
 
             <ul class="layui-nav layui-layout-right">
+                <li class="layui-nav-item" lay-unselect>
+                    <a href="javascript:;" data-refresh="刷新"><i class="fa fa-refresh"></i></a>
+                </li>
                 <li class="layui-nav-item layuimini-setting">
-                    <a href="javascript:;">admin</a>
+                    <a href="javascript:;">${teacher.username}</a>
                     <dl class="layui-nav-child">
                         <dd>
-                            <a href="javascript:;" layuimini-content-href="ssm_online_exam/teacher/teacherInfo"
-                               data-title="基本资料" data-icon="fa fa-gears">基本资料<span class="layui-badge-dot"></span></a>
+                            <a href="javascript:;" layuimini-content-href="/ssm_online_exam/teacher/teacherInfo"
+                               data-title="基本资料" data-icon="fa fa-gears">基本资料</a>
                         </dd>
                         <dd>
-                            <a href="javascript:;" layuimini-content-href="ssm_online_exam/teacher/teacherPassword"
+                            <a href="javascript:;" layuimini-content-href="/ssm_online_exam/teacher/teacherPassword"
                                data-title="修改密码" data-icon="fa fa-gears">修改密码</a>
                         </dd>
                         <dd>
