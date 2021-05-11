@@ -8,7 +8,7 @@ import java.util.List;
  *
  * @param <T> 传入哪种是有蹄类
  */
-public class DataResult<T> {
+public class DataResult<T> extends BaseResult {
 
     /**
      * 返回的状态码
