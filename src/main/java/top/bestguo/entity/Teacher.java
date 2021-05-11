@@ -36,12 +36,12 @@ public class Teacher implements Serializable {
     /**
      * 性别：0为男，1为女
      */
-    private Byte gender;
+    private Integer gender;
 
     /**
      * 教师角色：1为管理员，2为普通教师
      */
-    private Byte role;
+    private Integer role;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
@@ -105,28 +105,28 @@ public class Teacher implements Serializable {
     /**
      * 性别：0为男，1为女
      */
-    public Byte getGender() {
+    public Integer getGender() {
         return gender;
     }
 
     /**
      * 性别：0为男，1为女
      */
-    public void setGender(Byte gender) {
+    public void setGender(Integer gender) {
         this.gender = gender;
     }
 
     /**
      * 教师角色：1为管理员，2为普通教师
      */
-    public Byte getRole() {
+    public Integer getRole() {
         return role;
     }
 
     /**
      * 教师角色：1为管理员，2为普通教师
      */
-    public void setRole(Byte role) {
+    public void setRole(Integer role) {
         this.role = role;
     }
 
