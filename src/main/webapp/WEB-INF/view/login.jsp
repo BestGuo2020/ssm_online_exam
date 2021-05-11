@@ -45,15 +45,15 @@
         <div class="layui-form login-form">
             <form class="layui-form" action="">
                 <div class="layui-form-item logo-title">
-                    <h1>LayuiMini后台登录</h1>
+                    <h1>在线考试系统登录</h1>
                 </div>
                 <div class="layui-form-item">
                     <%--@declare id="username"--%><label class="layui-icon layui-icon-username" for="username"></label>
-                    <input type="text" name="username" lay-verify="required|account" placeholder="邮箱登录" autocomplete="off" class="layui-input" value="admin">
+                    <input type="text" name="username" lay-verify="email" placeholder="邮箱" autocomplete="off" class="layui-input">
                 </div>
                 <div class="layui-form-item">
                     <%--@declare id="password"--%><label class="layui-icon layui-icon-password" for="password"></label>
-                    <input type="password" name="password"  placeholder="密码" autocomplete="off" class="layui-input" value="123456">
+                    <input type="password" name="password" lay-verify="pass" placeholder="密码" autocomplete="off" class="layui-input">
                 </div>
 
                 <div class="layui-form-item">
@@ -75,6 +75,13 @@
     layui.use(['form'], function () {
         var form = layui.form,
             layer = layui.layer;
+
+        form.verify({
+            pass: [
+                /^[\S]{6,12}$/
+                , '密码必须6到12位，且不能出现空格'
+            ]
+        });
 
         // 登录过期的时候，跳出ifram框架
         if (top.location != self.location) top.location = self.location;
