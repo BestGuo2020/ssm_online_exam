@@ -25,4 +25,20 @@
         <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
     </context:component-scan>
 
+    <!-- 配置拦截器 -->
+    <mvc:interceptors>
+        <!-- 教师端登陆拦截器 -->
+        <mvc:interceptor>
+            <mvc:mapping path="/teacher/**"/>
+            <!-- 设置教师端拦截器类 -->
+            <bean class="top.bestguo.interceptor.TeacherLoginInterceptor" />
+        </mvc:interceptor>
+        <!-- 学生端登陆拦截器 -->
+        <mvc:interceptor>
+            <mvc:mapping path="/student/**"/>
+            <!-- 设置学生端拦截器类 -->
+            <bean class="top.bestguo.interceptor.StudentLoginInterceptor" />
+        </mvc:interceptor>
+    </mvc:interceptors>
+
 </beans>
