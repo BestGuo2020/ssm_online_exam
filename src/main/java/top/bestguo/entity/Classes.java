@@ -33,6 +33,11 @@ public class Classes implements Serializable {
      */
     private String classdesc;
 
+    /**
+     * 属于哪个老师
+     */
+    private Integer belongteacher;
+
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 
@@ -92,6 +97,20 @@ public class Classes implements Serializable {
         this.classdesc = classdesc;
     }
 
+    /**
+     * 属于哪个老师
+     */
+    public Integer getBelongteacher() {
+        return belongteacher;
+    }
+
+    /**
+     * 属于哪个老师
+     */
+    public void setBelongteacher(Integer belongteacher) {
+        this.belongteacher = belongteacher;
+    }
+
     @Override
     public boolean equals(Object that) {
         if (this == that) {
@@ -107,7 +126,8 @@ public class Classes implements Serializable {
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
             && (this.getClasscode() == null ? other.getClasscode() == null : this.getClasscode().equals(other.getClasscode()))
             && (this.getClassname() == null ? other.getClassname() == null : this.getClassname().equals(other.getClassname()))
-            && (this.getClassdesc() == null ? other.getClassdesc() == null : this.getClassdesc().equals(other.getClassdesc()));
+            && (this.getClassdesc() == null ? other.getClassdesc() == null : this.getClassdesc().equals(other.getClassdesc()))
+            && (this.getBelongteacher() == null ? other.getBelongteacher() == null : this.getBelongteacher().equals(other.getBelongteacher()));
     }
 
     @Override
@@ -118,6 +138,7 @@ public class Classes implements Serializable {
         result = prime * result + ((getClasscode() == null) ? 0 : getClasscode().hashCode());
         result = prime * result + ((getClassname() == null) ? 0 : getClassname().hashCode());
         result = prime * result + ((getClassdesc() == null) ? 0 : getClassdesc().hashCode());
+        result = prime * result + ((getBelongteacher() == null) ? 0 : getBelongteacher().hashCode());
         return result;
     }
 
@@ -131,6 +152,7 @@ public class Classes implements Serializable {
         sb.append(", classcode=").append(classcode);
         sb.append(", classname=").append(classname);
         sb.append(", classdesc=").append(classdesc);
+        sb.append(", belongteacher=").append(belongteacher);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();
