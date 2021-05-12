@@ -74,11 +74,22 @@
                         password: data.field.new_password
                     },
                     success: function(data){
-                        layer.msg(data.message);
+                        console.log(data);
+                        // layer.msg(data.message);
+                        // 判断返回的数据是json还是字符串
+                        if(typeof data === 'string') {
+                            data = JSON.parse(data);
+                        }
                         if(data.code === 0) {
-                            setTimeout(function () {
-                                miniTab.deleteCurrentByIframe();
-                            }, 2000);
+                            layer.msg(data.message, {icon: 1}, function(){
+                                top.location.href = "${pageContext.request.contextPath}/teacher";
+                            });
+                        } else if (data.code === 1) {
+                            layer.msg(data.message, {icon: 2});
+                        } else if (data.code === -1) {
+                            layer.msg(data.message, {icon: 7}, function(){
+                                top.location.href = '${pageContext.request.contextPath}/login';
+                            });
                         }
                     }
                 });
