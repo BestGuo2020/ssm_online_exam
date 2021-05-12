@@ -141,9 +141,30 @@
         miniAdmin.render(options);
 
         $('.login-out').on("click", function () {
-            layer.msg('退出登录成功', function () {
-                window.location = 'page/login-3.html';
+            layer.confirm('确定要退出吗？', {icon: 3, title:'提示'}, function(index){
+                $.ajax({
+                    type: "GET",
+                    url: "${pageContext.request.contextPath}/teacher/teacherLogout",
+                    success: function(data){
+                        console.log(data);
+                        // layer.msg(data.message);
+                        // 判断返回的数据是json还是字符串
+                        if(typeof data === 'string') {
+                            data = JSON.parse(data);
+                        }
+                        if(data.code === 0) {
+                            layer.msg(data.message, {icon: 1}, function(){
+                                top.location.href = "${pageContext.request.contextPath}/login";
+                            });
+                        } else if (data.code === -1) {
+                            layer.msg(data.message, {icon: 7}, function(){
+                                top.location.href = '${pageContext.request.contextPath}/login';
+                            });
+                        }
+                    }
+                });
             });
+            return false;
         });
     });
 </script>

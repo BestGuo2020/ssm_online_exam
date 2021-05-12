@@ -87,6 +87,24 @@ public class TeacherController {
     }
 
     /**
+     * 取消登录请求处理
+     *
+     * @param session 会话
+     * @return 响应结果
+     */
+    @RequestMapping(value = "/teacherLogout")
+    @ResponseBody
+    public BaseResult teacherLogout(HttpSession session) {
+        // 移除会话
+        session.removeAttribute("teacher");
+        // 设置返回对象
+        BaseResult result = new BaseResult();
+        result.setCode(0);
+        result.setMessage("退出登录成功");
+        return result;
+    }
+
+    /**
      * 教师主面板
      * @return
      */
