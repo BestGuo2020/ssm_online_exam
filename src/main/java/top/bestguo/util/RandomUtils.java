@@ -26,4 +26,13 @@ public class RandomUtils {
         }
         return set;
     }
+
+    /**
+     * 生成8位数的代码
+     *
+     * @return 8位数的代码
+     */
+    public static Integer generateCodeLength8() {
+        return random.nextInt(90000000) + 10000000;
+    }
 }

@@ -6,7 +6,7 @@ import java.util.List;
  * 返回数据类，一般运用于加载表格的数据。
  * 该类适用于分页。
  *
- * @param <T> 传入哪种是有蹄类
+ * @param <T> 传入哪种是类型
  */
 public class MultipleDataResult<T> extends BaseResult {
 

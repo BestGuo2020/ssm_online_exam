@@ -3,12 +3,12 @@ package top.bestguo.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+import top.bestguo.entity.Classes;
 import top.bestguo.entity.Teacher;
 import top.bestguo.render.BaseResult;
+import top.bestguo.render.SingleDataResult;
+import top.bestguo.service.ClassesService;
 import top.bestguo.service.TeacherService;
 
 import javax.servlet.http.HttpSession;
@@ -22,6 +22,8 @@ public class TeacherController {
 
     @Autowired
     private TeacherService teacherService;
+    @Autowired
+    private ClassesService classesService;
 
     /**
      * 教师端主页
@@ -132,7 +134,19 @@ public class TeacherController {
      * @return
      */
     @RequestMapping("/classAdd")
-    public String classAdd(Model model, @RequestParam String modify) {
+    public String classAdd(Model model, @RequestParam String modify,
+                           @RequestParam(required = false) Integer classId,
+                           @RequestParam(required = false) Integer teacherId) {
+        // 判断是否为修改状态
+        if ("true".equals(modify)) {
+            // 创建班级实体类，传递参数
+            Classes classes = new Classes();
+            classes.setId(classId);
+            classes.setBelongteacher(teacherId);
+            // 查询单个
+            SingleDataResult<Classes> oneClass = classesService.findOneClass(classes);
+            model.addAttribute("oneClass", oneClass);
+        }
         isModify(model, modify);
         return "teacher/class_add";
     }
@@ -195,8 +209,10 @@ public class TeacherController {
     private void isModify(Model model, @RequestParam String modify) {
         if ("true".equals(modify)) {
             model.addAttribute("modify", "true");
+            model.addAttribute("type", 2);
         } else {
             model.addAttribute("modify", "false");
+            model.addAttribute("type", 1);
         }
     }
 

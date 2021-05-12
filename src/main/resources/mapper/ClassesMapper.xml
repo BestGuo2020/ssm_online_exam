@@ -15,4 +15,8 @@
         id,classCode,className,
         classDesc
     </sql>
+
+    <select id="findAllClassCode" resultType="string">
+        select classCode from classes;
+    </select>
 </mapper>

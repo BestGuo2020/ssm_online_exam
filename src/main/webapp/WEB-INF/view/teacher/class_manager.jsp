@@ -43,14 +43,15 @@
 </div>
 <jsp:include page="../commons/scripts.jsp" />
 <script>
-    layui.use(['form', 'table'], function () {
+    layui.use(['form', 'table', 'layer'], function () {
         var $ = layui.jquery,
             form = layui.form,
-            table = layui.table;
+            table = layui.table,
+            layer = layui.layer;
 
         table.render({
             elem: '#currentTableId',
-            url: '${pageContext.request.contextPath}/static/backend/api/table.json',
+            url: '${pageContext.request.contextPath}/classes/loadAllClasses/${sessionScope.teacher.id}',
             toolbar: '#toolbarDemo',
             defaultToolbar: ['filter', 'exports', 'print', {
                 title: '提示',
@@ -59,15 +60,9 @@
             }],
             cols: [[
                 {type: "checkbox", width: 50},
-                {field: 'id', width: 80, title: 'ID', sort: true},
-                {field: 'username', width: 80, title: '用户名'},
-                {field: 'sex', width: 80, title: '性别', sort: true},
-                {field: 'city', width: 80, title: '城市'},
-                {field: 'sign', title: '签名', minWidth: 150},
-                {field: 'experience', width: 80, title: '积分', sort: true},
-                {field: 'score', width: 80, title: '评分', sort: true},
-                {field: 'classify', width: 80, title: '职业'},
-                {field: 'wealth', width: 135, title: '财富', sort: true},
+                {field: 'classcode', width: 95, title: '加课码'},
+                {field: 'classname', width: 200, title: '课程名', sort: true},
+                {field: 'classdesc', width: 400, title: '课程描述'},
                 {title: '操作', minWidth: 150, toolbar: '#currentTableBar', align: "center"}
             ]],
             limits: [10, 15, 20, 25, 50, 100],
@@ -127,8 +122,8 @@
 
         table.on('tool(currentTableFilter)', function (obj) {
             var data = obj.data;
+            console.log(obj);
             if (obj.event === 'edit') {
-
                 var index = layer.open({
                     title: '修改班级信息',
                     type: 2,
@@ -136,16 +131,41 @@
                     maxmin:true,
                     shadeClose: true,
                     area: ['100%', '100%'],
-                    content: '/ssm_online_exam/teacher/classAdd?modify=true',
+                    content: '/ssm_online_exam/teacher/classAdd?modify=true&classId=' + data.id + '&teacherId=' + data.belongteacher
                 });
                 $(window).on("resize", function () {
                     layer.full(index);
                 });
                 return false;
             } else if (obj.event === 'delete') {
-                layer.confirm('真的删除行么', function (index) {
-                    obj.del();
-                    layer.close(index);
+                layer.confirm('该班级的相关的所有数据将会消失，真的要删除这个班级吗？', function (index) {
+                    $.ajax({
+                        type: "POST",
+                        url: "${pageContext.request.contextPath}/classes/classManager_do/3",
+                        data: {
+                            id: data.id,
+                            belongteacher: ${sessionScope.teacher.id}
+                        },
+                        success: function(data){
+                            console.log(data);
+                            // layer.msg(data.message);
+                            // 判断返回的数据是json还是字符串
+                            if(typeof data === 'string') {
+                                data = JSON.parse(data);
+                            }
+                            if(data.code === 0) {
+                                layer.msg(data.message, {icon: 1}, function(){
+                                    obj.del();
+                                });
+                            } else if (data.code === 1) {
+                                layer.msg(data.message, {icon: 2});
+                            } else if (data.code === -1) {
+                                layer.msg(data.message, {icon: 7}, function(){
+                                    top.location.href = '${pageContext.request.contextPath}/login';
+                                });
+                            }
+                        }
+                    });
                 });
             }
         });

@@ -34,4 +34,14 @@
         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactoryBean" />
     </bean>
 
+    <!-- 配置 MybatisPlus分页插件 -->
+    <bean class="com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor" id="mybatisPlusInterceptor">
+        <property name="interceptors">
+            <list>
+                <!-- 配置 Mybatis 分页器 -->
+                <bean class="com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor"/>
+            </list>
+        </property>
+    </bean>
+
 </beans>
