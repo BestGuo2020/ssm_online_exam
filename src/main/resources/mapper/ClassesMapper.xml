@@ -8,11 +8,15 @@
             <id property="id" column="id" jdbcType="INTEGER"/>
             <result property="classcode" column="classCode" jdbcType="VARCHAR"/>
             <result property="classname" column="className" jdbcType="VARCHAR"/>
-            <result property="classimage" column="classImage" jdbcType="VARCHAR"/>
+            <result property="classdesc" column="classDesc" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         id,classCode,className,
-        classImage
+        classDesc
     </sql>
+
+    <select id="findAllClassCode" resultType="string">
+        select classCode from classes;
+    </select>
 </mapper>

@@ -8,13 +8,15 @@
             <id property="id" column="id" jdbcType="INTEGER"/>
             <result property="paperid" column="paperId" jdbcType="INTEGER"/>
             <result property="stuid" column="stuId" jdbcType="INTEGER"/>
-            <result property="selectans" column="selectAns" jdbcType="VARCHAR"/>
-            <result property="fillans" column="fillAns" jdbcType="VARCHAR"/>
+            <result property="answer" column="answer" jdbcType="VARCHAR"/>
+            <result property="wrong" column="wrong" jdbcType="VARCHAR"/>
+            <result property="correct" column="correct" jdbcType="VARCHAR"/>
             <result property="score" column="score" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         id,paperId,stuId,
-        selectAns,fillAns,score
+        answer,wrong,correct,
+        score
     </sql>
 </mapper>

@@ -1,0 +1,58 @@
+{
+  "homeInfo": {
+    "title": "首页",
+    "href": "/ssm_online_exam/student/dashboard"
+  },
+  "logoInfo": {
+    "title": "在线考试系统 - 学生端",
+    "href": "",
+    "image": "/ssm_online_exam/static/images/logo.png"
+  },
+  "menuInfo": [
+    {
+      "title": "常规管理",
+      "icon": "fa fa-address-book",
+      "href": "/ssm_online_exam/student/dashboard",
+      "target": "_self",
+      "child": [
+        {
+          "title": "主页",
+          "href": "/ssm_online_exam/student/dashboard",
+          "icon": "fa fa-home",
+          "target": "_self"
+        }, {
+          "title": "我的班级",
+          "href": "/ssm_online_exam/student/class_attended",
+          "icon": "fa fa-window-maximize",
+          "target": "_self",
+          "child":[
+            {
+              "title": "我参与的班级",
+              "href": "/ssm_online_exam/student/class_attended",
+              "icon": "fa fa-window-maximize",
+              "target": "_self"
+            },
+        {
+          "title": "申请加入班级",
+          "href": "/ssm_online_exam/student/class_attend",
+          "icon": "fa fa-file-text",
+          "target": "_self"
+        }
+          ]
+        },{
+          "title": "我的资料",
+          "href": "/ssm_online_exam/student/class_attend",
+          "icon": "fa fa-file-text",
+          "target": "_self"
+
+        },{
+          "title": "我考过的试卷",
+          "href": "/ssm_online_exam/student/class_attend",
+          "icon": "fa fa-file-text",
+          "target": "_self"
+        }
+
+      ]
+    }
+  ]
+}

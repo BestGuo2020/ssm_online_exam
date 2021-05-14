@@ -7,9 +7,7 @@
     <resultMap id="BaseResultMap" type="top.bestguo.entity.Question">
             <id property="id" column="id" jdbcType="INTEGER"/>
             <result property="questionname" column="questionName" jdbcType="VARCHAR"/>
-            <result property="isselect" column="isSelect" jdbcType="BOOLEAN"/>
-            <result property="isfill" column="isFill" jdbcType="BOOLEAN"/>
-            <result property="isfillautocheck" column="isFillAutoCheck" jdbcType="BOOLEAN"/>
+            <result property="ismulti" column="isMulti" jdbcType="BOOLEAN"/>
             <result property="option1" column="option1" jdbcType="VARCHAR"/>
             <result property="option2" column="option2" jdbcType="VARCHAR"/>
             <result property="option3" column="option3" jdbcType="VARCHAR"/>
@@ -17,12 +15,14 @@
             <result property="option5" column="option5" jdbcType="VARCHAR"/>
             <result property="answer" column="answer" jdbcType="VARCHAR"/>
             <result property="reason" column="reason" jdbcType="VARCHAR"/>
+            <result property="belongclass" column="belongClass" jdbcType="INTEGER"/>
+            <result property="level" column="level" jdbcType="INTEGER"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,questionName,isSelect,
-        isFill,isFillAutoCheck,option1,
-        option2,option3,option4,
-        option5,answer,reason
+        id,questionName,isMulti,
+        option1,option2,option3,
+        option4,option5,answer,
+        reason,belongClass,level
     </sql>
 </mapper>

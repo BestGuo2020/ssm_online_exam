@@ -1,7 +1,9 @@
 package top.bestguo.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 
 import java.io.Serializable;
 
@@ -9,11 +11,13 @@ import java.io.Serializable;
  * 
  * @TableName teacher
  */
+@TableName(value ="teacher")
 public class Teacher implements Serializable {
     /**
      * 用户自增id
      */
-    @TableId(value="id",type= IdType.AUTO)
+
+    @TableId(type = IdType.AUTO)
     private Integer id;
 
     /**
@@ -22,9 +26,9 @@ public class Teacher implements Serializable {
     private String email;
 
     /**
-     * 电子邮箱
+     * 教师工号（可选填项）
      */
-    private Integer teacherId;
+    private Integer teacherid;
 
     /**
      * 用户名
@@ -39,13 +43,9 @@ public class Teacher implements Serializable {
     /**
      * 性别：0为男，1为女
      */
-    private Byte gender;
+    private Integer gender;
 
-    /**
-     * 教师角色：1为管理员，2为普通教师
-     */
-    private Byte role;
-
+    @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 
     /**
@@ -77,17 +77,17 @@ public class Teacher implements Serializable {
     }
 
     /**
-     * 教师工号
+     * 教师工号（可选填项）
      */
-    public Integer getTeacherId() {
-        return teacherId;
+    public Integer getTeacherid() {
+        return teacherid;
     }
 
     /**
-     * 教师工号
+     * 教师工号（可选填项）
      */
-    public void setTeacherId(Integer teacherId) {
-        this.teacherId = teacherId;
+    public void setTeacherid(Integer teacherid) {
+        this.teacherid = teacherid;
     }
 
     /**
@@ -121,42 +121,15 @@ public class Teacher implements Serializable {
     /**
      * 性别：0为男，1为女
      */
-    public Byte getGender() {
+    public Integer getGender() {
         return gender;
     }
 
     /**
      * 性别：0为男，1为女
      */
-    public void setGender(Byte gender) {
+    public void setGender(Integer gender) {
         this.gender = gender;
-    }
-
-    /**
-     * 教师角色：1为管理员，2为普通教师
-     */
-    public Byte getRole() {
-        return role;
-    }
-
-    /**
-     * 教师角色：1为管理员，2为普通教师
-     */
-    public void setRole(Byte role) {
-        this.role = role;
-    }
-
-    @Override
-    public String toString() {
-        return "Teacher{" +
-                "id=" + id +
-                ", email='" + email + '\'' +
-                ", teacherId='" + teacherId + '\'' +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", gender=" + gender +
-                ", role=" + role +
-                '}';
     }
 
     @Override
@@ -173,10 +146,10 @@ public class Teacher implements Serializable {
         Teacher other = (Teacher) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
             && (this.getEmail() == null ? other.getEmail() == null : this.getEmail().equals(other.getEmail()))
+            && (this.getTeacherid() == null ? other.getTeacherid() == null : this.getTeacherid().equals(other.getTeacherid()))
             && (this.getUsername() == null ? other.getUsername() == null : this.getUsername().equals(other.getUsername()))
             && (this.getPassword() == null ? other.getPassword() == null : this.getPassword().equals(other.getPassword()))
-            && (this.getGender() == null ? other.getGender() == null : this.getGender().equals(other.getGender()))
-            && (this.getRole() == null ? other.getRole() == null : this.getRole().equals(other.getRole()));
+            && (this.getGender() == null ? other.getGender() == null : this.getGender().equals(other.getGender()));
     }
 
     @Override
@@ -185,11 +158,28 @@ public class Teacher implements Serializable {
         int result = 1;
         result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
         result = prime * result + ((getEmail() == null) ? 0 : getEmail().hashCode());
+        result = prime * result + ((getTeacherid() == null) ? 0 : getTeacherid().hashCode());
         result = prime * result + ((getUsername() == null) ? 0 : getUsername().hashCode());
         result = prime * result + ((getPassword() == null) ? 0 : getPassword().hashCode());
         result = prime * result + ((getGender() == null) ? 0 : getGender().hashCode());
-        result = prime * result + ((getRole() == null) ? 0 : getRole().hashCode());
         return result;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getClass().getSimpleName());
+        sb.append(" [");
+        sb.append("Hash = ").append(hashCode());
+        sb.append(", id=").append(id);
+        sb.append(", email=").append(email);
+        sb.append(", teacherid=").append(teacherid);
+        sb.append(", username=").append(username);
+        sb.append(", password=").append(password);
+        sb.append(", gender=").append(gender);
+        sb.append(", serialVersionUID=").append(serialVersionUID);
+        sb.append("]");
+        return sb.toString();
     }
 
 }

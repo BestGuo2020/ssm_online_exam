@@ -170,8 +170,7 @@
                 {field: 'experience', width: 80, title: '积分', sort: true},
                 {field: 'score', width: 80, title: '评分', sort: true},
                 {field: 'classify', width: 80, title: '职业'},
-                {field: 'wealth', width: 135, title: '财富', sort: true},
-                {title: '操作', minWidth: 150, toolbar: '#currentTableBar', align: "center"}
+                {field: 'wealth', width: 135, title: '财富', sort: true}
             ]],
             limits: [10, 15, 20, 25, 50, 100],
             limit: 15,

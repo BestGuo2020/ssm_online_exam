@@ -1,14 +1,22 @@
 package top.bestguo.mapper;
 
-import org.springframework.stereotype.Repository;
 import top.bestguo.entity.Classes;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+
+import java.util.List;
 
 /**
  * @Entity top.bestguo.entity.Classes
  */
-@Repository
 public interface ClassesMapper extends BaseMapper<Classes> {
+
+
+    /**
+     * 查询所有的班级码
+     *
+     * @return 返回班级码
+     */
+    List<String> findAllClassCode();
 
 }
 

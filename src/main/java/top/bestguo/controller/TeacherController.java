@@ -1,9 +1,17 @@
 package top.bestguo.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import top.bestguo.entity.Classes;
+import top.bestguo.entity.Teacher;
+import top.bestguo.render.BaseResult;
+import top.bestguo.render.SingleDataResult;
+import top.bestguo.service.ClassesService;
+import top.bestguo.service.TeacherService;
+
+import javax.servlet.http.HttpSession;
 
 /**
  * 教师端页面
@@ -12,12 +20,22 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping("/teacher")
 public class TeacherController {
 
+    @Autowired
+    private TeacherService teacherService;
+    @Autowired
+    private ClassesService classesService;
+
     /**
      * 教师端主页
      * @return
      */
     @RequestMapping("")
-    public String main() {
+    public String main(HttpSession session, Model model) {
+        Teacher teacher = (Teacher) session.getAttribute("teacher");
+        // 得到id
+        Integer id = teacher.getId();
+        // 查询教师信息
+        model.addAttribute("teacher", teacherService.selectTeacherById(id));
         return "teacher/teacher_index";
     }
 
@@ -26,8 +44,25 @@ public class TeacherController {
      * @return
      */
     @RequestMapping("/teacherInfo")
-    public String teacherInfo() {
+    public String teacherInfo(HttpSession session, Model model) {
+        Teacher teacher = (Teacher) session.getAttribute("teacher");
+        // 得到id
+        Integer id = teacher.getId();
+        // 查询教师信息
+        model.addAttribute("teacher", teacherService.selectTeacherById(id));
         return "teacher/teacher_setting";
+    }
+
+    /**
+     * 教师信息的修改请求处理
+     *
+     * @param teacher 教师实体类
+     * @return 响应结果
+     */
+    @RequestMapping(value = "/teacherInfo_do", method = RequestMethod.POST)
+    @ResponseBody
+    public BaseResult teacherInfoDo(Teacher teacher) {
+        return teacherService.modifyTeacherInfo(teacher);
     }
 
     /**
@@ -40,11 +75,48 @@ public class TeacherController {
     }
 
     /**
+     * 教师修改密码的请求处理
+     *
+     * @param id 教师id
+     * @param old_password 前端传入的旧密码
+     * @param password 前端传入的新密码
+     * @return 响应结果
+     */
+    @RequestMapping(value = "/teacherPassword_do", method = RequestMethod.POST)
+    @ResponseBody
+    public BaseResult teacherPasswordDo(Integer id, String old_password, String password) {
+        return teacherService.modifyTeacherPassword(id, old_password, password);
+    }
+
+    /**
+     * 取消登录请求处理
+     *
+     * @param session 会话
+     * @return 响应结果
+     */
+    @RequestMapping(value = "/teacherLogout")
+    @ResponseBody
+    public BaseResult teacherLogout(HttpSession session) {
+        // 移除会话
+        session.removeAttribute("teacher");
+        // 设置返回对象
+        BaseResult result = new BaseResult();
+        result.setCode(0);
+        result.setMessage("退出登录成功");
+        return result;
+    }
+
+    /**
      * 教师主面板
      * @return
      */
     @RequestMapping("/dashboard")
-    public String dashboard() {
+    public String dashboard(HttpSession session, Model model) {
+        Teacher teacher = (Teacher) session.getAttribute("teacher");
+        // 得到id
+        Integer id = teacher.getId();
+        // 查询教师信息
+        model.addAttribute("teacher", teacherService.selectTeacherById(id));
         return "teacher/teacher_dashboard";
     }
 
@@ -62,7 +134,19 @@ public class TeacherController {
      * @return
      */
     @RequestMapping("/classAdd")
-    public String classAdd(Model model, @RequestParam String modify) {
+    public String classAdd(Model model, @RequestParam String modify,
+                           @RequestParam(required = false) Integer classId,
+                           @RequestParam(required = false) Integer teacherId) {
+        // 判断是否为修改状态
+        if ("true".equals(modify)) {
+            // 创建班级实体类，传递参数
+            Classes classes = new Classes();
+            classes.setId(classId);
+            classes.setBelongteacher(teacherId);
+            // 查询单个
+            SingleDataResult<Classes> oneClass = classesService.findOneClass(classes);
+            model.addAttribute("oneClass", oneClass);
+        }
         isModify(model, modify);
         return "teacher/class_add";
     }
@@ -125,8 +209,10 @@ public class TeacherController {
     private void isModify(Model model, @RequestParam String modify) {
         if ("true".equals(modify)) {
             model.addAttribute("modify", "true");
+            model.addAttribute("type", 2);
         } else {
             model.addAttribute("modify", "false");
+            model.addAttribute("type", 1);
         }
     }
 

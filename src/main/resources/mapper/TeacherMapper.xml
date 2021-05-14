@@ -11,12 +11,11 @@
             <result property="username" column="username" jdbcType="VARCHAR"/>
             <result property="password" column="password" jdbcType="VARCHAR"/>
             <result property="gender" column="gender" jdbcType="TINYINT"/>
-            <result property="role" column="role" jdbcType="TINYINT"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         id,email,username,
-        password,gender,role
+        password,gender
     </sql>
 
     <select id="findOneByEmail" resultMap="BaseResultMap">

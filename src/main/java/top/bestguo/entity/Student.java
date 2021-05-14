@@ -1,19 +1,22 @@
 package top.bestguo.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
-
+import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 
 /**
  * 
  * @TableName student
  */
+@TableName(value ="student")
 public class Student implements Serializable {
     /**
      * 自增id
      */
-    @TableId(value="id",type= IdType.AUTO)
+
+    @TableId(type = IdType.AUTO)
     private Integer id;
 
     /**
@@ -39,8 +42,9 @@ public class Student implements Serializable {
     /**
      * 性别：0为男，1为女
      */
-    private Byte gender;
+    private Integer gender;
 
+    @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 
     /**
@@ -116,14 +120,14 @@ public class Student implements Serializable {
     /**
      * 性别：0为男，1为女
      */
-    public Byte getGender() {
+    public Integer getGender() {
         return gender;
     }
 
     /**
      * 性别：0为男，1为女
      */
-    public void setGender(Byte gender) {
+    public void setGender(Integer gender) {
         this.gender = gender;
     }
 
