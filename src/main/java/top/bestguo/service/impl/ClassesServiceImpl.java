@@ -1,6 +1,7 @@
 package top.bestguo.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import top.bestguo.entity.Classes;
@@ -129,7 +130,7 @@ public class ClassesServiceImpl implements ClassesService {
     }
 
     /**
-     * 查询当前老师所在的班级信息
+     * 查询当前老师所管理的班级
      *
      * @param teacherId 教师id
      * @return 所有的班级信息
@@ -141,13 +142,50 @@ public class ClassesServiceImpl implements ClassesService {
         queryWrapper.eq("belongteacher", teacherId);
         // 开始查询
         List<Classes> classesList = classesMapper.selectList(queryWrapper);
+        return getClassesMultipleDataResult(classesList, null);
+    }
+
+    /**
+     * 查询当前老师所管理的班级信息
+     *
+     * @param teacherId 教师id
+     * @param p 当前页
+     * @param limit 当前页展示的数据条数
+     * @return 当前页的班级信息
+     */
+    public MultipleDataResult<Classes> findAllClass(Integer teacherId, Integer p, Integer limit) {
+        // 设置查询条件
+        QueryWrapper<Classes> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("belongteacher", teacherId);
+        // 设置分页器
+        Page<Classes> page = new Page<>(p, limit);
+        // 开始查询
+        List<Classes> classesList = classesMapper.selectPage(page, queryWrapper).getRecords();
+        return getClassesMultipleDataResult(classesList, page);
+    }
+
+    /**
+     * 单独封装的返回结果
+     *
+     * @param list 查询到的数据
+     * @param page 分页器
+     * @return 当前页的班级信息或者所有的班级信息
+     */
+    private MultipleDataResult<Classes> getClassesMultipleDataResult(List<Classes> list, Page<Classes> page) {
         // 返回数据
         MultipleDataResult<Classes> dataResult = new MultipleDataResult<>();
-        if(classesList.size() > 0) {
+        if (list.size() > 0) {
             dataResult.setCode(0);
         }
-        dataResult.setData(classesList);
-        dataResult.setTotal(classesList.size());
+        // 设置数据
+        dataResult.setData(list);
+        // 判断是否传入分页器参数
+        if(page != null) {
+            dataResult.setTotal((int) page.getTotal());
+        }
+        else {
+            dataResult.setTotal(list.size());
+        }
         return dataResult;
     }
 }

@@ -54,4 +54,14 @@ public interface ClassesService {
      */
     MultipleDataResult<Classes> findAllClass(Integer teacherId);
 
+    /**
+     * 查询当前老师所管理的班级信息
+     *
+     * @param teacherId 教师id
+     * @param p 当前页
+     * @param limit 当前页展示的数据条数
+     * @return 当前页的班级信息
+     */
+    MultipleDataResult<Classes> findAllClass(Integer teacherId, Integer p, Integer limit);
+
 }
