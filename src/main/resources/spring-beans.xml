@@ -26,6 +26,8 @@
         <property name="dataSource" ref="dataSource" />
         <property name="typeAliasesPackage" value="top.bestguo.entity" />
         <property name="mapperLocations" value="classpath:mapper/*Mapper.xml" />
+        <!-- 添加插件 -->
+        <property name="plugins" ref="mybatisPlusInterceptor" />
     </bean>
 
     <!-- 配置 Mybatis mapper 扫描器 -->
