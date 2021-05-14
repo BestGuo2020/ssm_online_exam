@@ -62,7 +62,7 @@
             height: 300px;
             position: absolute;
             left: 50%;
-            top: 40%;
+            top: 28%;
             margin-left: -180px;
             margin-top: -100px;
         }
@@ -166,6 +166,9 @@
                     <button class="layui-btn layui-btn layui-btn-normal layui-btn-fluid" lay-submit=""
                             lay-filter="register">注 册
                     </button>
+                </div>
+                <div class="layui-form-item">
+                    <a class="layui-btn layui-btn layui-btn-normal layui-btn-fluid" href="${pageContext.request.contextPath}/login">回到登录界面</a>
                 </div>
             </form>
         </div>
