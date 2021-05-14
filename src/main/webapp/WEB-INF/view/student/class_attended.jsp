@@ -1,5 +1,12 @@
 <%--
   Created by IntelliJ IDEA.
+  User: Administrator
+  Date: 2021/5/14
+  Time: 15:21
+  To change this template use File | Settings | File Templates.
+--%>
+<%--
+  Created by IntelliJ IDEA.
   User: He Guo
   Date: 2021/5/7
   Time: 19:05
@@ -22,7 +29,7 @@
     <div class="layuimini-main">
 
         <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-            <legend>管理您的班级</legend>
+            <legend>查看你参与的班级</legend>
         </fieldset>
 
         <script type="text/html" id="toolbarDemo">
@@ -174,3 +181,4 @@
 </script>
 </body>
 </html>
+

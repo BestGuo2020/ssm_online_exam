@@ -56,5 +56,11 @@ public class ClassesController {
     public MultipleDataResult<Classes> loadAllClasses(@PathVariable Integer teacherId) {
         return classesService.findAllClass(teacherId);
     }
+    /**
+     * 查询当前学生拥有的班级
+     *
+     * @param teacherId
+     * @return
+     */
 
 }
