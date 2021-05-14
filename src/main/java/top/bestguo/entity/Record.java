@@ -15,7 +15,7 @@ public class Record implements Serializable {
     /**
      * 自增id
      */
-    @TableId
+    @TableId(type = IdType.AUTO)
     private Integer id;
 
     /**
@@ -31,12 +31,17 @@ public class Record implements Serializable {
     /**
      * 选择题答案记录
      */
-    private String selectans;
+    private String answer;
 
     /**
-     * 填空题答题记录
+     * 错误的题号
      */
-    private String fillans;
+    private String wrong;
+
+    /**
+     * 正确的题号
+     */
+    private String correct;
 
     /**
      * 分数
@@ -91,29 +96,43 @@ public class Record implements Serializable {
     /**
      * 选择题答案记录
      */
-    public String getSelectans() {
-        return selectans;
+    public String getAnswer() {
+        return answer;
     }
 
     /**
      * 选择题答案记录
      */
-    public void setSelectans(String selectans) {
-        this.selectans = selectans;
+    public void setAnswer(String answer) {
+        this.answer = answer;
     }
 
     /**
-     * 填空题答题记录
+     * 错误的题号
      */
-    public String getFillans() {
-        return fillans;
+    public String getWrong() {
+        return wrong;
     }
 
     /**
-     * 填空题答题记录
+     * 错误的题号
      */
-    public void setFillans(String fillans) {
-        this.fillans = fillans;
+    public void setWrong(String wrong) {
+        this.wrong = wrong;
+    }
+
+    /**
+     * 正确的题号
+     */
+    public String getCorrect() {
+        return correct;
+    }
+
+    /**
+     * 正确的题号
+     */
+    public void setCorrect(String correct) {
+        this.correct = correct;
     }
 
     /**
@@ -145,8 +164,9 @@ public class Record implements Serializable {
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
             && (this.getPaperid() == null ? other.getPaperid() == null : this.getPaperid().equals(other.getPaperid()))
             && (this.getStuid() == null ? other.getStuid() == null : this.getStuid().equals(other.getStuid()))
-            && (this.getSelectans() == null ? other.getSelectans() == null : this.getSelectans().equals(other.getSelectans()))
-            && (this.getFillans() == null ? other.getFillans() == null : this.getFillans().equals(other.getFillans()))
+            && (this.getAnswer() == null ? other.getAnswer() == null : this.getAnswer().equals(other.getAnswer()))
+            && (this.getWrong() == null ? other.getWrong() == null : this.getWrong().equals(other.getWrong()))
+            && (this.getCorrect() == null ? other.getCorrect() == null : this.getCorrect().equals(other.getCorrect()))
             && (this.getScore() == null ? other.getScore() == null : this.getScore().equals(other.getScore()));
     }
 
@@ -157,8 +177,9 @@ public class Record implements Serializable {
         result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
         result = prime * result + ((getPaperid() == null) ? 0 : getPaperid().hashCode());
         result = prime * result + ((getStuid() == null) ? 0 : getStuid().hashCode());
-        result = prime * result + ((getSelectans() == null) ? 0 : getSelectans().hashCode());
-        result = prime * result + ((getFillans() == null) ? 0 : getFillans().hashCode());
+        result = prime * result + ((getAnswer() == null) ? 0 : getAnswer().hashCode());
+        result = prime * result + ((getWrong() == null) ? 0 : getWrong().hashCode());
+        result = prime * result + ((getCorrect() == null) ? 0 : getCorrect().hashCode());
         result = prime * result + ((getScore() == null) ? 0 : getScore().hashCode());
         return result;
     }
@@ -172,8 +193,9 @@ public class Record implements Serializable {
         sb.append(", id=").append(id);
         sb.append(", paperid=").append(paperid);
         sb.append(", stuid=").append(stuid);
-        sb.append(", selectans=").append(selectans);
-        sb.append(", fillans=").append(fillans);
+        sb.append(", answer=").append(answer);
+        sb.append(", wrong=").append(wrong);
+        sb.append(", correct=").append(correct);
         sb.append(", score=").append(score);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
