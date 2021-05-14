@@ -20,7 +20,7 @@ private RegisterService registerService;
     }
     @RequestMapping(value = "/registerdo",method = RequestMethod.POST)
     @ResponseBody
-    public String registerdo(String email,Integer number,String username,String password,Byte gender,String type) {
+    public String registerdo(String email,Integer number,String username,String password,Integer gender,String type) {
 
         if(type.equals("1")){
             Student student=new Student();
@@ -41,7 +41,7 @@ private RegisterService registerService;
         if(type.equals("2")){
             Teacher teacher = new Teacher();
             teacher.setEmail(email);
-            teacher.setTeacherId(number);
+            teacher.setTeacherid(number);
             teacher.setUsername(username);
             teacher.setPassword(password);
             teacher.setGender(gender);
