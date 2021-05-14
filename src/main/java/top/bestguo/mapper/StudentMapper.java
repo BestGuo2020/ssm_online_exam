@@ -10,6 +10,10 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 @Repository
 public interface StudentMapper extends BaseMapper<Student> {
+  /*
+  * 学生注册
+  * */
+  int addStudent(Student student);
   Student findStudent(@Param("email")String email,@Param("password")String password);
 
 }

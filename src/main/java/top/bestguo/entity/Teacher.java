@@ -1,5 +1,8 @@
 package top.bestguo.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+
 import java.io.Serializable;
 
 /**
@@ -10,12 +13,18 @@ public class Teacher implements Serializable {
     /**
      * 用户自增id
      */
+    @TableId(value="id",type= IdType.AUTO)
     private Integer id;
 
     /**
      * 电子邮箱
      */
     private String email;
+
+    /**
+     * 电子邮箱
+     */
+    private Integer teacherId;
 
     /**
      * 用户名
@@ -65,6 +74,20 @@ public class Teacher implements Serializable {
      */
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    /**
+     * 教师工号
+     */
+    public Integer getTeacherId() {
+        return teacherId;
+    }
+
+    /**
+     * 教师工号
+     */
+    public void setTeacherId(Integer teacherId) {
+        this.teacherId = teacherId;
     }
 
     /**
@@ -124,6 +147,19 @@ public class Teacher implements Serializable {
     }
 
     @Override
+    public String toString() {
+        return "Teacher{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", teacherId='" + teacherId + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", gender=" + gender +
+                ", role=" + role +
+                '}';
+    }
+
+    @Override
     public boolean equals(Object that) {
         if (this == that) {
             return true;
@@ -156,20 +192,4 @@ public class Teacher implements Serializable {
         return result;
     }
 
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getClass().getSimpleName());
-        sb.append(" [");
-        sb.append("Hash = ").append(hashCode());
-        sb.append(", id=").append(id);
-        sb.append(", email=").append(email);
-        sb.append(", username=").append(username);
-        sb.append(", password=").append(password);
-        sb.append(", gender=").append(gender);
-        sb.append(", role=").append(role);
-        sb.append(", serialVersionUID=").append(serialVersionUID);
-        sb.append("]");
-        return sb.toString();
-    }
 }

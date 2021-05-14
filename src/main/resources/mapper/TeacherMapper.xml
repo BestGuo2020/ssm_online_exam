@@ -7,6 +7,7 @@
     <resultMap id="BaseResultMap" type="top.bestguo.entity.Teacher">
             <id property="id" column="id" jdbcType="INTEGER"/>
             <result property="email" column="email" jdbcType="VARCHAR"/>
+            <result property="teacherId" column="teacherId" jdbcType="VARCHAR"/>
             <result property="username" column="username" jdbcType="VARCHAR"/>
             <result property="password" column="password" jdbcType="VARCHAR"/>
             <result property="gender" column="gender" jdbcType="TINYINT"/>
@@ -31,5 +32,10 @@
         email=#{email} and password=#{password}
 
     </select>
+
+    <!-- 插入老师注册信息-->
+    <insert id="addTeacher" parameterType="teacher">
+        insert into teacher(email,teacherId,username,password,gender) values (#{email},#{teacherId},#{username},#{password},#{gender})
+    </insert>
 
 </mapper>

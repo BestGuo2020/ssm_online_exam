@@ -21,7 +21,9 @@
     <select id="findStudent" parameterType="String" resultType="student">
         select <include refid="Base_Column_List"/> from student where
         email=#{email} and password=#{password}
-
     </select>
-
+<!-- 插入学生注册信息-->
+    <insert id="addStudent" parameterType="student">
+        insert into student(email,stuId,username,password,gender) values (#{email},#{stuid},#{username},#{password},#{gender})
+    </insert>
 </mapper>

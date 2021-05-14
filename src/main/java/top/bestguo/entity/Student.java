@@ -1,5 +1,8 @@
 package top.bestguo.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+
 import java.io.Serializable;
 
 /**
@@ -10,6 +13,7 @@ public class Student implements Serializable {
     /**
      * 自增id
      */
+    @TableId(value="id",type= IdType.AUTO)
     private Integer id;
 
     /**

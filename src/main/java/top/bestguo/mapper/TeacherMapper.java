@@ -14,6 +14,7 @@ public interface TeacherMapper extends BaseMapper<Teacher> {
 
     Teacher findOneByEmail(@Param("email") String email);
     Teacher findTeacher(@Param("email")String email, @Param("password")String password);
+    int addTeacher(Teacher teacher);
 }
 
 
