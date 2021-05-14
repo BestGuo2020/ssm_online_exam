@@ -2,10 +2,7 @@ package top.bestguo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import top.bestguo.entity.Classes;
 import top.bestguo.render.BaseResult;
 import top.bestguo.render.MultipleDataResult;
@@ -48,14 +45,23 @@ public class ClassesController {
     /**
      * 查询当前教师拥有的班级
      *
-     * @param teacherId
+     * @param teacherId 教师id
+     * @param page 当前页数
+     * @param limit 当前页面
      * @return
      */
     @RequestMapping(value = "/loadAllClasses/{teacherId}")
     @ResponseBody
-    public MultipleDataResult<Classes> loadAllClasses(@PathVariable Integer teacherId) {
-        return classesService.findAllClass(teacherId);
+    public MultipleDataResult<Classes> loadAllClasses(@PathVariable Integer teacherId,
+                                                      @RequestParam(required = false) Integer page,
+                                                      @RequestParam(required = false) Integer limit) {
+        // 判断分页传来的参数是否为空
+        if(page == null || limit == null)
+            return classesService.findAllClass(teacherId);
+        else
+            return classesService.findAllClass(teacherId, page, limit);
     }
+
     /**
      * 查询当前学生拥有的班级
      *
