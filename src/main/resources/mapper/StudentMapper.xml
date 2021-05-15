@@ -26,4 +26,8 @@
     <insert id="addStudent" parameterType="student">
         insert into student(email,stuId,username,password,gender) values (#{email},#{stuid},#{username},#{password},#{gender})
     </insert>
+    <!-- 通过班级id查询学生信息 -->
+    <select id="selectStudentByClassId" parameterType="integer" resultType="student">
+        select * from student where id in (select stuId from student_class where classId = #{classId})
+    </select>
 </mapper>

@@ -12,6 +12,7 @@ import top.bestguo.service.ClassesService;
 import top.bestguo.service.TeacherService;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 /**
  * 教师端页面
@@ -156,7 +157,12 @@ public class TeacherController {
      * @return
      */
     @RequestMapping("/studentManage")
-    public String studentManage() {
+    public String studentManage(HttpSession session, Model model) {
+        Teacher teacher = (Teacher) session.getAttribute("teacher");
+        // 得到id
+        Integer id = teacher.getId();
+        List<Classes> data = classesService.findAllClass(teacher.getId()).getData();
+        model.addAttribute("data", data);
         return "teacher/student_manage";
     }
 

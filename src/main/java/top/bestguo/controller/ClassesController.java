@@ -4,10 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import top.bestguo.entity.Classes;
+import top.bestguo.entity.Student;
 import top.bestguo.render.BaseResult;
 import top.bestguo.render.MultipleDataResult;
 import top.bestguo.render.SingleDataResult;
 import top.bestguo.service.ClassesService;
+import top.bestguo.service.StudentService;
 
 /**
  * 班级管理控制层
@@ -18,6 +20,8 @@ public class ClassesController {
 
     @Autowired
     private ClassesService classesService;
+    @Autowired
+    private StudentService studentService;
 
     /**
      * 班级信息的增删改请求处理
@@ -60,6 +64,24 @@ public class ClassesController {
             return classesService.findAllClass(teacherId);
         else
             return classesService.findAllClass(teacherId, page, limit);
+    }
+
+    /**
+     * 通过班级id查询当前班级的学生信息
+     *
+     * @param classId 班级号
+     * @param page 当前页
+     * @param limit 当前页展示的数据条数
+     * @return 学生信息
+     */
+    @RequestMapping(value = "/loadStudentByClass/{classId}")
+    @ResponseBody
+    public MultipleDataResult<Student> loadStudentByClass(@PathVariable Integer classId,
+                                                          @RequestParam Integer page,
+                                                          @RequestParam Integer limit) {
+
+        return studentService.selectStudentByClassId(classId, page, limit);
+
     }
 
     /**
