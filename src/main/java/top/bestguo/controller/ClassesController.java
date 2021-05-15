@@ -24,7 +24,7 @@ public class ClassesController {
     private StudentService studentService;
 
     /**
-     * 班级信息的增删改请求处理
+     * 班级信息的基本增删改请求处理
      *
      * @param select 增删改功能选择：1-添加、2-修改、3-删除
      * @param classes 班级实体类
@@ -32,7 +32,7 @@ public class ClassesController {
      */
     @RequestMapping(value = "/classManager_do/{select}", method = RequestMethod.POST)
     @ResponseBody
-    public BaseResult classManager_do(@PathVariable("select") Integer select, Classes classes) {
+    public BaseResult classManager_do(@PathVariable Integer select, Classes classes) {
         if(select == 1) {
             return classesService.createClass(classes);
         } else if(select == 2) {
@@ -44,6 +44,19 @@ public class ClassesController {
         result.setMessage("没有这个功能");
         result.setCode(1);
         return result;
+    }
+
+    /**
+     * 班级信息删除多个
+     *
+     * @param teacherId 教师id
+     * @param classesId 班级实体类
+     * @return 返回增删改的状态
+     */
+    @RequestMapping(value = "/classManager_delMany", method = RequestMethod.POST)
+    @ResponseBody
+    public BaseResult classManager_do(Integer teacherId, Integer[] classesId) {
+        return classesService.deleteClass(teacherId, classesId);
     }
 
     /**
@@ -82,6 +95,32 @@ public class ClassesController {
 
         return studentService.selectStudentByClassId(classId, page, limit);
 
+    }
+
+    /**
+     * 从班级踢出学生
+     *
+     * @param classId 班级id
+     * @param stuId 学生id
+     * @return 返回状态
+     */
+    @RequestMapping(value = "/kickOut")
+    @ResponseBody
+    public BaseResult kickOutStudent(@RequestParam Integer classId, @RequestParam Integer stuId){
+        return classesService.kickOutStudent(classId, stuId);
+    }
+
+    /**
+     * 从班级踢出学生
+     *
+     * @param classId 班级id
+     * @param stuIds 多个学生id
+     * @return 返回状态
+     */
+    @RequestMapping(value = "/kickOutMany")
+    @ResponseBody
+    public BaseResult kickOutStudent(@RequestParam Integer classId, @RequestParam Integer[] stuIds){
+        return classesService.kickOutStudent(classId, stuIds);
     }
 
     /**

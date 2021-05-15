@@ -39,6 +39,15 @@ public interface ClassesService {
     BaseResult deleteClass(Integer teacherId, Integer classesId);
 
     /**
+     * 删除多个班级
+     *
+     * @param teacherId 教师id
+     * @param classesId 班级id
+     * @return 返回状态
+     */
+    BaseResult deleteClass(Integer teacherId, Integer[] classesId);
+
+    /**
      * 查询一条班级数据
      *
      * @param classes 班级
@@ -63,5 +72,23 @@ public interface ClassesService {
      * @return 当前页的班级信息
      */
     MultipleDataResult<Classes> findAllClass(Integer teacherId, Integer p, Integer limit);
+
+    /**
+     * 从班级踢出学生
+     *
+     * @param classId 班级id
+     * @param stuId 学生id
+     * @return 返回状态
+     */
+    BaseResult kickOutStudent(Integer classId, Integer stuId);
+
+    /**
+     * 从班级踢出多个学生
+     *
+     * @param classId 班级id
+     * @param stuIds 学生id
+     * @return 返回状态
+     */
+    BaseResult kickOutStudent(Integer classId, Integer[] stuIds);
 
 }

@@ -56,14 +56,14 @@
 
         <script type="text/html" id="toolbarDemo">
             <div class="layui-btn-container">
-                <button class="layui-btn layui-btn-sm layui-btn-danger data-delete-btn" lay-event="delete"> 踢出 </button>
+                <button class="layui-btn layui-btn-sm layui-btn-danger data-delete-btn" lay-event="kickOut"> 踢出 </button>
             </div>
         </script>
 
         <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
 
         <script type="text/html" id="currentTableBar">
-            <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">踢出</a>
+            <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="kickOut">踢出</a>
         </script>
 
     </div>
@@ -73,14 +73,15 @@
     layui.use(['form', 'table'], function () {
         var $ = layui.jquery,
             form = layui.form,
-            table = layui.table;
+            table = layui.table,
+            classId = [0];
 
         table.render({
             elem: '#currentTableId',
             url: '${pageContext.request.contextPath}/static/backend/api/empty.json',
             toolbar: '#toolbarDemo',
             text: {
-                none: '暂无数据，请在选择框中选择你的班级查找班级中所在的学生' // 默认：无数据。注：该属性为 layui 2.2.5 开始新增
+                none: '请在选择框中选择你的班级查找班级中所在的学生' // 默认：无数据。注：该属性为 layui 2.2.5 开始新增
             },
             parseData: function(res){ //res 即为原始返回的数据
                 return {
@@ -97,9 +98,9 @@
             }],
             cols: [[
                 {type: "checkbox", width: 50},
-                {field: 'id', width: 120, title: '序号', sort: true, type:'numbers'},
+                {field: 'id', width: 120, title: '序号', type:'numbers'},
                 {field: 'username', width: 110, title: '姓名'},
-                {field: 'gender', width: 110, title: '性别', sort: true, templet: function(d){
+                {field: 'gender', width: 110, title: '性别', templet: function(d){
                         if(d.gender === 1){
                             return '男'
                         }else{
@@ -122,6 +123,8 @@
 
             console.log(result);
 
+            classId[0] = data.field.classId;
+
             //执行搜索重载
             table.reload('currentTableId', {
                 url: '${pageContext.request.contextPath}/classes/loadStudentByClass/' + data.field.classId,
@@ -137,23 +140,51 @@
          * toolbar监听事件
          */
         table.on('toolbar(currentTableFilter)', function (obj) {
-            if (obj.event === 'add') {  // 监听添加操作
-                var index = layer.open({
-                    title: '创建班级',
-                    type: 2,
-                    shade: 0.2,
-                    maxmin:true,
-                    shadeClose: true,
-                    area: ['100%', '100%'],
-                    content: '/ssm_online_exam/teacher/classAdd?modify=false',
-                });
-                $(window).on("resize", function () {
-                    layer.full(index);
-                });
-            } else if (obj.event === 'delete') {  // 监听删除操作
+            if (obj.event === 'kickOut') {  // 监听删除操作
                 var checkStatus = table.checkStatus('currentTableId')
                     , data = checkStatus.data;
-                layer.alert(JSON.stringify(data));
+                // layer.alert(JSON.stringify(data));
+                // 将数据保存至数组
+                var tmp_data = [];
+                for(var i = 0; i < data.length; i++) {
+                    tmp_data.push(data[i].id);
+                }
+                console.log(data);
+                layer.confirm('真的要将选中的学生踢出班级吗？', function (index) {
+                    $.ajax({
+                        type: "POST",
+                        url: "${pageContext.request.contextPath}/classes/kickOutMany",
+                        data: {
+                            classId: classId[0],
+                            stuIds: tmp_data
+                        },
+                        traditional: true,
+                        success: function(data){
+                            console.log(data);
+                            // layer.msg(data.message);
+                            // 判断返回的数据是json还是字符串
+                            if(typeof data === 'string') {
+                                data = JSON.parse(data);
+                            }
+                            if(data.code === 0) {
+                                layer.msg(data.message, {icon: 1}, function(){
+                                    // 重载表格数据
+                                    table.reload("currentTableId", {
+                                        page: {
+                                            curr: 1 //重新从第 1 页开始
+                                        }
+                                    });
+                                });
+                            } else if (data.code === 1) {
+                                layer.msg(data.message, {icon: 2});
+                            } else if (data.code === -1) {
+                                layer.msg(data.message, {icon: 7}, function(){
+                                    top.location.href = '${pageContext.request.contextPath}/login';
+                                });
+                            }
+                        }
+                    });
+                });
             }
         });
 
@@ -179,10 +210,41 @@
                     layer.full(index);
                 });
                 return false;
-            } else if (obj.event === 'delete') {
-                layer.confirm('真的删除行么', function (index) {
-                    obj.del();
-                    layer.close(index);
+            } else if (obj.event === 'kickOut') {
+                console.log(data);
+                layer.confirm('真的要将选中的学生踢出班级吗？', function (index) {
+                    $.ajax({
+                        type: "POST",
+                        url: "${pageContext.request.contextPath}/classes/kickOut",
+                        data: {
+                            classId: classId[0],
+                            stuId: data.id
+                        },
+                        success: function(data){
+                            console.log(data);
+                            // layer.msg(data.message);
+                            // 判断返回的数据是json还是字符串
+                            if(typeof data === 'string') {
+                                data = JSON.parse(data);
+                            }
+                            if(data.code === 0) {
+                                layer.msg(data.message, {icon: 1}, function(){
+                                    // 重载表格数据
+                                    table.reload("currentTableId", {
+                                        page: {
+                                            curr: 1 //重新从第 1 页开始
+                                        }
+                                    });
+                                });
+                            } else if (data.code === 1) {
+                                layer.msg(data.message, {icon: 2});
+                            } else if (data.code === -1) {
+                                layer.msg(data.message, {icon: 7}, function(){
+                                    top.location.href = '${pageContext.request.contextPath}/login';
+                                });
+                            }
+                        }
+                    });
                 });
             }
         });

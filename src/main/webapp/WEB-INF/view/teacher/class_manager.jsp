@@ -68,8 +68,9 @@
             }],
             cols: [[
                 {type: "checkbox", width: 50},
+                {field: 'id', width: 80, title: '序号', type:'numbers'},
                 {field: 'classcode', width: 95, title: '班级码'},
-                {field: 'classname', width: 200, title: '班级名', sort: true},
+                {field: 'classname', width: 200, title: '班级名'},
                 {field: 'classdesc', width: 400, title: '班级描述'},
                 {title: '操作', minWidth: 150, toolbar: '#currentTableBar', align: "center"}
             ]],
@@ -119,7 +120,47 @@
             } else if (obj.event === 'delete') {  // 监听删除操作
                 var checkStatus = table.checkStatus('currentTableId')
                     , data = checkStatus.data;
-                layer.alert(JSON.stringify(data));
+                // 将数据保存至数组
+                var tmp_data = [];
+                for(var i = 0; i < data.length; i++) {
+                    tmp_data.push(data[i].id);
+                }
+                console.log(data);
+                layer.confirm('该班级的相关的所有数据将会消失，真的要删除选中的班级吗？', function (index) {
+                    $.ajax({
+                        type: "POST",
+                        url: "${pageContext.request.contextPath}/classes/classManager_delMany",
+                        traditional:true,
+                        data: {
+                            classesId: tmp_data,
+                            teacherId: ${sessionScope.teacher.id}
+                        },
+                        success: function(data){
+                            console.log(data);
+                            // layer.msg(data.message);
+                            // 判断返回的数据是json还是字符串
+                            if(typeof data === 'string') {
+                                data = JSON.parse(data);
+                            }
+                            if(data.code === 0) {
+                                layer.msg(data.message, {icon: 1}, function() {
+                                    // 重载表格数据
+                                    table.reload("currentTableId", {
+                                        page: {
+                                            curr: 1 //重新从第 1 页开始
+                                        }
+                                    });
+                                });
+                            } else if (data.code === 1) {
+                                layer.msg(data.message, {icon: 2});
+                            } else if (data.code === -1) {
+                                layer.msg(data.message, {icon: 7}, function(){
+                                    top.location.href = '${pageContext.request.contextPath}/login';
+                                });
+                            }
+                        }
+                    });
+                });
             }
         });
 
