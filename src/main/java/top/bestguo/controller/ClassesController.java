@@ -11,6 +11,8 @@ import top.bestguo.render.SingleDataResult;
 import top.bestguo.service.ClassesService;
 import top.bestguo.service.StudentService;
 
+import java.util.Map;
+
 /**
  * 班级管理控制层
  */
@@ -126,8 +128,40 @@ public class ClassesController {
     /**
      * 查询当前学生拥有的班级
      *
-     * @param teacherId
+     * @param studentId
      * @return
      */
+    @RequestMapping(value = "/loadJoinedClasses/{studentId}")
+    @ResponseBody
+    public MultipleDataResult<?> loadJoinedClasses(@PathVariable Integer studentId) {
+
+        return classesService.findJoinClass(studentId);
+    }
+    /**
+     * 学生退出班级请求处理
+     * @param studentId 学生ID
+     * @param classes 班级实体类
+     * @return 返回删除的状态
+     */
+    @RequestMapping(value = "/deleteClass_do/{studentId}", method = RequestMethod.POST)
+    @ResponseBody
+    public BaseResult deleteJoinClass( @PathVariable Integer studentId ,Classes classes) {
+
+            return classesService.deleteJoinClass(studentId,classes.getId());
+
+
+    }
+    /**
+     * 学生退出多个班级
+     *
+     * @param classIds 多个班级id
+     * @param stuId 学生id
+     * @return 返回状态
+     */
+    @RequestMapping(value = "/deleteClassMany/{stuId}")
+    @ResponseBody
+    public BaseResult deleteJoinClass(@PathVariable Integer stuId ,Integer[] classIds){
+        return classesService.deleteJoinClass(stuId,classIds);
+    }
 
 }

@@ -11,6 +11,13 @@
             <result property="username" column="username" jdbcType="VARCHAR"/>
             <result property="password" column="password" jdbcType="VARCHAR"/>
             <result property="gender" column="gender" jdbcType="TINYINT"/>
+<!--        <collection property="ClassesList" column="id" ofType="classes"-->
+
+<!--        select=""-->
+<!--        >-->
+
+
+<!--        </collection>-->
     </resultMap>
 
     <sql id="Base_Column_List">
