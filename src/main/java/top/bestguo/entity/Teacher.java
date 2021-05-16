@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+
 import java.io.Serializable;
 
 /**
@@ -15,6 +16,7 @@ public class Teacher implements Serializable {
     /**
      * 用户自增id
      */
+
     @TableId(type = IdType.AUTO)
     private Integer id;
 
@@ -179,4 +181,5 @@ public class Teacher implements Serializable {
         sb.append("]");
         return sb.toString();
     }
+
 }

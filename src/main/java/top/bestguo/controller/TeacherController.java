@@ -12,6 +12,7 @@ import top.bestguo.service.ClassesService;
 import top.bestguo.service.TeacherService;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 /**
  * 教师端页面
@@ -156,7 +157,12 @@ public class TeacherController {
      * @return
      */
     @RequestMapping("/studentManage")
-    public String studentManage() {
+    public String studentManage(HttpSession session, Model model) {
+        Teacher teacher = (Teacher) session.getAttribute("teacher");
+        // 得到id
+        Integer id = teacher.getId();
+        List<Classes> data = classesService.findAllClass(teacher.getId()).getData();
+        model.addAttribute("data", data);
         return "teacher/student_manage";
     }
 
@@ -192,7 +198,10 @@ public class TeacherController {
      * @return
      */
     @RequestMapping("/tikuManage")
-    public String tikuManage() {
+    public String tikuManage(HttpSession session, Model model) {
+        Teacher teacher = (Teacher) session.getAttribute("teacher");
+        List<Classes> data = classesService.findAllClass(teacher.getId()).getData();
+        model.addAttribute("data", data);
         return "teacher/tiku_manage";
     }
 
@@ -201,7 +210,10 @@ public class TeacherController {
      * @return
      */
     @RequestMapping("/tikuAdd")
-    public String tikuAdd(Model model, @RequestParam String modify) {
+    public String tikuAdd(HttpSession session, Model model, @RequestParam String modify) {
+        Teacher teacher = (Teacher) session.getAttribute("teacher");
+        List<Classes> data = classesService.findAllClass(teacher.getId()).getData();
+        model.addAttribute("data", data);
         isModify(model, modify);
         return "teacher/tiku_add";
     }

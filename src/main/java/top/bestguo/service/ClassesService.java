@@ -39,6 +39,15 @@ public interface ClassesService {
     BaseResult deleteClass(Integer teacherId, Integer classesId);
 
     /**
+     * 删除多个班级
+     *
+     * @param teacherId 教师id
+     * @param classesId 班级id
+     * @return 返回状态
+     */
+    BaseResult deleteClass(Integer teacherId, Integer[] classesId);
+
+    /**
      * 查询一条班级数据
      *
      * @param classes 班级
@@ -54,19 +63,56 @@ public interface ClassesService {
      */
     MultipleDataResult<Classes> findAllClass(Integer teacherId);
     /**
-     * 查询当前老师所创建的班级
+     * 查询当前老师所管理的班级信息
+     *
+     * @param teacherId 教师id
+     * @param p 当前页
+     * @param limit 当前页展示的数据条数
+     * @return 当前页的班级信息
+     */
+    MultipleDataResult<Classes> findAllClass(Integer teacherId, Integer p, Integer limit);
+
+    /**
+     * 从班级踢出学生
+     *
+     * @param classId 班级id
+     * @param stuId 学生id
+     * @return 返回状态
+     */
+    BaseResult kickOutStudent(Integer classId, Integer stuId);
+
+    /**
+     * 从班级踢出多个学生
+     *
+     * @param classId 班级id
+     * @param stuIds 学生id
+     * @return 返回状态
+     */
+    BaseResult kickOutStudent(Integer classId, Integer[] stuIds);
+
+    /**
+     * 学生退出班级
+     *
+     * @param stuId 学生id
+     * @param classId 班级id
+     * @return 返回退出状态
+     */
+    BaseResult deleteJoinClass(Integer stuId, Integer classId);
+    /**
+     * 学生退出多个班级
+     *
+     * @param stuId 学生id
+     * @param classIds 班级id
+     * @return 返回退出状态
+     */
+    BaseResult deleteJoinClass(Integer stuId, Integer[] classIds);
+    /**
+     * 查询学生所加入的班级
      *
      * @param studentId 学生id
      * @return 返回状态和班级数据
      */
 
+
     MultipleDataResult<?> findJoinClass(Integer studentId);
-    /**
-     * 学生退出班级
-     *
-     * @param studentId 教师id
-     * @param classesId 班级id
-     * @return 返回状态
-     */
-    BaseResult deleteJoinClass(Integer studentId, Integer classesId);
 }

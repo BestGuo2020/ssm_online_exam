@@ -1,18 +1,25 @@
 package top.bestguo.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import top.bestguo.entity.Classes;
+import top.bestguo.entity.StudentClass;
 import top.bestguo.mapper.ClassesMapper;
+import top.bestguo.mapper.StudentClassMapper;
 import top.bestguo.render.BaseResult;
 import top.bestguo.render.MultipleDataResult;
 import top.bestguo.render.SingleDataResult;
 import top.bestguo.service.ClassesService;
 import top.bestguo.util.RandomUtils;
 
+
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import java.util.Arrays;
+
 import java.util.List;
 import java.util.Map;
 
@@ -27,6 +34,8 @@ public class ClassesServiceImpl implements ClassesService {
 
     @Autowired
     private ClassesMapper classesMapper;
+    @Autowired
+    private StudentClassMapper studentClassMapper;
 
     /**
      * 创建班级
@@ -107,6 +116,32 @@ public class ClassesServiceImpl implements ClassesService {
     }
 
     /**
+     * 删除多个班级
+     *
+     * @param teacherId 教师id
+     * @param classesId 多个班级id
+     * @return 返回状态
+     */
+    @Override
+    public BaseResult deleteClass(Integer teacherId, Integer[] classesId) {
+        BaseResult result = new BaseResult();
+        // 设置查询条件
+        QueryWrapper<Classes> wrapper = new QueryWrapper<>();
+        wrapper.eq("belongteacher", teacherId);
+        wrapper.in("id", Arrays.asList(classesId));
+        // 删除数据
+        int res = classesMapper.delete(wrapper);
+        if(res > 0) {
+            result.setCode(0);
+            result.setMessage("删除多个班级成功");
+        } else {
+            result.setCode(1);
+            result.setMessage("删除多个班级失败");
+        }
+        return result;
+    }
+
+    /**
      * 查询单个班级信息
      *
      * @param classes 班级
@@ -132,7 +167,7 @@ public class ClassesServiceImpl implements ClassesService {
     }
 
     /**
-     * 查询当前老师所在的班级信息
+     * 查询当前老师所管理的班级
      *
      * @param teacherId 教师id
      * @return 所有的班级信息
@@ -144,15 +179,109 @@ public class ClassesServiceImpl implements ClassesService {
         queryWrapper.eq("belongteacher", teacherId);
         // 开始查询
         List<Classes> classesList = classesMapper.selectList(queryWrapper);
+        return getClassesMultipleDataResult(classesList, null);
+    }
+
+    /**
+     * 查询当前老师所管理的班级信息
+     *
+     * @param teacherId 教师id
+     * @param p 当前页
+     * @param limit 当前页展示的数据条数
+     * @return 当前页的班级信息
+     */
+    public MultipleDataResult<Classes> findAllClass(Integer teacherId, Integer p, Integer limit) {
+        // 设置查询条件
+        QueryWrapper<Classes> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("belongteacher", teacherId);
+        // 设置分页器
+        Page<Classes> page = new Page<>(p, limit);
+        // 开始查询
+        List<Classes> classesList = classesMapper.selectPage(page, queryWrapper).getRecords();
+        return getClassesMultipleDataResult(classesList, page);
+    }
+
+    /**
+     * 从班级踢出学生
+     *
+     * @param classId 班级id
+     * @param stuId 学生id
+     * @return 返回状态
+     */
+    @Override
+    public BaseResult kickOutStudent(Integer classId, Integer stuId) {
+        BaseResult result = new BaseResult();
+        // 设置查询条件
+        QueryWrapper<StudentClass> wrapper = new QueryWrapper<>();
+        wrapper.eq("classid", classId);
+        wrapper.eq("stuid", stuId);
+        // 删除数据
+        int res = studentClassMapper.delete(wrapper);
+        if(res > 0) {
+            result.setCode(0);
+            result.setMessage("踢出学生成功");
+        } else {
+            result.setCode(1);
+            result.setMessage("踢出学生失败，该学生不在班级中");
+        }
+
+        return result;
+    }
+
+    /**
+     * 从班级踢出学生
+     *
+     * @param classId 班级id
+     * @param stuIds 多个学生id
+     * @return 返回状态
+     */
+    @Override
+    public BaseResult kickOutStudent(Integer classId, Integer[] stuIds) {
+        BaseResult result = new BaseResult();
+        // 设置查询条件
+        QueryWrapper<StudentClass> wrapper = new QueryWrapper<>();
+        wrapper.eq("classid", classId);
+        wrapper.in("stuid", Arrays.asList(stuIds));
+        // 删除数据
+        int res = studentClassMapper.delete(wrapper);
+        if(res > 0) {
+            result.setCode(0);
+            result.setMessage("踢出多个学生成功");
+        } else {
+            result.setCode(1);
+            result.setMessage("踢出多个学生失败，该学生不在班级中");
+        }
+
+        return result;
+    }
+
+    /**
+     * 单独封装的返回结果
+     *
+     * @param list 查询到的数据
+     * @param page 分页器
+     * @return 当前页的班级信息或者所有的班级信息
+     */
+    private MultipleDataResult<Classes> getClassesMultipleDataResult(List<Classes> list, Page<Classes> page) {
         // 返回数据
         MultipleDataResult<Classes> dataResult = new MultipleDataResult<>();
-        if(classesList.size() > 0) {
-            dataResult.setCode(0);
+        // 设置数据
+        dataResult.setData(list);
+        dataResult.setCode(0);
+        // 判断是否传入分页器参数
+        if(page != null) {
+            dataResult.setTotal((int) page.getTotal());
         }
-        dataResult.setData(classesList);
-        dataResult.setTotal(classesList.size());
+        else {
+            dataResult.setTotal(list.size());
+        }
         return dataResult;
     }
+
+
+    /***                    以下都是学生操作班级方法                 ***/
+
+
     /**
      * 查询学生所加入的班级
      *
@@ -175,6 +304,7 @@ public class ClassesServiceImpl implements ClassesService {
             map.put("classcode", classes.getClasscode());
             map.put("classname", classes.getClassname());
             map.put("classdesc", classes.getClassdesc());
+            map.put("id",classes.getId());
             map.put("classcount", classesMapper.findClassesCount(classes.getId()));
             // 添加到 list 里面
             data.add(map);
@@ -193,23 +323,57 @@ public class ClassesServiceImpl implements ClassesService {
     /**
      * 学生退出班级
      *
-     * @param studentId 学生id
-     * @param  classesId 课堂id
-     * @return 状态
+     * @param stuId 学生id
+     * @param  classId 班级id
+     * @return 返回状态
      */
     @Override
-    public BaseResult deleteJoinClass(Integer studentId, Integer classesId) {
+    public BaseResult deleteJoinClass(Integer stuId, Integer classId) {
         BaseResult result = new BaseResult();
-
-        int res = classesMapper.deleteJoinClass(studentId,classesId);
-        System.out.println(res );
+        // 设置查询条件
+        QueryWrapper<StudentClass> wrapper = new QueryWrapper<>();
+        wrapper.eq("classid", classId);
+        wrapper.eq("stuid", stuId);
+        // 删除数据
+        int res = studentClassMapper.delete(wrapper);
         if(res > 0) {
             result.setCode(0);
-            result.setMessage("班级退出成功");
+            result.setMessage("学生退出成功");
         } else {
             result.setCode(1);
-            result.setMessage("班级退出失败");
+            result.setMessage("学生退出失败，该学生不在班级中");
         }
+
+        return result;
+    }
+    /**
+     * 学生退出多个班级
+     *
+     * @param stuId 学生id
+     * @param  classIds 多个班级id
+     * @return 返回状态
+     */
+    @Override
+    public BaseResult deleteJoinClass(Integer stuId, Integer[] classIds) {
+        BaseResult result = new BaseResult();
+        // 设置查询条件
+        QueryWrapper<StudentClass> wrapper = new QueryWrapper<>();
+        wrapper.in("classid", Arrays.asList(classIds));
+        wrapper.eq("stuid",stuId);
+        // 删除数据
+        System.out.println(classIds);
+        System.out.println(stuId);
+
+        int res = studentClassMapper.delete(wrapper);
+        System.out.println(res);
+        if(res > 0) {
+            result.setCode(0);
+            result.setMessage("学生退出成功");
+        } else {
+            result.setCode(1);
+            result.setMessage("学生退出失败，该学生不在班级中");
+        }
+
         return result;
     }
 

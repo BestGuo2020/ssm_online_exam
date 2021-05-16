@@ -15,7 +15,7 @@ public class Question implements Serializable {
     /**
      * 自增id
      */
-    @TableId
+    @TableId(type = IdType.AUTO)
     private Integer id;
 
     /**

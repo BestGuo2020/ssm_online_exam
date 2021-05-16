@@ -29,19 +29,19 @@
     <div class="layuimini-main">
 
         <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-            <legend>查看你参与的班级</legend>
+            <legend>查看你加入的班级</legend>
         </fieldset>
 
         <script type="text/html" id="toolbarDemo">
             <div class="layui-btn-container">
-
+                <button class="layui-btn layui-btn-sm layui-btn-danger data-delete-btn" lay-event="delete"> 退出 </button>
             </div>
         </script>
 
         <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
 
         <script type="text/html" id="currentTableBar">
-            <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="delete">退出</a>
+            <a class="layui-btn layui-btn-sm layui-btn-danger data-delete-btn"  lay-event="delete">退出</a>
         </script>
     </div>
 </div>
@@ -106,6 +106,54 @@
         table.on('checkbox(currentTableFilter)', function (obj) {
             console.log(obj)
         });
+        table.on('toolbar(currentTableFilter)', function (obj) {
+            if (obj.event === 'delete') {  // 监听删除操作
+                var checkStatus = table.checkStatus('currentTableId')
+                    , data = checkStatus.data;
+                // layer.alert(JSON.stringify(data));
+                // 将数据保存至数组
+                var tmp_data = [];
+                for(var i = 0; i < data.length; i++) {
+                    tmp_data.push(data[i].id);
+                }
+                console.log(data);
+                layer.confirm('真的要退出选中的这些班级吗？', function (index) {
+                    $.ajax({
+                        type: "POST",
+                        url: "${pageContext.request.contextPath}/classes/deleteClassMany/${sessionScope.student.id}",
+                        data: {
+                            classIds: tmp_data,
+                            stuId: ${sessionScope.student.id}
+                        },
+                        traditional: true,
+                        success: function(data){
+                            console.log(data);
+                            // layer.msg(data.message);
+                            // 判断返回的数据是json还是字符串
+                            if(typeof data === 'string') {
+                                data = JSON.parse(data);
+                            }
+                            if(data.code === 0) {
+                                layer.msg(data.message, {icon: 1}, function(){
+                                    // 重载表格数据
+                                    table.reload("currentTableId", {
+                                        page: {
+                                            curr: 1 //重新从第 1 页开始
+                                        }
+                                    });
+                                });
+                            } else if (data.code === 1) {
+                                layer.msg(data.message, {icon: 2});
+                            } else if (data.code === -1) {
+                                layer.msg(data.message, {icon: 7}, function(){
+                                    top.location.href = '${pageContext.request.contextPath}/login';
+                                });
+                            }
+                        }
+                    });
+                });
+            }
+        });
 
         table.on('tool(currentTableFilter)', function (obj) {
             var data = obj.data;
@@ -115,7 +163,7 @@
                         type: "POST",
                         url: "${pageContext.request.contextPath}/classes/deleteClass_do/${sessionScope.student.id}",
                         data: {
-                            id: data.,
+                            id: data.id,
                             student: ${sessionScope.student.id}
                         },
                         success: function(data){

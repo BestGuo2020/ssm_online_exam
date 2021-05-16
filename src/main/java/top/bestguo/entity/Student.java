@@ -16,6 +16,7 @@ public class Student implements Serializable {
     /**
      * 自增id
      */
+
     @TableId(type = IdType.AUTO)
     private Integer id;
 
@@ -42,7 +43,7 @@ public class Student implements Serializable {
     /**
      * 性别：0为男，1为女
      */
-    private Byte gender;
+    private Integer gender;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
@@ -120,14 +121,14 @@ public class Student implements Serializable {
     /**
      * 性别：0为男，1为女
      */
-    public Byte getGender() {
+    public Integer getGender() {
         return gender;
     }
 
     /**
      * 性别：0为男，1为女
      */
-    public void setGender(Byte gender) {
+    public void setGender(Integer gender) {
         this.gender = gender;
     }
 
