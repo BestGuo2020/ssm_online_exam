@@ -198,7 +198,10 @@ public class TeacherController {
      * @return
      */
     @RequestMapping("/tikuManage")
-    public String tikuManage() {
+    public String tikuManage(HttpSession session, Model model) {
+        Teacher teacher = (Teacher) session.getAttribute("teacher");
+        List<Classes> data = classesService.findAllClass(teacher.getId()).getData();
+        model.addAttribute("data", data);
         return "teacher/tiku_manage";
     }
 
@@ -207,7 +210,10 @@ public class TeacherController {
      * @return
      */
     @RequestMapping("/tikuAdd")
-    public String tikuAdd(Model model, @RequestParam String modify) {
+    public String tikuAdd(HttpSession session, Model model, @RequestParam String modify) {
+        Teacher teacher = (Teacher) session.getAttribute("teacher");
+        List<Classes> data = classesService.findAllClass(teacher.getId()).getData();
+        model.addAttribute("data", data);
         isModify(model, modify);
         return "teacher/tiku_add";
     }
