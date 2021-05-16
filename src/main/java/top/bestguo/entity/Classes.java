@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 
@@ -22,6 +23,7 @@ public class Classes implements Serializable {
      * 8位的班级码
      */
     private String classcode;
+
 
     /**
      * 班级名

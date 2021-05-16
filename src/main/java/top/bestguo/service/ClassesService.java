@@ -53,5 +53,20 @@ public interface ClassesService {
      * @return 返回状态和班级数据
      */
     MultipleDataResult<Classes> findAllClass(Integer teacherId);
+    /**
+     * 查询当前老师所创建的班级
+     *
+     * @param studentId 学生id
+     * @return 返回状态和班级数据
+     */
 
+    MultipleDataResult<?> findJoinClass(Integer studentId);
+    /**
+     * 学生退出班级
+     *
+     * @param studentId 教师id
+     * @param classesId 班级id
+     * @return 返回状态
+     */
+    BaseResult deleteJoinClass(Integer studentId, Integer classesId);
 }

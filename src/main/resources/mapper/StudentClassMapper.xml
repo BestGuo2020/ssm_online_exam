@@ -13,4 +13,5 @@
     <sql id="Base_Column_List">
         id,stuId,classId
     </sql>
+
 </mapper>
