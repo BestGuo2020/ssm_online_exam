@@ -23,6 +23,7 @@
                     1. 手动录入题目到题库 <br>
                     2. 通过 excel 表格的方式导入题目到题库
                 </p>
+                <p>必须选择一个班级才能导入</p>
             </blockquote>
         </c:if>
         <fieldset class="table-search-fieldset" style="margin-top: 20px;">
@@ -35,73 +36,123 @@
                 </c:otherwise>
             </c:choose>
             <form class="layui-form layui-form-pane" action="" lay-filter="example">
+                <input type="hidden" name="id" value="${question.id}" />
+                <div class="layui-form-item layui-form-text">
+                    <label class="layui-form-label">选择导入的班级</label>
+                    <div class="layui-input-block">
+                        <select name="classId" lay-verify="required" lay-search="">
+                            <option value="">选择你的班级</option>
+                            <c:forEach var="cls" items="${data}">
+                                <c:choose>
+                                    <c:when test="${cls.id == question.belongclass}">
+                                        <option value="${cls.id}" selected>${cls.classcode} - ${cls.classname}</option>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <option value="${cls.id}">${cls.classcode} - ${cls.classname}</option>
+                                    </c:otherwise>
+                                </c:choose>
+                            </c:forEach>
+                        </select>
+                    </div>
+                </div>
 
                 <div class="layui-form-item layui-form-text">
                     <label class="layui-form-label">题目内容</label>
                     <div class="layui-input-block">
-                        <textarea placeholder="请输入问题" class="layui-textarea"></textarea>
+                        <textarea placeholder="请输入问题" lay-verify="required" name="question" class="layui-textarea">${question.questionname}</textarea>
                     </div>
                 </div>
 
                 <div class="layui-form-item">
-                    <label class="layui-form-label" title="选项A（第一空）">选项A（第一空）</label>
+                    <label class="layui-form-label" title="选项A">选项A</label>
                     <div class="layui-input-block">
-                        <input type="text" name="title" lay-verify="title" autocomplete="off" placeholder="请输入选项A（第一空）" class="layui-input">
+                        <input type="text" value="${question.option1}" name="optionA" lay-verify="required" lay-verify="title" autocomplete="off" placeholder="请输入选项A" class="layui-input">
                     </div>
                 </div>
 
                 <div class="layui-form-item">
-                    <label class="layui-form-label" title="选项B（第二空）">选项B（第二空）</label>
+                    <label class="layui-form-label" title="选项B">选项B</label>
                     <div class="layui-input-block">
-                        <input type="text" name="title" lay-verify="title" autocomplete="off" placeholder="请输入选项B（第二空）" class="layui-input">
+                        <input type="text" value="${question.option2}" name="optionB" lay-verify="required" lay-verify="title" autocomplete="off" placeholder="请输入选项B" class="layui-input">
                     </div>
                 </div>
 
                 <div class="layui-form-item">
-                    <label class="layui-form-label" title="选项C（第三空）">选项C（第三空）</label>
+                    <label class="layui-form-label" title="选项C">选项C</label>
                     <div class="layui-input-block">
-                        <input type="text" name="title" lay-verify="title" autocomplete="off" placeholder="请输入选项C（第三空）" class="layui-input">
+                        <input type="text" value="${question.option3}" name="optionC" autocomplete="off" placeholder="请输入选项C" class="layui-input">
                     </div>
                 </div>
 
                 <div class="layui-form-item">
-                    <label class="layui-form-label" title="选项D（第四空）">选项D（第四空）</label>
+                    <label class="layui-form-label" title="选项D">选项D</label>
                     <div class="layui-input-block">
-                        <input type="text" name="title" lay-verify="title" autocomplete="off" placeholder="请输入选项D（第四空）" class="layui-input">
+                        <input type="text" value="${question.option4}" name="optionD" autocomplete="off" placeholder="请输入选项D" class="layui-input">
                     </div>
                 </div>
 
                 <div class="layui-form-item">
-                    <label class="layui-form-label" title="选项E（第五空）">选项E（第五空）</label>
+                    <label class="layui-form-label" title="选项E">选项E</label>
                     <div class="layui-input-block">
-                        <input type="text" name="title" lay-verify="title" autocomplete="off" placeholder="请输入选项E（第五空）" class="layui-input">
+                        <input type="text" value="${question.option5}" name="optionE" autocomplete="off" placeholder="请输入选项E" class="layui-input">
                     </div>
                 </div>
 
                 <div class="layui-form-item">
                     <label class="layui-form-label">题型</label>
                     <div class="layui-input-block">
-                        <input type="radio" name="sex" value="1" title="选择题" checked="">
-                        <input type="radio" name="sex" value="0" title="填空题">
+                        <c:choose>
+                            <c:when test="${question.ismulti}">
+                                <input type="radio" name="type" value="0" lay-verify="required" title="单选题">
+                                <input type="radio" name="type" value="1" lay-verify="required" title="多选题" checked="">
+                            </c:when>
+                            <c:otherwise>
+                                <input type="radio" name="type" value="0" lay-verify="required" title="单选题" checked="">
+                                <input type="radio" name="type" value="1" lay-verify="required" title="多选题">
+                            </c:otherwise>
+                        </c:choose>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">难度系数</label>
+                    <div class="layui-input-block">
+                        <c:choose>
+                            <c:when test="${question.level == 2}">
+                                <input type="radio" name="level" value="1" lay-verify="required" title="简单">
+                                <input type="radio" name="level" value="2" lay-verify="required" title="中等" checked="">
+                                <input type="radio" name="level" value="3" lay-verify="required" title="困难">
+                            </c:when>
+                            <c:when test="${question.level == 2}">
+                                <input type="radio" name="level" value="1" lay-verify="required" title="简单">
+                                <input type="radio" name="level" value="2" lay-verify="required" title="中等">
+                                <input type="radio" name="level" value="3" lay-verify="required" title="困难" checked="">
+                            </c:when>
+                            <c:otherwise>
+                                <input type="radio" name="level" value="1" lay-verify="required" title="简单" checked="">
+                                <input type="radio" name="level" value="2" lay-verify="required" title="中等">
+                                <input type="radio" name="level" value="3" lay-verify="required" title="困难">
+                            </c:otherwise>
+                        </c:choose>
                     </div>
                 </div>
 
                 <div class="layui-form-item">
                     <label class="layui-form-label">答案</label>
                     <div class="layui-input-block">
-                        <input type="text" name="title" lay-verify="title" autocomplete="off" placeholder="若选择题为多选答案，中间不需要逗号隔开（例如：ABD）。若填空题有多个空，答案与答案之间用英文逗号分开（例如：C,Java,Python）" class="layui-input">
+                        <input type="text" name="answer" value="${question.answer}" lay-verify="title" lay-verify="required" autocomplete="off" placeholder="若选择题为多选答案，中间不需要逗号隔开（例如：ABD）" class="layui-input">
                     </div>
                 </div>
 
                 <div class="layui-form-item layui-form-text">
                     <label class="layui-form-label">解析</label>
                     <div class="layui-input-block">
-                        <textarea placeholder="请输入内容" class="layui-textarea"></textarea>
+                        <textarea placeholder="请输入内容" lay-verify="required" name="analyse" class="layui-textarea">${question.reason}</textarea>
                     </div>
                 </div>
 
                 <div class="layui-form-item">
-                    <button class="layui-btn" lay-submit="" lay-filter="demo1">提交题目</button>
+                    <button class="layui-btn" lay-submit="" lay-filter="submit-question">提交题目</button>
                 </div>
             </form>
         </fieldset>
@@ -119,8 +170,9 @@
 <jsp:include page="../commons/scripts.jsp" />
 <script>
 
-    layui.use('upload', function(){
-        var upload = layui.upload;
+    layui.use(['form', 'upload'], function(){
+        var upload = layui.upload,
+        form = layui.form;
         <c:if test="${modify eq 'false'}">
         // 文档上传
         var uploadInst = upload.render({
@@ -143,6 +195,52 @@
             }
         });
         </c:if>
+
+        // 手动导入上传
+        form.on("submit(submit-question)", function (data) {
+            console.log(data.field);
+            layer.confirm(${modify.equals('true') ? '"确定要修改吗？"' : '"确定要添加吗？"'}, {offset: '200px'}, function (index) {
+                $.ajax({
+                    type: "POST",
+                    url: "${pageContext.request.contextPath}/tiku/manageQuestion/" + ${modify.equals('true') ? 2 : 1},
+                    data: {
+                        belongclass: data.field.classId,
+                        questionname: data.field.question,
+                        option1: data.field.optionA,
+                        option2: data.field.optionB,
+                        option3: data.field.optionC,
+                        option4: data.field.optionD,
+                        option5: data.field.optionE,
+                        ismulti: data.field.type,
+                        answer: data.field.answer,
+                        reason: data.field.analyse,
+                        level: data.field.level
+                    },
+                    success: function(data){
+                        console.log(data);
+                        layer.close(index);
+                        // layer.msg(data.message);
+                        // 判断返回的数据是json还是字符串
+                        if(typeof data === 'string') {
+                            data = JSON.parse(data);
+                        }
+                        if(data.code === 0) {
+                            layer.msg(data.message, {icon: 1, offset: '200px'}, function() {
+                                top.location.reload();
+                            });
+                        } else if (data.code === 1) {
+                            layer.msg(data.message, {icon: 2});
+                        } else if (data.code === -1) {
+                            layer.msg(data.message, {icon: 7}, function(){
+                                top.location.href = '${pageContext.request.contextPath}/login';
+                            });
+                        }
+                    }
+                });
+            });
+            return false;
+        });
+
     });
 </script>
 </body>
