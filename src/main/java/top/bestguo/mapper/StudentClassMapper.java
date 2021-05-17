@@ -10,6 +10,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 @Repository
 public interface StudentClassMapper extends BaseMapper<StudentClass> {
 
+    int joinClass(StudentClass studentClass);
 }
 
 

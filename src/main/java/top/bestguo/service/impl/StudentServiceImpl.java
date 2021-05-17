@@ -3,10 +3,15 @@ package top.bestguo.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import top.bestguo.entity.Student;
+import top.bestguo.entity.StudentClass;
 import top.bestguo.entity.Teacher;
+import top.bestguo.mapper.StudentClassMapper;
 import top.bestguo.mapper.StudentMapper;
 import top.bestguo.render.BaseResult;
+import top.bestguo.render.SingleDataResult;
 import top.bestguo.service.StudentService;
+import top.bestguo.vo.ClassInfo;
+
 @Service("StudentService")
 public class StudentServiceImpl implements StudentService {
     @Autowired
@@ -53,5 +58,17 @@ public class StudentServiceImpl implements StudentService {
             result.setMessage("学生信息修改失败");
         }
         return result;
+    }
+
+    @Override
+    public ClassInfo selectClassCodeByName(Integer classCode) {
+        return studentMapper.findClassInfo(classCode);
+    }
+
+    @Autowired
+    StudentClassMapper studentClassMapper;
+    @Override
+    public int studentJoinClass(StudentClass studentClass) {
+        return studentClassMapper.joinClass(studentClass);
     }
 }

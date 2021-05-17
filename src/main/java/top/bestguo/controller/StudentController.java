@@ -1,17 +1,20 @@
 package top.bestguo.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import top.bestguo.entity.Classes;
 import top.bestguo.entity.Student;
+import top.bestguo.entity.StudentClass;
 import top.bestguo.entity.Teacher;
 import top.bestguo.render.BaseResult;
 import top.bestguo.render.SingleDataResult;
 import top.bestguo.service.ClassesService;
 import top.bestguo.service.StudentService;
 import top.bestguo.service.TeacherService;
+import top.bestguo.vo.ClassInfo;
 
 import javax.servlet.http.HttpSession;
 
@@ -24,6 +27,8 @@ public class  StudentController {
 
     @Autowired
     private StudentService studentService;
+    @Autowired
+    private ClassesService classesService;
 
     /**
      * 学生端主页
@@ -136,100 +141,46 @@ public class  StudentController {
     public String classAttend() {
         return "student/class_attend";
     }
-//    /**
-//     * 班级添加界面
-//     * @return
-//     */
-//    @RequestMapping("/classAdd")
-//    public String classAdd(Model model, @RequestParam String modify,
-//                           @RequestParam(required = false) Integer classId,
-//                           @RequestParam(required = false) Integer teacherId) {
-//        // 判断是否为修改状态
-//        if ("true".equals(modify)) {
-//            // 创建班级实体类，传递参数
-//            Classes classes = new Classes();
-//            classes.setId(classId);
-//            classes.setBelongteacher(teacherId);
-//            // 查询单个
-//            SingleDataResult<Classes> oneClass = classesService.findOneClass(classes);
-//            model.addAttribute("oneClass", oneClass);
-//        }
-//        isModify(model, modify);
-//        return "teacher/class_add";
-//    }
 
     /**
-     * 学生管理界面
-     * @return
+     * 查询班级编码
      */
-    @RequestMapping("/studentManage")
-    public String studentManage() {
-        return "teacher/student_manage";
-    }
+    @RequestMapping("/findClassInfo")
+    public String findClassInfo(Model model,Integer classCode) {
+        ClassInfo classInfo = studentService.selectClassCodeByName(classCode);
+        if(classInfo != null)
+            model.addAttribute("classInfo",classInfo);
+        return "student/class_attend";}
 
     /**
-     * 试卷管理界面
-     * @return
-     */
-    @RequestMapping("/paperManage")
-    public String paperManage() {
-        return "teacher/paper_manage";
-    }
-
-    /**
-     * 自组选题界面
-     * @return
-     */
-    @RequestMapping("/paperAdd")
-    public String paperAdd() {
-        return "teacher/paper_add";
-    }
-
-    /**
-     * 随机选题界面
-     * @return
-     */
-    @RequestMapping("/paperAddRandom")
-    public String paperAddRandom() {
-        return "teacher/paper_add_random";
-    }
-
-    /**
-     * 题库管理界面
-     * @return
-     */
-    @RequestMapping("/tikuManage")
-    public String tikuManage() {
-        return "teacher/tiku_manage";
-    }
-
-    /**
-     * 题库添加界面
-     * @return
-     */
-    @RequestMapping("/tikuAdd")
-    public String tikuAdd(Model model, @RequestParam String modify) {
-        isModify(model, modify);
-        return "teacher/tiku_add";
-    }
-
-    private void isModify(Model model, @RequestParam String modify) {
-        if ("true".equals(modify)) {
-            model.addAttribute("modify", "true");
-            model.addAttribute("type", 2);
+     * 加入班级
+      */
+    @RequestMapping("/joinclass")
+    public String studentJoinClass(Model model, HttpSession session, Integer classId){
+        StudentClass studentClass = new StudentClass();
+        Student student = (Student) session.getAttribute("student");
+        // 得到id
+        Integer id = student.getId();
+        studentClass.setStuid(id);
+        Classes oneClassByClassCode = classesService.findOneClassByClassCode(classId);
+        studentClass.setClassid(oneClassByClassCode.getId());
+        // 判断学生已经加入
+        Boolean studentAtTheClass = classesService.isStudentAtTheClass(studentClass.getClassid(), studentClass.getStuid());
+        if(studentAtTheClass){
+            model.addAttribute("msg", "加入班级失败，因为你已经加入了");
+            model.addAttribute("path", "student/class_attend");
+            return "status/fail";
         } else {
-            model.addAttribute("modify", "false");
-            model.addAttribute("type", 1);
+            int rows = studentService.studentJoinClass(studentClass);
+            if (rows > 0) {
+                model.addAttribute("msg", "加入班级成功");
+                model.addAttribute("path", "student/class_attended");
+                return "status/success";
+            } else {
+                model.addAttribute("msg", "加入班级失败");
+                model.addAttribute("path", "student/class_attend");
+                return "status/fail";
+            }
         }
     }
-
-    /**
-     * 成绩管理界面
-     * @return
-     */
-    @RequestMapping("/scoresManage")
-    public String scoresManage() {
-        return "teacher/scores_manage";
-    }
-
 }

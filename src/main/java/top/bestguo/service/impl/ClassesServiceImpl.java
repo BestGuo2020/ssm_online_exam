@@ -4,7 +4,9 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import top.bestguo.entity.Classes;
+import top.bestguo.entity.StudentClass;
 import top.bestguo.mapper.ClassesMapper;
+import top.bestguo.mapper.StudentClassMapper;
 import top.bestguo.render.BaseResult;
 import top.bestguo.render.MultipleDataResult;
 import top.bestguo.render.SingleDataResult;
@@ -24,6 +26,8 @@ public class ClassesServiceImpl implements ClassesService {
 
     @Autowired
     private ClassesMapper classesMapper;
+    @Autowired
+    private StudentClassMapper studentClassMapper;
 
     /**
      * 创建班级
@@ -126,6 +130,24 @@ public class ClassesServiceImpl implements ClassesService {
             result.setMessage("没有查询到相关数据");
         }
         return result;
+    }
+
+    @Override
+    public Classes findOneClassByClassCode(Integer classcode) {
+        // 查询条件
+        QueryWrapper<Classes> classesQueryWrapper = new QueryWrapper<>();
+        classesQueryWrapper.eq("classcode",classcode);
+        Classes classes = classesMapper.selectOne(classesQueryWrapper);
+        return classes;
+    }
+
+    @Override
+    public Boolean isStudentAtTheClass(Integer classId, Integer stuId) {
+        QueryWrapper<StudentClass> classesQueryWrapper = new QueryWrapper<>();
+        classesQueryWrapper.eq("classid", classId);
+        classesQueryWrapper.eq("stuid", stuId);
+        StudentClass studentClass = studentClassMapper.selectOne(classesQueryWrapper);
+        return studentClass != null;
     }
 
     /**

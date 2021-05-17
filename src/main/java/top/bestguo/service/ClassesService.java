@@ -46,6 +46,22 @@ public interface ClassesService {
      */
     SingleDataResult<Classes> findOneClass(Classes classes);
 
+
+    /**
+     * 通过班级吗查询一条班级信息
+     * @param classcode 班级码
+     * @return 返回班级信息
+     */
+    Classes findOneClassByClassCode(Integer classcode);
+
+    /**
+     * 通过班级id和学生id查询一条班级信息
+     * @param classId
+     * @param stuId
+     * @return
+     */
+    Boolean isStudentAtTheClass(Integer classId, Integer stuId);
+
     /**
      * 查询当前老师所创建的班级
      *

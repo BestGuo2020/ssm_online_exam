@@ -13,4 +13,8 @@
     <sql id="Base_Column_List">
         id,stuId,classId
     </sql>
+<!-- 加入班级 -->
+    <insert id="joinClass" parameterType="StudentClass">
+        INSERT INTO student_class (stuId,classId) VALUES (#{stuid},#{classid})
+    </insert>
 </mapper>

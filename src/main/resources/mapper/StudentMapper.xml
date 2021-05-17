@@ -26,4 +26,9 @@
     <insert id="addStudent" parameterType="student">
         insert into student(email,stuId,username,password,gender) values (#{email},#{stuid},#{username},#{password},#{gender})
     </insert>
+<!-- 查询课程码并显示 -->
+    <select id="findClassInfo" parameterType="Integer" resultType="top.bestguo.vo.ClassInfo">
+        SELECT classCode,className,classDesc,username FROM classes JOIN teacher ON classes.belongTeacher=teacher.id
+          WHERE classCode=#{classCode}
+    </select>
 </mapper>

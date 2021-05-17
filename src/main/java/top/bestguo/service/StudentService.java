@@ -1,8 +1,11 @@
 package top.bestguo.service;
 
 import top.bestguo.entity.Student;
+import top.bestguo.entity.StudentClass;
 import top.bestguo.entity.Teacher;
 import top.bestguo.render.BaseResult;
+import top.bestguo.render.SingleDataResult;
+import top.bestguo.vo.ClassInfo;
 
 /**
  * 学生服务类
@@ -33,4 +36,12 @@ public interface StudentService {
      * @return 返回修改状态
      */
     BaseResult modifyStudentInfo(Student student);
+    /**
+     * 查询班级编号
+     */
+    ClassInfo selectClassCodeByName(Integer classCode);
+    /**
+     * 加入班级
+     */
+    int studentJoinClass(StudentClass studentClass);
 }

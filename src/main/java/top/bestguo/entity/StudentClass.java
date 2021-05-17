@@ -15,7 +15,7 @@ public class StudentClass implements Serializable {
     /**
      * 关系id
      */
-    @TableId
+    @TableId(type = IdType.AUTO)
     private Integer id;
 
     /**

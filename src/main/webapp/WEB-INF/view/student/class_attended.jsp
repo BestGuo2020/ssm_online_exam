@@ -151,7 +151,7 @@
                         url: "${pageContext.request.contextPath}/classes/classManager_do/3",
                         data: {
                             id: data.id,
-                            belongteacher: ${sessionScope.teacher.id}
+                            belongteacher: ""
                         },
                         success: function(data){
                             console.log(data);

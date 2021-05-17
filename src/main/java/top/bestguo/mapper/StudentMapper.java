@@ -4,6 +4,8 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 import top.bestguo.entity.Student;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import top.bestguo.entity.StudentClass;
+import top.bestguo.vo.ClassInfo;
 
 /**
  * @Entity top.bestguo.entity.Student
@@ -15,7 +17,7 @@ public interface StudentMapper extends BaseMapper<Student> {
   * */
   int addStudent(Student student);
   Student findStudent(@Param("email")String email,@Param("password")String password);
-
+  ClassInfo findClassInfo(@Param("classCode")Integer classCode);
 }
 
 

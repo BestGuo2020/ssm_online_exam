@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
   User: Administrator
@@ -25,152 +26,62 @@
             <legend>申请加入班级</legend>
         </fieldset>
 
-        <script type="text/html" id="toolbarDemo">
-            <div class="layui-btn-container">
-                <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add"> 创建班级 </button>
-                <button class="layui-btn layui-btn-sm layui-btn-danger data-delete-btn" lay-event="delete"> 删除 </button>
-            </div>
-        </script>
+        <h4 style="color: #0f6c8d;margin-left: 10px">输入要加入班级的编号，点击「查询」按钮，核实班级信息无误后点击「申请加入」按钮。</h4>
 
-        <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
+        <div style="margin: 10px 10px 10px 10px" id="btn">
+            <form class="layui-form layui-form-pane" onsubmit="show()" action="findClassInfo">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">班级编号</label>
+                        <div class="layui-input-inline">
+                            <!--注意此处input标签里的id-->
+                            <input class="layui-input" name="classCode" value="${classInfo.classCode}" id="demoReload" autocomplete="off">
+                        </div>
+                    </div>
 
-        <script type="text/html" id="currentTableBar">
-            <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="edit">编辑</a>
-            <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除</a>
-        </script>
+                    <div class="layui-inline">
+                        <!--注意此处button标签里的type属性-->
+                        <button type="submit" class="layui-btn layui-btn-primary"  lay-submit data-type="reload"
+                                lay-filter="findClassInfo"><i class="layui-icon"></i> 查 询</button>
+                    </div>
+                </div>
+            </form>
+        </div>
 
+        <div class="classinfo" id="classinfo">
+            <c:if test="${classInfo != null}">
+                <form action="joinClass">
+                    <h3 style="margin-top: 20px;margin-left: 10px">班级信息：</h3>
+                    <p style="margin-top: 10px;margin-left: 10px;font-size: 13.5px">班级编号：${classInfo.classCode}</p>
+                    <p style="margin-top: 10px;margin-left: 10px;font-size: 13.5px">班级名称：${classInfo.className}</p>
+                    <p style="margin-top: 10px;margin-left: 10px;font-size: 13.5px">班级信息：${classInfo.classDesc}</p>
+                    <p style="margin-top: 10px;margin-left: 10px;font-size: 13.5px">教师名称：${classInfo.username}</p>
+                    <a style="margin-top: 10px;margin-left: 10px" href="${pageContext.request.contextPath}/student/joinclass?classId=${classInfo.classCode}"
+                       type="button" class="layui-btn layui-btn-primary" lay-filter="joinClass">加入班级</a>
+                </form>
+            </c:if>
+        </div>
     </div>
 </div>
 <jsp:include page="../commons/scripts.jsp" />
-<script>
-    layui.use(['form', 'table', 'layer'], function () {
-        var $ = layui.jquery,
-            form = layui.form,
-            table = layui.table,
-            layer = layui.layer;
-
-        table.render({
-            elem: '#currentTableId',
-            url: '${pageContext.request.contextPath}/classes/loadAllClasses/${sessionScope.student.id}',
-            toolbar: '#toolbarDemo',
-            defaultToolbar: ['filter', 'exports', 'print', {
-                title: '提示',
-                layEvent: 'LAYTABLE_TIPS',
-                icon: 'layui-icon-tips'
-            }],
-            cols: [[
-                {type: "checkbox", width: 50},
-                {field: 'classcode', width: 95, title: '班级码'},
-                {field: 'classname', width: 200, title: '班级名', sort: true},
-                {field: 'classdesc', width: 400, title: '班级描述'},
-                {title: '操作', minWidth: 150, toolbar: '#currentTableBar', align: "center"}
-            ]],
-            limits: [10, 15, 20, 25, 50, 100],
-            limit: 15,
-            page: true,
-            skin: 'line'
-        });
-
-        // 监听搜索操作
-        form.on('submit(data-search-btn)', function (data) {
-            var result = JSON.stringify(data.field);
-            layer.alert(result, {
-                title: '最终的搜索信息'
-            });
-
-            //执行搜索重载
-            table.reload('currentTableId', {
-                page: {
-                    curr: 1
-                }
-                , where: {
-                    searchParams: result
-                }
-            }, 'data');
-
+<%--<script>
+    var classCode = document.getElementById('demoReload');
+    var vvv = sessionStorage.getItem('classCode');
+    classCode.value = vvv;
+    function show() {
+        var classinfo = document.getElementById('classinfo');
+        if (classCode.value!=""){
+            sessionStorage.setItem('classCode', classCode.value);
+            classinfo.style.display="block";
+        }else {
+            classinfo.style.display="none";
             return false;
-        });
+        }
+        sessionStorage.clear();
+    }
 
-        /**
-         * toolbar监听事件
-         */
-        table.on('toolbar(currentTableFilter)', function (obj) {
-            if (obj.event === 'add') {  // 监听添加操作
-                var index = layer.open({
-                    title: '创建班级',
-                    type: 2,
-                    shade: 0.2,
-                    maxmin:true,
-                    shadeClose: true,
-                    area: ['100%', '100%'],
-                    content: '/ssm_online_exam/teacher/classAdd?modify=false',
-                });
-                $(window).on("resize", function () {
-                    layer.full(index);
-                });
-            } else if (obj.event === 'delete') {  // 监听删除操作
-                var checkStatus = table.checkStatus('currentTableId')
-                    , data = checkStatus.data;
-                layer.alert(JSON.stringify(data));
-            }
-        });
+    show();
 
-        //监听表格复选框选择
-        table.on('checkbox(currentTableFilter)', function (obj) {
-            console.log(obj)
-        });
-
-        table.on('tool(currentTableFilter)', function (obj) {
-            var data = obj.data;
-            console.log(obj);
-            if (obj.event === 'edit') {
-                var index = layer.open({
-                    title: '修改班级信息',
-                    type: 2,
-                    shade: 0.2,
-                    maxmin:true,
-                    shadeClose: true,
-                    area: ['100%', '100%'],
-                    content: '/ssm_online_exam/teacher/classAdd?modify=true&classId=' + data.id + '&teacherId=' + data.belongteacher
-                });
-                $(window).on("resize", function () {
-                    layer.full(index);
-                });
-                return false;
-            } else if (obj.event === 'delete') {
-                layer.confirm('该班级的相关的所有数据将会消失，真的要删除这个班级吗？', function (index) {
-                    $.ajax({
-                        type: "POST",
-                        url: "${pageContext.request.contextPath}/classes/classManager_do/3",
-                        data: {
-                            id: data.id,
-                            belongteacher: ${sessionScope.teacher.id}
-                        },
-                        success: function(data){
-                            console.log(data);
-                            // layer.msg(data.message);
-                            // 判断返回的数据是json还是字符串
-                            if(typeof data === 'string') {
-                                data = JSON.parse(data);
-                            }
-                            if(data.code === 0) {
-                                layer.msg(data.message, {icon: 1}, function(){
-                                    obj.del();
-                                });
-                            } else if (data.code === 1) {
-                                layer.msg(data.message, {icon: 2});
-                            } else if (data.code === -1) {
-                                layer.msg(data.message, {icon: 7}, function(){
-                                    top.location.href = '${pageContext.request.contextPath}/login';
-                                });
-                            }
-                        }
-                    });
-                });
-            }
-        });
-
-    });
-</script>
+</script>--%>
 </body>
 </html>
