@@ -1,5 +1,6 @@
 package top.bestguo.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -195,6 +196,30 @@ public class TikuServiceImpl implements TikuService {
         // 关闭文件流
         file.close();
         return result;
+    }
+
+    /**
+     * 删除多个问题
+     *
+     * @param questionId 多个题目
+     * @return 删除状态
+     */
+    @Override
+    public BaseResult deleteQuestionMore(Integer[] questionId){
+        BaseResult baseResult = new BaseResult();
+        // 条件设置
+        QueryWrapper<Question> questionWrapper = new QueryWrapper<>();
+        questionWrapper.in("id", Arrays.asList(questionId));
+        // 删除
+        int delete = questionMapper.delete(questionWrapper);
+        if(delete > 0) {
+            baseResult.setCode(0);
+            baseResult.setMessage("选中的题目删除成功");
+        } else {
+            baseResult.setCode(0);
+            baseResult.setMessage("选中的题目删除失败");
+        }
+        return baseResult;
     }
 
     private boolean batch(Integer belongClass, BaseResult result, List<Question> questions, Workbook workbook) {

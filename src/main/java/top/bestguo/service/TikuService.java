@@ -73,4 +73,12 @@ public interface TikuService {
      */
     BaseResult importQuestion(InputStream file, String fileExt, Integer belongClass) throws IOException;
 
+    /**
+     * 删除多个问题
+     *
+     * @param questionId
+     * @return
+     */
+    BaseResult deleteQuestionMore(Integer[] questionId);
+
 }

@@ -216,8 +216,48 @@
                 });
             } else if (obj.event === 'delete') {  // 监听删除操作
                 var checkStatus = table.checkStatus('currentTableId')
-                    , data = checkStatus.data;
-                layer.alert(JSON.stringify(data));
+                    , data = checkStatus.data, delId = [];
+                // layer.alert(JSON.stringify(data));
+                for(var i = 0; i < data.length; i++){
+                    delId.push(data[i].id);
+                }
+                layer.confirm('真的删除选中的题目吗？', function (index) {
+                    $.ajax({
+                        type: "POST",
+                        url: "${pageContext.request.contextPath}/tiku/deleteQuestionMore",
+                        data: {
+                            ids: delId
+                        },
+                        traditional: true,
+                        success: function(data){
+                            console.log(data);
+                            layer.close(index);
+                            // layer.msg(data.message);
+                            // 判断返回的数据是json还是字符串
+                            if(typeof data === 'string') {
+                                data = JSON.parse(data);
+                            }
+                            if(data.code === 0) {
+                                layer.msg(data.message, {icon: 1, offset: '200px'}, function() {
+                                    table.reload('currentTableId', {
+                                        method: "post",
+                                        page: {
+                                            curr: 1
+                                        },
+                                    }, 'data');
+                                });
+                            } else if (data.code === 1) {
+                                layer.msg(data.message, {icon: 2});
+                            } else if (data.code === -1) {
+                                layer.msg(data.message, {icon: 7}, function(){
+                                    top.location.href = '${pageContext.request.contextPath}/login';
+                                });
+                            }
+                        }
+                    });
+                    layer.close(index);
+                });
+
             }
         });
 

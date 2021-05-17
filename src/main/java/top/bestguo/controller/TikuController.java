@@ -99,4 +99,16 @@ public class TikuController {
         result.setCode(1);
         return result;
     }
+
+    /**
+     * 删除多个题目
+     *
+     * @param ids 多个题目
+     * @return
+     */
+    @RequestMapping(value = "/deleteQuestionMore", method = RequestMethod.POST)
+    @ResponseBody
+    public BaseResult deleteQuestionMore(Integer[] ids) {
+        return tikuService.deleteQuestionMore(ids);
+    }
 }
