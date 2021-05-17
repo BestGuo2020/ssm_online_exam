@@ -4,8 +4,11 @@ import top.bestguo.entity.Student;
 import top.bestguo.entity.StudentClass;
 import top.bestguo.entity.Teacher;
 import top.bestguo.render.BaseResult;
+
 import top.bestguo.render.SingleDataResult;
 import top.bestguo.vo.ClassInfo;
+
+import top.bestguo.render.MultipleDataResult;
 
 /**
  * 学生服务类
@@ -44,4 +47,14 @@ public interface StudentService {
      * 加入班级
      */
     int studentJoinClass(StudentClass studentClass);
+
+    /**
+     * 通过班级id查询当前班级的学生信息
+     *
+     * @param classId 班级号
+     * @param p 当前页
+     * @param limit 当前页展示的数据条数
+     * @return 学生信息
+     */
+    MultipleDataResult<Student> selectStudentByClassId(Integer classId, Integer p, Integer limit);
 }

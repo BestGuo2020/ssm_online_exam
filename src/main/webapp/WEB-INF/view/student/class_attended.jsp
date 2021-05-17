@@ -29,23 +29,20 @@
     <div class="layuimini-main">
 
         <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-            <legend>查看你参与的班级</legend>
+            <legend>查看你加入的班级</legend>
         </fieldset>
 
         <script type="text/html" id="toolbarDemo">
             <div class="layui-btn-container">
-                <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add"> 创建班级 </button>
-                <button class="layui-btn layui-btn-sm layui-btn-danger data-delete-btn" lay-event="delete"> 删除 </button>
+                <button class="layui-btn layui-btn-sm layui-btn-danger data-delete-btn" lay-event="delete"> 退出 </button>
             </div>
         </script>
 
         <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
 
         <script type="text/html" id="currentTableBar">
-            <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="edit">编辑</a>
-            <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除</a>
+            <a class="layui-btn layui-btn-sm layui-btn-danger data-delete-btn"  lay-event="delete">退出</a>
         </script>
-
     </div>
 </div>
 <jsp:include page="../commons/scripts.jsp" />
@@ -58,7 +55,7 @@
 
         table.render({
             elem: '#currentTableId',
-            url: '${pageContext.request.contextPath}/classes/loadAllClasses/${sessionScope.teacher.id}',
+            url: '${pageContext.request.contextPath}/classes/loadJoinedClasses/${sessionScope.student.id}',
             toolbar: '#toolbarDemo',
             defaultToolbar: ['filter', 'exports', 'print', {
                 title: '提示',
@@ -70,6 +67,7 @@
                 {field: 'classcode', width: 95, title: '班级码'},
                 {field: 'classname', width: 200, title: '班级名', sort: true},
                 {field: 'classdesc', width: 400, title: '班级描述'},
+                {field: 'classcount', width: 400, title: '班级人数'},
                 {title: '操作', minWidth: 150, toolbar: '#currentTableBar', align: "center"}
             ]],
             limits: [10, 15, 20, 25, 50, 100],
@@ -98,60 +96,75 @@
             return false;
         });
 
-        /**
-         * toolbar监听事件
-         */
-        table.on('toolbar(currentTableFilter)', function (obj) {
-            if (obj.event === 'add') {  // 监听添加操作
-                var index = layer.open({
-                    title: '创建班级',
-                    type: 2,
-                    shade: 0.2,
-                    maxmin:true,
-                    shadeClose: true,
-                    area: ['100%', '100%'],
-                    content: '/ssm_online_exam/teacher/classAdd?modify=false',
-                });
-                $(window).on("resize", function () {
-                    layer.full(index);
-                });
-            } else if (obj.event === 'delete') {  // 监听删除操作
-                var checkStatus = table.checkStatus('currentTableId')
-                    , data = checkStatus.data;
-                layer.alert(JSON.stringify(data));
-            }
-        });
+
 
         //监听表格复选框选择
         table.on('checkbox(currentTableFilter)', function (obj) {
             console.log(obj)
         });
+        //监听表格复选框选择
+        table.on('checkbox(currentTableFilter)', function (obj) {
+            console.log(obj)
+        });
+        table.on('toolbar(currentTableFilter)', function (obj) {
+            if (obj.event === 'delete') {  // 监听删除操作
+                var checkStatus = table.checkStatus('currentTableId')
+                    , data = checkStatus.data;
+                // layer.alert(JSON.stringify(data));
+                // 将数据保存至数组
+                var tmp_data = [];
+                for(var i = 0; i < data.length; i++) {
+                    tmp_data.push(data[i].id);
+                }
+                console.log(data);
+                layer.confirm('真的要退出选中的这些班级吗？', function (index) {
+                    $.ajax({
+                        type: "POST",
+                        url: "${pageContext.request.contextPath}/classes/deleteClassMany/${sessionScope.student.id}",
+                        data: {
+                            classIds: tmp_data,
+                            stuId: ${sessionScope.student.id}
+                        },
+                        traditional: true,
+                        success: function(data){
+                            console.log(data);
+                            // layer.msg(data.message);
+                            // 判断返回的数据是json还是字符串
+                            if(typeof data === 'string') {
+                                data = JSON.parse(data);
+                            }
+                            if(data.code === 0) {
+                                layer.msg(data.message, {icon: 1}, function(){
+                                    // 重载表格数据
+                                    table.reload("currentTableId", {
+                                        page: {
+                                            curr: 1 //重新从第 1 页开始
+                                        }
+                                    });
+                                });
+                            } else if (data.code === 1) {
+                                layer.msg(data.message, {icon: 2});
+                            } else if (data.code === -1) {
+                                layer.msg(data.message, {icon: 7}, function(){
+                                    top.location.href = '${pageContext.request.contextPath}/login';
+                                });
+                            }
+                        }
+                    });
+                });
+            }
+        });
 
         table.on('tool(currentTableFilter)', function (obj) {
             var data = obj.data;
-            console.log(obj);
-            if (obj.event === 'edit') {
-                var index = layer.open({
-                    title: '修改班级信息',
-                    type: 2,
-                    shade: 0.2,
-                    maxmin:true,
-                    shadeClose: true,
-                    area: ['100%', '100%'],
-                    content: '/ssm_online_exam/teacher/classAdd?modify=true&classId=' + data.id + '&teacherId=' + data.belongteacher
-                });
-                $(window).on("resize", function () {
-                    layer.full(index);
-                });
-                return false;
-            } else if (obj.event === 'delete') {
-                layer.confirm('该班级的相关的所有数据将会消失，真的要删除这个班级吗？', function (index) {
+         if (obj.event === 'delete') {
+                layer.confirm('该班级的相关的所有数据将会消失，真的要退出这个班级吗？', function (index) {
                     $.ajax({
                         type: "POST",
-                        url: "${pageContext.request.contextPath}/classes/classManager_do/3",
+                        url: "${pageContext.request.contextPath}/classes/deleteClass_do/${sessionScope.student.id}",
                         data: {
                             id: data.id,
-                            belongteacher: ""
+                            student: ${sessionScope.student.id}
                         },
                         success: function(data){
                             console.log(data);
@@ -176,6 +189,7 @@
                 });
             }
         });
+
 
     });
 </script>

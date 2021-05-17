@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
   User: He Guo
@@ -37,23 +38,16 @@
                         <div class="layui-inline">
                             <label class="layui-form-label">班级</label>
                             <div class="layui-input-inline">
-                                <select name="modules" lay-verify="required" lay-search="">
-                                    <option value="">直接选择或搜索选择</option>
-                                    <option value="1">layer</option>
-                                    <option value="2">form</option>
-                                    <option value="3">layim</option>
-                                    <option value="4">element</option>
-                                    <option value="5">laytpl</option>
-                                    <option value="6">upload</option>
-                                    <option value="7">laydate</option>
-                                    <option value="8">laypage</option>
-                                    <option value="9">flow</option>
-                                    <option value="10">util</option>
+                                <select name="classId" lay-verify="required" lay-search="">
+                                    <option value="">选择你的班级</option>
+                                    <c:forEach var="cls" items="${data}">
+                                        <option value="${cls.id}">${cls.classcode} - ${cls.classname}</option>
+                                    </c:forEach>
                                 </select>
                             </div>
                         </div>
                         <div class="layui-inline">
-                            <button type="submit" class="layui-btn layui-btn-primary"  lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
+                            <button type="submit" class="layui-btn layui-btn-primary" lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
                         </div>
                     </div>
                 </form>
@@ -62,11 +56,15 @@
 
         <script type="text/html" id="toolbarDemo">
             <div class="layui-btn-container">
-                <button class="layui-btn layui-btn-sm layui-btn-danger data-delete-btn" lay-event="delete"> 踢出 </button>
+                <button class="layui-btn layui-btn-sm layui-btn-danger data-delete-btn" lay-event="kickOut"> 踢出 </button>
             </div>
         </script>
 
         <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
+
+        <script type="text/html" id="currentTableBar">
+            <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="kickOut">踢出</a>
+        </script>
 
     </div>
 </div>
@@ -75,12 +73,24 @@
     layui.use(['form', 'table'], function () {
         var $ = layui.jquery,
             form = layui.form,
-            table = layui.table;
+            table = layui.table,
+            classId = [0];
 
         table.render({
             elem: '#currentTableId',
-            url: '${pageContext.request.contextPath}/static/backend/api/table.json',
+            url: '${pageContext.request.contextPath}/static/backend/api/empty.json',
             toolbar: '#toolbarDemo',
+            text: {
+                none: '请在选择框中选择你的班级查找班级中所在的学生' // 默认：无数据。注：该属性为 layui 2.2.5 开始新增
+            },
+            parseData: function(res){ //res 即为原始返回的数据
+                return {
+                    "code": res.code, //解析接口状态
+                    "msg": res.message, //解析提示文本
+                    "count": res.total, //解析数据长度
+                    "data": res.data //解析数据列表
+                };
+            },
             defaultToolbar: ['filter', 'exports', 'print', {
                 title: '提示',
                 layEvent: 'LAYTABLE_TIPS',
@@ -88,18 +98,21 @@
             }],
             cols: [[
                 {type: "checkbox", width: 50},
-                {field: 'id', width: 80, title: 'ID', sort: true},
-                {field: 'username', width: 80, title: '用户名'},
-                {field: 'sex', width: 80, title: '性别', sort: true},
-                {field: 'city', width: 80, title: '城市'},
-                {field: 'sign', title: '签名', minWidth: 150},
-                {field: 'experience', width: 80, title: '积分', sort: true},
-                {field: 'score', width: 80, title: '评分', sort: true},
-                {field: 'classify', width: 80, title: '职业'},
-                {field: 'wealth', width: 135, title: '财富', sort: true}
+                {field: 'id', width: 120, title: '序号', type:'numbers'},
+                {field: 'username', width: 110, title: '姓名'},
+                {field: 'gender', width: 110, title: '性别', templet: function(d){
+                        if(d.gender === 1){
+                            return '男'
+                        }else{
+                            return '女'
+                        }
+                    }
+                },
+                {field: 'stuid', width: 140, title: '学号'},
+                {title: '操作', minWidth: 150, toolbar: '#currentTableBar', align: "center"}
             ]],
             limits: [10, 15, 20, 25, 50, 100],
-            limit: 15,
+            limit: 10,
             page: true,
             skin: 'line'
         });
@@ -107,17 +120,16 @@
         // 监听搜索操作
         form.on('submit(data-search-btn)', function (data) {
             var result = JSON.stringify(data.field);
-            layer.alert(result, {
-                title: '最终的搜索信息'
-            });
+
+            console.log(result);
+
+            classId[0] = data.field.classId;
 
             //执行搜索重载
             table.reload('currentTableId', {
+                url: '${pageContext.request.contextPath}/classes/loadStudentByClass/' + data.field.classId,
                 page: {
                     curr: 1
-                }
-                , where: {
-                    searchParams: result
                 }
             }, 'data');
 
@@ -128,23 +140,51 @@
          * toolbar监听事件
          */
         table.on('toolbar(currentTableFilter)', function (obj) {
-            if (obj.event === 'add') {  // 监听添加操作
-                var index = layer.open({
-                    title: '创建班级',
-                    type: 2,
-                    shade: 0.2,
-                    maxmin:true,
-                    shadeClose: true,
-                    area: ['100%', '100%'],
-                    content: '/ssm_online_exam/teacher/classAdd?modify=false',
-                });
-                $(window).on("resize", function () {
-                    layer.full(index);
-                });
-            } else if (obj.event === 'delete') {  // 监听删除操作
+            if (obj.event === 'kickOut') {  // 监听删除操作
                 var checkStatus = table.checkStatus('currentTableId')
                     , data = checkStatus.data;
-                layer.alert(JSON.stringify(data));
+                // layer.alert(JSON.stringify(data));
+                // 将数据保存至数组
+                var tmp_data = [];
+                for(var i = 0; i < data.length; i++) {
+                    tmp_data.push(data[i].id);
+                }
+                console.log(data);
+                layer.confirm('真的要将选中的学生踢出班级吗？', function (index) {
+                    $.ajax({
+                        type: "POST",
+                        url: "${pageContext.request.contextPath}/classes/kickOutMany",
+                        data: {
+                            classId: classId[0],
+                            stuIds: tmp_data
+                        },
+                        traditional: true,
+                        success: function(data){
+                            console.log(data);
+                            // layer.msg(data.message);
+                            // 判断返回的数据是json还是字符串
+                            if(typeof data === 'string') {
+                                data = JSON.parse(data);
+                            }
+                            if(data.code === 0) {
+                                layer.msg(data.message, {icon: 1}, function(){
+                                    // 重载表格数据
+                                    table.reload("currentTableId", {
+                                        page: {
+                                            curr: 1 //重新从第 1 页开始
+                                        }
+                                    });
+                                });
+                            } else if (data.code === 1) {
+                                layer.msg(data.message, {icon: 2});
+                            } else if (data.code === -1) {
+                                layer.msg(data.message, {icon: 7}, function(){
+                                    top.location.href = '${pageContext.request.contextPath}/login';
+                                });
+                            }
+                        }
+                    });
+                });
             }
         });
 
@@ -170,10 +210,41 @@
                     layer.full(index);
                 });
                 return false;
-            } else if (obj.event === 'delete') {
-                layer.confirm('真的删除行么', function (index) {
-                    obj.del();
-                    layer.close(index);
+            } else if (obj.event === 'kickOut') {
+                console.log(data);
+                layer.confirm('真的要将选中的学生踢出班级吗？', function (index) {
+                    $.ajax({
+                        type: "POST",
+                        url: "${pageContext.request.contextPath}/classes/kickOut",
+                        data: {
+                            classId: classId[0],
+                            stuId: data.id
+                        },
+                        success: function(data){
+                            console.log(data);
+                            // layer.msg(data.message);
+                            // 判断返回的数据是json还是字符串
+                            if(typeof data === 'string') {
+                                data = JSON.parse(data);
+                            }
+                            if(data.code === 0) {
+                                layer.msg(data.message, {icon: 1}, function(){
+                                    // 重载表格数据
+                                    table.reload("currentTableId", {
+                                        page: {
+                                            curr: 1 //重新从第 1 页开始
+                                        }
+                                    });
+                                });
+                            } else if (data.code === 1) {
+                                layer.msg(data.message, {icon: 2});
+                            } else if (data.code === -1) {
+                                layer.msg(data.message, {icon: 7}, function(){
+                                    top.location.href = '${pageContext.request.contextPath}/login';
+                                });
+                            }
+                        }
+                    });
                 });
             }
         });

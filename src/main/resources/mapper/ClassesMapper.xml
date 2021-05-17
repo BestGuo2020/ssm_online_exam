@@ -19,4 +19,11 @@
     <select id="findAllClassCode" resultType="string">
         select classCode from classes;
     </select>
+<select id="findJoinClasses" parameterType="Integer" resultType="Classes">
+    select * from classes where  id in(select  classId from student_class where  stuId =#{stuId})
+</select>
+    <select id="findClassesCount" parameterType="Integer" resultType="Integer">
+        select count(classId) from student_class where classId = #{classId}
+    </select>
+
 </mapper>

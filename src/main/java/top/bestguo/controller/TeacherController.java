@@ -5,13 +5,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import top.bestguo.entity.Classes;
+import top.bestguo.entity.Question;
 import top.bestguo.entity.Teacher;
 import top.bestguo.render.BaseResult;
 import top.bestguo.render.SingleDataResult;
 import top.bestguo.service.ClassesService;
 import top.bestguo.service.TeacherService;
+import top.bestguo.service.TikuService;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 /**
  * 教师端页面
@@ -24,6 +27,8 @@ public class TeacherController {
     private TeacherService teacherService;
     @Autowired
     private ClassesService classesService;
+    @Autowired
+    private TikuService tikuService;
 
     /**
      * 教师端主页
@@ -156,7 +161,12 @@ public class TeacherController {
      * @return
      */
     @RequestMapping("/studentManage")
-    public String studentManage() {
+    public String studentManage(HttpSession session, Model model) {
+        Teacher teacher = (Teacher) session.getAttribute("teacher");
+        // 得到id
+        Integer id = teacher.getId();
+        List<Classes> data = classesService.findAllClass(teacher.getId()).getData();
+        model.addAttribute("data", data);
         return "teacher/student_manage";
     }
 
@@ -192,16 +202,35 @@ public class TeacherController {
      * @return
      */
     @RequestMapping("/tikuManage")
-    public String tikuManage() {
+    public String tikuManage(HttpSession session, Model model) {
+        Teacher teacher = (Teacher) session.getAttribute("teacher");
+        List<Classes> data = classesService.findAllClass(teacher.getId()).getData();
+        model.addAttribute("data", data);
         return "teacher/tiku_manage";
     }
 
     /**
      * 题库添加界面
+     *
+     * @param session
+     * @param model
+     * @param modify 是否为修改状态
+     * @param id 题目id
      * @return
      */
     @RequestMapping("/tikuAdd")
-    public String tikuAdd(Model model, @RequestParam String modify) {
+    public String tikuAdd(HttpSession session, Model model,
+                          @RequestParam String modify, @RequestParam(required = false) Integer id) {
+        Teacher teacher = (Teacher) session.getAttribute("teacher");
+        // 加载班级界面
+        List<Classes> data = classesService.findAllClass(teacher.getId()).getData();
+        model.addAttribute("data", data);
+        // 判断修改状态
+        if ("true".equals(modify)) {
+            Question question = tikuService.findQuestionById(id);
+            model.addAttribute("question", question);
+        }
+        // 展示内容给
         isModify(model, modify);
         return "teacher/tiku_add";
     }

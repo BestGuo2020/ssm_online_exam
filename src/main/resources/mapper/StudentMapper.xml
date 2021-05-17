@@ -11,6 +11,13 @@
             <result property="username" column="username" jdbcType="VARCHAR"/>
             <result property="password" column="password" jdbcType="VARCHAR"/>
             <result property="gender" column="gender" jdbcType="TINYINT"/>
+<!--        <collection property="ClassesList" column="id" ofType="classes"-->
+
+<!--        select=""-->
+<!--        >-->
+
+
+<!--        </collection>-->
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -30,5 +37,9 @@
     <select id="findClassInfo" parameterType="Integer" resultType="top.bestguo.vo.ClassInfo">
         SELECT classCode,className,classDesc,username FROM classes JOIN teacher ON classes.belongTeacher=teacher.id
           WHERE classCode=#{classCode}
+    </select>
+    <!-- 通过班级id查询学生信息 -->
+    <select id="selectStudentByClassId" parameterType="integer" resultType="student">
+        select * from student where id in (select stuId from student_class where classId = #{classId})
     </select>
 </mapper>

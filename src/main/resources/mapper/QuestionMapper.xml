@@ -25,4 +25,14 @@
         option4,option5,answer,
         reason,belongClass,level
     </sql>
+
+    <insert id="insertBatch" parameterType="list">
+        insert into question(questionName,isMulti,option1,option2,option3,
+                             option4,option5,answer,reason,belongClass,level)
+        values
+        <foreach collection="questions" item="question" separator=",">
+            (#{question.questionname},#{question.ismulti},#{question.option1},#{question.option2},#{question.option3},
+            #{question.option4},#{question.option5},#{question.answer},#{question.reason},#{question.belongclass},#{question.level})
+        </foreach>
+    </insert>
 </mapper>

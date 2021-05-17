@@ -26,22 +26,35 @@
         <property name="dataSource" ref="dataSource" />
         <property name="typeAliasesPackage" value="top.bestguo.entity" />
         <property name="mapperLocations" value="classpath:mapper/*Mapper.xml" />
+        <!-- 添加插件 -->
+        <property name="plugins">
+            <list>
+                <!-- 配置 MybatisPlus 拦截器 -->
+                <bean class="com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor">
+                    <property name="interceptors">
+                        <list>
+                            <!-- 配置 MybatisPlus 分页器 -->
+                            <bean class="com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor"/>
+                        </list>
+                    </property>
+                </bean>
+                <!--配置 pageHelper 分页插件-->
+                <bean class="com.github.pagehelper.PageInterceptor">
+                    <property name="properties">
+                        <props>
+                            <!--方言：-->
+                            <prop key="helperDialect">mysql</prop>
+                        </props>
+                    </property>
+                </bean>
+            </list>
+        </property>
     </bean>
 
     <!-- 配置 Mybatis mapper 扫描器 -->
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer" id="mapperScanner">
         <property name="basePackage" value="top.bestguo.mapper" />
         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactoryBean" />
-    </bean>
-
-    <!-- 配置 MybatisPlus分页插件 -->
-    <bean class="com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor" id="mybatisPlusInterceptor">
-        <property name="interceptors">
-            <list>
-                <!-- 配置 Mybatis 分页器 -->
-                <bean class="com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor"/>
-            </list>
-        </property>
     </bean>
 
 </beans>

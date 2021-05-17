@@ -27,7 +27,7 @@
           "target": "_self",
           "child":[
             {
-              "title": "我参与的班级",
+              "title": "我加入的班级",
               "href": "/ssm_online_exam/student/class_attended",
               "icon": "fa fa-window-maximize",
               "target": "_self"
