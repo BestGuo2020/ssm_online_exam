@@ -331,9 +331,7 @@ public class ClassesServiceImpl implements ClassesService {
         // 返回数据
         MultipleDataResult<Map<String, Object>> dataResult = new MultipleDataResult<>();
 
-        if(classesList.size() > 0) {
-            dataResult.setCode(0);
-        }
+        dataResult.setCode(0);
         dataResult.setData(data);
         dataResult.setTotal(classesList.size());
         return dataResult;
