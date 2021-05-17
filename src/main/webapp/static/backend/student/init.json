@@ -40,7 +40,7 @@
         }
           ]
         },{
-          "title": "我的资料",
+          "title": "我的考试",
           "href": "/ssm_online_exam/student/class_attend",
           "icon": "fa fa-file-text",
           "target": "_self"

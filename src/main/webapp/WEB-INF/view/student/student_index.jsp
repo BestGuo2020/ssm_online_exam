@@ -151,6 +151,7 @@
                         // 判断返回的数据是json还是字符串
                         if(typeof data === 'string') {
                             data = JSON.parse(data);
+
                         }
                         if(data.code === 0) {
                             layer.msg(data.message, {icon: 1}, function(){
