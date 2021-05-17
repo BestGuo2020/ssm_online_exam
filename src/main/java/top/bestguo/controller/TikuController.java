@@ -1,13 +1,26 @@
 package top.bestguo.controller;
 
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import top.bestguo.entity.Question;
 import top.bestguo.render.BaseResult;
 import top.bestguo.render.MultipleDataResult;
 import top.bestguo.service.TikuService;
 import top.bestguo.vo.QuestionCondition;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.Objects;
 
 @Controller
 @RequestMapping("/tiku")
@@ -59,5 +72,31 @@ public class TikuController {
                                                         @RequestParam("page") Integer p,
                                                         @RequestParam("limit") Integer limit) {
         return tikuService.findAllQuestion(question, p, limit);
+    }
+
+    @RequestMapping(value = "/uploadQuestionSet", method = RequestMethod.POST)
+    @ResponseBody
+    public BaseResult importQuestion(MultipartFile file, @RequestParam("belongclass") Integer belongclass) {
+        BaseResult result = new BaseResult();
+        if(belongclass == null) {
+            result.setMessage("请选择要上传到的班级");
+            result.setCode(1);
+            return result;
+        }
+        // 得到文件流
+        InputStream inputStream;
+        // 获取文件后缀名
+        String fileExt = Objects.requireNonNull(file.getOriginalFilename()).split("\\.")[1];
+        try {
+            // 获取文件流
+            inputStream = file.getInputStream();
+            return tikuService.importQuestion(inputStream, fileExt, belongclass);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        // 未知异常信息
+        result.setMessage("出现未知异常");
+        result.setCode(1);
+        return result;
     }
 }

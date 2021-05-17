@@ -2,6 +2,12 @@ package top.bestguo.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import top.bestguo.entity.Question;
@@ -11,6 +17,10 @@ import top.bestguo.render.MultipleDataResult;
 import top.bestguo.service.TikuService;
 import top.bestguo.vo.QuestionCondition;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -154,6 +164,120 @@ public class TikuServiceImpl implements TikuService {
         List<Question> questions = questionMapper.selectPage(page, questionQueryWrapper).getRecords();
 
         return getQuestionMultipleDataResult(questions, page);
+    }
+
+    /**
+     * 批量导入题目到题库中
+     *
+     * @param file excel文件流
+     * @param fileExt 文件各式
+     * @param belongClass 所属班级
+     * @return 状态
+     * @throws IOException 可能出现文件解析错误等异常
+     */
+    @Override
+    public BaseResult importQuestion(InputStream file, String fileExt, Integer belongClass) throws IOException {
+        BaseResult result = new BaseResult();
+        // 将问题集保存到列表中
+        List<Question> questions = new ArrayList<>();
+        if("xls".equals(fileExt)){
+            // 得到工作簿
+            Workbook workbook = new HSSFWorkbook(file);
+            if (batch(belongClass, result, questions, workbook)) return result;
+        } else if("xlsx".equals(fileExt)) {
+            // 得到工作簿
+            Workbook workbook = new XSSFWorkbook(file);
+            if (batch(belongClass, result, questions, workbook)) return result;
+        } else {
+            result.setCode(1);
+            result.setMessage("上传的文件格式不符合要求");
+        }
+        // 关闭文件流
+        file.close();
+        return result;
+    }
+
+    private boolean batch(Integer belongClass, BaseResult result, List<Question> questions, Workbook workbook) {
+        // 得到工作表
+        Sheet sheet = workbook.getSheet("题目集");
+        // 得到行数
+        int rows = sheet.getLastRowNum();
+        for (int i = 1; i < rows; i++) {
+            try {
+                // 得到当前行
+                Row row = sheet.getRow(i);
+                // 取出表格中的数据，将其放入到实体类中
+                Question question = new Question();
+                // 问题名称
+                question.setQuestionname(row.getCell(0).getStringCellValue());
+                // 题型
+                String type = row.getCell(1).getStringCellValue();
+                // 是否为多选
+                if ("是".equals(type)) {
+                    question.setIsmulti(true);
+                } else if ("否".equals(type)) {
+                    question.setIsmulti(false);
+                } else {
+                    result.setCode(1);
+                    result.setMessage("错误：第" + (i + 1) + "行第2列输入的值不符合要求");
+                    return true;
+                }
+                // A选项
+                Cell cell3 = row.getCell(2);
+                cell3.setCellType(CellType.STRING);
+                String option1 = cell3.getStringCellValue();
+                question.setOption1(option1);
+                // B选项
+                Cell cell4 = row.getCell(3);
+                cell4.setCellType(CellType.STRING);
+                String option2 = cell3.getStringCellValue();
+                question.setOption2(option2);
+                // C选项
+                Cell cell5 = row.getCell(4);
+                if (cell5.getCellType() != CellType.BLANK) {
+                    cell5.setCellType(CellType.STRING);
+                    String option3 = cell3.getStringCellValue();
+                    question.setOption3(option3);
+                }
+                // D选项
+                Cell cell6 = row.getCell(5);
+                if (cell6.getCellType() != CellType.BLANK) {
+                    cell6.setCellType(CellType.STRING);
+                    String option4 = cell6.getStringCellValue();
+                    question.setOption4(option4);
+                }
+                // D选项
+                Cell cell7 = row.getCell(6);
+                if (cell7.getCellType() != CellType.BLANK) {
+                    cell7.setCellType(CellType.STRING);
+                    String option5 = cell7.getStringCellValue();
+                    question.setOption5(option5);
+                }
+                // 正确选项
+                String answer = row.getCell(7).getStringCellValue();
+                question.setAnswer(answer);
+                // 答案解析
+                Cell cell8 = row.getCell(8);
+                cell8.setCellType(CellType.STRING);
+                String reason = cell8.getStringCellValue();
+                question.setReason(reason);
+                // 所属班级
+                question.setBelongclass(belongClass);
+                // 难度系数
+                Cell cell9 = row.getCell(9);
+                double level = cell9.getNumericCellValue();
+                question.setLevel((int) level);
+                questions.add(question);
+            } catch (Exception e) {
+                result.setCode(1);
+                result.setMessage("批量导入失败，请检查表格中的内容是否输入合理");
+                return false;
+            }
+        }
+        boolean res = questionMapper.insertBatch(questions);
+        result.setCode(res ? 0 : 1);
+        result.setMessage(res ? "批量导入成功" : "批量导入失败");
+        return false;
     }
 
     /**

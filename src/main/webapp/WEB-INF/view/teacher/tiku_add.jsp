@@ -40,7 +40,7 @@
                 <div class="layui-form-item layui-form-text">
                     <label class="layui-form-label">选择导入的班级</label>
                     <div class="layui-input-block">
-                        <select name="classId" lay-verify="required" lay-search="">
+                        <select name="classId" id="classId" lay-verify="required" lay-search="">
                             <option value="">选择你的班级</option>
                             <c:forEach var="cls" items="${data}">
                                 <c:choose>
@@ -159,10 +159,12 @@
         <c:if test="${modify eq 'false'}">
             <fieldset class="table-search-fieldset" style="margin-top: 20px;">
                 <legend>通过 excel 表格导入</legend>
-                <a type="button" class="layui-btn layui-btn-sm layui-btn-normal" href="#" target="_blank">点此下载导入模板</a>
+                <a type="button" class="layui-btn layui-btn-sm layui-btn-normal" href="${pageContext.request.contextPath}/static/template/题库导入模板.xlsx" target="_blank">点此下载导入模板</a>
+                <br/><br/>
                 <button type="button" class="layui-btn" id="test1">
-                    <i class="layui-icon">&#xe67c;</i> 导入题目
+                    <i class="layui-icon">&#xe67c;</i> 选择文件
                 </button>
+                <button type="button" class="layui-btn" id="test9">开始上传</button>
             </fieldset>
         </c:if>
     </div>
@@ -170,14 +172,25 @@
 <jsp:include page="../commons/scripts.jsp" />
 <script>
 
-    layui.use(['form', 'upload'], function(){
+    layui.use(['form', 'upload', 'element'], function(){
         var upload = layui.upload,
-        form = layui.form;
+        form = layui.form, element = layui.element,
+        $ = layui.jquery;
+
         <c:if test="${modify eq 'false'}">
         // 文档上传
         var uploadInst = upload.render({
             elem: '#test1' //绑定元素
-            ,url: '/upload/' //上传接口
+            ,url: '${pageContext.request.contextPath}/tiku/uploadQuestionSet' //上传接口
+            ,auto: false // 不自定上传
+            ,accept: 'file' //普通文件
+            ,data: {
+                belongclass: function () {
+                    return $("#classId").val();
+                }
+            }
+            ,exts: 'xls|xlsx' // 表格
+            ,bindAction: '#test9'
             ,progress: function(n, elem, res, index){ // 上传进度
                 var percent = n + '%' //获取进度百分比
                 element.progress('demo', percent); //可配合 layui 进度条元素使用
@@ -189,6 +202,23 @@
             }
             ,done: function(res){
                 //上传完毕回调
+                console.log(res);
+                // 判断返回的数据是json还是字符串
+                if(typeof res === 'string') {
+                    res = JSON.parse(res);
+                }
+                if(res.code === 0) {
+                    layer.msg(res.message, {icon: 1, offset: '200px'}, function() {
+                        // 重载表格数据
+                        top.location.reload();
+                    });
+                } else if (res.code === 1) {
+                    layer.msg(res.message, {icon: 2, offset: '200px'});
+                } else if (res.code === -1) {
+                    layer.msg(res.message, {icon: 7, offset: '200px'}, function(){
+                        top.location.href = '${pageContext.request.contextPath}/login';
+                    });
+                }
             }
             ,error: function(){
                 //请求异常回调
@@ -229,9 +259,9 @@
                                 top.location.reload();
                             });
                         } else if (data.code === 1) {
-                            layer.msg(data.message, {icon: 2});
+                            layer.msg(data.message, {icon: 2, offset: '200px'});
                         } else if (data.code === -1) {
-                            layer.msg(data.message, {icon: 7}, function(){
+                            layer.msg(data.message, {icon: 7, offset: '200px'}, function(){
                                 top.location.href = '${pageContext.request.contextPath}/login';
                             });
                         }

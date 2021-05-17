@@ -104,6 +104,9 @@
             elem: '#currentTableId',
             url: '${pageContext.request.contextPath}/static/backend/api/empty.json',
             toolbar: '#toolbarDemo',
+            text: {
+                none: "请在选择框中选择你的班级，查找班级中的题库"
+            },
             parseData: function(res){ //res 即为原始返回的数据
                 return {
                     "code": res.code, //解析接口状态
@@ -132,25 +135,37 @@
                 {field: 'option1', width: 80, title: '选项A'},
                 {field: 'option2', title: '选项B', width: 80},
                 {field: 'option3', width: 80, title: '选项C', templet: function(d){
-                        if(d.option3 === ""){
+                        if(d.option3 === "" || d.option3 === null){
                             return '无'
                         }
                         return d.option3;
                     }},
                 {field: 'option4', width: 80, title: '选项D', templet: function(d){
-                        if(d.option4 === ""){
+                        if(d.option4 === "" || d.option4 === null){
                             return '无'
                         }
                         return d.option4;
                     }},
                 {field: 'option5', width: 80, title: '选项E', templet: function(d){
-                        if(d.option5 === ""){
+                        if(d.option5 === "" || d.option5 === null){
                             return '无'
                         }
                         return d.option5;
-                    }},
+                    }
+                },
                 {field: 'answer', width: 135, title: '答案'},
                 {field: 'reason', width: 135, title: '解析'},
+                {field: 'level', width: 135, title: '难度', templet: function(d){
+                        switch (d.level) {
+                            case 1:
+                                return "简单";
+                            case 2:
+                                return "一般";
+                            case 3:
+                                return "困难";
+                        }
+                    }
+                },
                 {title: '操作', minWidth: 150, toolbar: '#currentTableBar', align: "center"}
             ]],
             limits: [10, 15, 20, 25, 50, 100],

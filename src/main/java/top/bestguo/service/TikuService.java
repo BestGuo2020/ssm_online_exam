@@ -1,9 +1,14 @@
 package top.bestguo.service;
 
+import org.springframework.web.multipart.MultipartFile;
 import top.bestguo.entity.Question;
 import top.bestguo.render.BaseResult;
 import top.bestguo.render.MultipleDataResult;
 import top.bestguo.vo.QuestionCondition;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * 题库服务类
@@ -59,5 +64,13 @@ public interface TikuService {
      * @return 当前页的数据
      */
     MultipleDataResult<Question> findAllQuestion(QuestionCondition question, Integer p, Integer limit);
+
+    /**
+     * 批量导入题目到题库中
+     *
+     * @param file
+     * @return
+     */
+    BaseResult importQuestion(InputStream file, String fileExt, Integer belongClass) throws IOException;
 
 }
