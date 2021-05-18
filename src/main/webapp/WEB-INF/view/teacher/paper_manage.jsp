@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
   User: He Guo
@@ -37,18 +38,11 @@
                         <div class="layui-inline">
                             <label class="layui-form-label">班级</label>
                             <div class="layui-input-inline">
-                                <select name="modules" lay-verify="required" lay-search="">
-                                    <option value="">直接选择或搜索选择</option>
-                                    <option value="1">layer</option>
-                                    <option value="2">form</option>
-                                    <option value="3">layim</option>
-                                    <option value="4">element</option>
-                                    <option value="5">laytpl</option>
-                                    <option value="6">upload</option>
-                                    <option value="7">laydate</option>
-                                    <option value="8">laypage</option>
-                                    <option value="9">flow</option>
-                                    <option value="10">util</option>
+                                <select name="classId" lay-verify="required" lay-search="">
+                                    <option value="">选择你的班级</option>
+                                    <c:forEach var="cls" items="${data}">
+                                        <option value="${cls.id}">${cls.classcode} - ${cls.classname}</option>
+                                    </c:forEach>
                                 </select>
                             </div>
                         </div>
@@ -82,16 +76,28 @@
 </div>
 <jsp:include page="../commons/scripts.jsp"/>
 <script>
-    layui.use(['form', 'table', 'layer'], function () {
+    layui.use(['form', 'table', 'layer', 'util'], function () {
         var $ = layui.jquery,
             form = layui.form,
             table = layui.table,
-            layer = layui.layer;
+            layer = layui.layer,
+            util = layui.util;
 
         table.render({
             elem: '#currentTableId',
-            url: '${pageContext.request.contextPath}/static/backend/api/table.json',
+            url: '${pageContext.request.contextPath}/static/backend/api/empty.json',
             toolbar: '#toolbarDemo',
+            parseData: function(res){ //res 即为原始返回的数据
+                return {
+                    "code": res.code, //解析接口状态
+                    "msg": res.message, //解析提示文本
+                    "count": res.total, //解析数据长度
+                    "data": res.data //解析数据列表
+                };
+            },
+            text: {
+                none: "请在选择框中选择你的班级，查找班级中的考试"
+            },
             defaultToolbar: ['filter', 'exports', 'print', {
                 title: '提示',
                 layEvent: 'LAYTABLE_TIPS',
@@ -99,19 +105,37 @@
             }],
             cols: [[
                 {type: "checkbox", width: 50},
-                {field: 'id', width: 80, title: 'ID', sort: true},
-                {field: 'username', width: 80, title: '用户名'},
-                {field: 'sex', width: 80, title: '性别', sort: true},
-                {field: 'city', width: 80, title: '城市'},
-                {field: 'sign', title: '签名', minWidth: 150},
-                {field: 'experience', width: 80, title: '积分', sort: true},
-                {field: 'score', width: 80, title: '评分', sort: true},
-                {field: 'classify', width: 80, title: '职业'},
-                {field: 'wealth', width: 135, title: '财富', sort: true},
-                {title: '操作', minWidth: 150, toolbar: '#currentTableBar', align: "center"}
+                {field: 'id', width: 60, title: '序号', type:'numbers'},
+                {field: 'examname', width: 170, title: '考试名称'},
+                {field: 'starttime', width: 170, title: '开始时间', templet: function (d) {
+                        return util.toDateString(d.starttime, "yyyy-MM-dd HH:mm:ss");
+                    }
+                },
+                {field: 'stoptime', width: 170, title: '结束时间', templet: function (d) {
+                        return util.toDateString(d.starttime, "yyyy-MM-dd HH:mm:ss");
+                    }
+                },
+                {field: 'selectone', title: '单选每题分数', width: 140},
+                {field: 'selectmore', width: 140, title: '多选每题分数'},
+                {field: 'score', width: 80, title: '总分', sort: true},
+                {field: 'status', width: 80, title: '考试状态', templet: function (d) {
+                        var timestamp=new Date().getTime();
+                        console.log(d);
+                        if(timestamp < d.starttime) {
+                            return "<font color='gray'>未开始</font>";
+                        }
+                        if(timestamp <=  d.endtime) {
+                            return "<font color='green'>进行中</font>";
+                        }
+                        if(timestamp > d.endtime) {
+                            return "<font color='black'>已结束</font>";
+                        }
+                    }
+                },
+                {title: '操作', minWidth: 250, toolbar: '#currentTableBar', align: "center"}
             ]],
             limits: [10, 15, 20, 25, 50, 100],
-            limit: 15,
+            limit: 10,
             page: true,
             skin: 'line'
         });
@@ -119,17 +143,18 @@
         // 监听搜索操作
         form.on('submit(data-search-btn)', function (data) {
             var result = JSON.stringify(data.field);
-            layer.alert(result, {
-                title: '最终的搜索信息'
-            });
+
+            console.log(result);
 
             //执行搜索重载
             table.reload('currentTableId', {
+                url: '${pageContext.request.contextPath}/exam/findExam',
+                method: "post",
                 page: {
                     curr: 1
-                }
-                , where: {
-                    searchParams: result
+                },
+                where: {
+                    classId: data.field.classId
                 }
             }, 'data');
 

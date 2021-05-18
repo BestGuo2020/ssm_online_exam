@@ -9,14 +9,20 @@
             <result property="examname" column="examName" jdbcType="VARCHAR"/>
             <result property="starttime" column="startTime" jdbcType="TIMESTAMP"/>
             <result property="stoptime" column="stopTime" jdbcType="TIMESTAMP"/>
-            <result property="selectpoint" column="selectPoint" jdbcType="INTEGER"/>
-            <result property="fillpoint" column="fillPoint" jdbcType="INTEGER"/>
+            <result property="selectone" column="selectOne" jdbcType="INTEGER"/>
+            <result property="selectmore" column="selectMore" jdbcType="INTEGER"/>
             <result property="score" column="score" jdbcType="INTEGER"/>
+            <result property="qlist" column="qList" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         id,examName,startTime,
-        stopTime,selectPoint,fillPoint,
-        score
+        stopTime,selectOne,selectMore,
+        score,qList
     </sql>
+
+    <!-- 通过班级id查询考试信息 -->
+    <select id="findExamInfoByClassId" parameterType="integer" resultMap="BaseResultMap">
+        select exam.* from exam, exam_class where exam_class.examId = exam.id and classId = #{classId}
+    </select>
 </mapper>

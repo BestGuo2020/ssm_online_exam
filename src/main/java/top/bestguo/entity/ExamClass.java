@@ -8,25 +8,25 @@ import java.io.Serializable;
 
 /**
  * 
- * @TableName paper
+ * @TableName exam_class
  */
-@TableName(value ="paper")
-public class Paper implements Serializable {
+@TableName(value ="exam_class")
+public class ExamClass implements Serializable {
     /**
      * 自增id
      */
-    @TableId
+    @TableId(type = IdType.AUTO)
     private Integer id;
+
+    /**
+     * 班级id
+     */
+    private Integer classid;
 
     /**
      * 考试id
      */
     private Integer examid;
-
-    /**
-     * 题目id
-     */
-    private Integer questionid;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
@@ -46,6 +46,20 @@ public class Paper implements Serializable {
     }
 
     /**
+     * 班级id
+     */
+    public Integer getClassid() {
+        return classid;
+    }
+
+    /**
+     * 班级id
+     */
+    public void setClassid(Integer classid) {
+        this.classid = classid;
+    }
+
+    /**
      * 考试id
      */
     public Integer getExamid() {
@@ -59,20 +73,6 @@ public class Paper implements Serializable {
         this.examid = examid;
     }
 
-    /**
-     * 题目id
-     */
-    public Integer getQuestionid() {
-        return questionid;
-    }
-
-    /**
-     * 题目id
-     */
-    public void setQuestionid(Integer questionid) {
-        this.questionid = questionid;
-    }
-
     @Override
     public boolean equals(Object that) {
         if (this == that) {
@@ -84,10 +84,10 @@ public class Paper implements Serializable {
         if (getClass() != that.getClass()) {
             return false;
         }
-        Paper other = (Paper) that;
+        ExamClass other = (ExamClass) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getExamid() == null ? other.getExamid() == null : this.getExamid().equals(other.getExamid()))
-            && (this.getQuestionid() == null ? other.getQuestionid() == null : this.getQuestionid().equals(other.getQuestionid()));
+            && (this.getClassid() == null ? other.getClassid() == null : this.getClassid().equals(other.getClassid()))
+            && (this.getExamid() == null ? other.getExamid() == null : this.getExamid().equals(other.getExamid()));
     }
 
     @Override
@@ -95,8 +95,8 @@ public class Paper implements Serializable {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
+        result = prime * result + ((getClassid() == null) ? 0 : getClassid().hashCode());
         result = prime * result + ((getExamid() == null) ? 0 : getExamid().hashCode());
-        result = prime * result + ((getQuestionid() == null) ? 0 : getQuestionid().hashCode());
         return result;
     }
 
@@ -107,8 +107,8 @@ public class Paper implements Serializable {
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(id);
+        sb.append(", classid=").append(classid);
         sb.append(", examid=").append(examid);
-        sb.append(", questionid=").append(questionid);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

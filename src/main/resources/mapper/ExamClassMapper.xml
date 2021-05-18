@@ -2,15 +2,15 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="top.bestguo.mapper.PaperMapper">
+<mapper namespace="top.bestguo.mapper.ExamClassMapper">
 
-    <resultMap id="BaseResultMap" type="top.bestguo.entity.Paper">
+    <resultMap id="BaseResultMap" type="top.bestguo.entity.ExamClass">
             <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="classid" column="classId" jdbcType="INTEGER"/>
             <result property="examid" column="examId" jdbcType="INTEGER"/>
-            <result property="questionid" column="questionId" jdbcType="INTEGER"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,examId,questionId
+        id,classId,examId
     </sql>
 </mapper>

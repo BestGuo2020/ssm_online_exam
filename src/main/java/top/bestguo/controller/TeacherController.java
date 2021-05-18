@@ -163,8 +163,6 @@ public class TeacherController {
     @RequestMapping("/studentManage")
     public String studentManage(HttpSession session, Model model) {
         Teacher teacher = (Teacher) session.getAttribute("teacher");
-        // 得到id
-        Integer id = teacher.getId();
         List<Classes> data = classesService.findAllClass(teacher.getId()).getData();
         model.addAttribute("data", data);
         return "teacher/student_manage";
@@ -175,7 +173,10 @@ public class TeacherController {
      * @return
      */
     @RequestMapping("/paperManage")
-    public String paperManage() {
+    public String paperManage(HttpSession session, Model model) {
+        Teacher teacher = (Teacher) session.getAttribute("teacher");
+        List<Classes> data = classesService.findAllClass(teacher.getId()).getData();
+        model.addAttribute("data", data);
         return "teacher/paper_manage";
     }
 

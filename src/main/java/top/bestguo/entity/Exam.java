@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -35,19 +37,24 @@ public class Exam implements Serializable {
     private Date stoptime;
 
     /**
-     * 选择题分数
+     * 单选题分数
      */
-    private Integer selectpoint;
+    private Integer selectone;
 
     /**
-     * 填空题分数（按每空计分）
+     * 多选题分数
      */
-    private Integer fillpoint;
+    private Integer selectmore;
 
     /**
      * 总分
      */
     private Integer score;
+
+    /**
+     * 题目列表，题号之间是用逗号隔开
+     */
+    private String qlist;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
@@ -109,31 +116,31 @@ public class Exam implements Serializable {
     }
 
     /**
-     * 选择题分数
+     * 单选题分数
      */
-    public Integer getSelectpoint() {
-        return selectpoint;
+    public Integer getSelectone() {
+        return selectone;
     }
 
     /**
-     * 选择题分数
+     * 单选题分数
      */
-    public void setSelectpoint(Integer selectpoint) {
-        this.selectpoint = selectpoint;
+    public void setSelectone(Integer selectone) {
+        this.selectone = selectone;
     }
 
     /**
-     * 填空题分数（按每空计分）
+     * 多选题分数
      */
-    public Integer getFillpoint() {
-        return fillpoint;
+    public Integer getSelectmore() {
+        return selectmore;
     }
 
     /**
-     * 填空题分数（按每空计分）
+     * 多选题分数
      */
-    public void setFillpoint(Integer fillpoint) {
-        this.fillpoint = fillpoint;
+    public void setSelectmore(Integer selectmore) {
+        this.selectmore = selectmore;
     }
 
     /**
@@ -148,6 +155,20 @@ public class Exam implements Serializable {
      */
     public void setScore(Integer score) {
         this.score = score;
+    }
+
+    /**
+     * 题目列表
+     */
+    public String getQlist() {
+        return qlist;
+    }
+
+    /**
+     * 题目列表
+     */
+    public void setQlist(String qlist) {
+        this.qlist = qlist;
     }
 
     @Override
@@ -166,9 +187,10 @@ public class Exam implements Serializable {
             && (this.getExamname() == null ? other.getExamname() == null : this.getExamname().equals(other.getExamname()))
             && (this.getStarttime() == null ? other.getStarttime() == null : this.getStarttime().equals(other.getStarttime()))
             && (this.getStoptime() == null ? other.getStoptime() == null : this.getStoptime().equals(other.getStoptime()))
-            && (this.getSelectpoint() == null ? other.getSelectpoint() == null : this.getSelectpoint().equals(other.getSelectpoint()))
-            && (this.getFillpoint() == null ? other.getFillpoint() == null : this.getFillpoint().equals(other.getFillpoint()))
-            && (this.getScore() == null ? other.getScore() == null : this.getScore().equals(other.getScore()));
+            && (this.getSelectone() == null ? other.getSelectone() == null : this.getSelectone().equals(other.getSelectone()))
+            && (this.getSelectmore() == null ? other.getSelectmore() == null : this.getSelectmore().equals(other.getSelectmore()))
+            && (this.getScore() == null ? other.getScore() == null : this.getScore().equals(other.getScore()))
+            && (this.getQlist() == null ? other.getQlist() == null : this.getQlist().equals(other.getQlist()));
     }
 
     @Override
@@ -179,9 +201,10 @@ public class Exam implements Serializable {
         result = prime * result + ((getExamname() == null) ? 0 : getExamname().hashCode());
         result = prime * result + ((getStarttime() == null) ? 0 : getStarttime().hashCode());
         result = prime * result + ((getStoptime() == null) ? 0 : getStoptime().hashCode());
-        result = prime * result + ((getSelectpoint() == null) ? 0 : getSelectpoint().hashCode());
-        result = prime * result + ((getFillpoint() == null) ? 0 : getFillpoint().hashCode());
+        result = prime * result + ((getSelectone() == null) ? 0 : getSelectone().hashCode());
+        result = prime * result + ((getSelectmore() == null) ? 0 : getSelectmore().hashCode());
         result = prime * result + ((getScore() == null) ? 0 : getScore().hashCode());
+        result = prime * result + ((getQlist() == null) ? 0 : getQlist().hashCode());
         return result;
     }
 
@@ -195,9 +218,10 @@ public class Exam implements Serializable {
         sb.append(", examname=").append(examname);
         sb.append(", starttime=").append(starttime);
         sb.append(", stoptime=").append(stoptime);
-        sb.append(", selectpoint=").append(selectpoint);
-        sb.append(", fillpoint=").append(fillpoint);
+        sb.append(", selectone=").append(selectone);
+        sb.append(", selectmore=").append(selectmore);
         sb.append(", score=").append(score);
+        sb.append(", qlist=").append(qlist);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();
