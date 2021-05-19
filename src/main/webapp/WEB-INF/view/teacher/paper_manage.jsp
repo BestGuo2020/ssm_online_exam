@@ -112,22 +112,22 @@
                     }
                 },
                 {field: 'stoptime', width: 170, title: '结束时间', templet: function (d) {
-                        return util.toDateString(d.starttime, "yyyy-MM-dd HH:mm:ss");
+                        return util.toDateString(d.stoptime, "yyyy-MM-dd HH:mm:ss");
                     }
                 },
                 {field: 'selectone', title: '单选每题分数', width: 140},
                 {field: 'selectmore', width: 140, title: '多选每题分数'},
                 {field: 'score', width: 80, title: '总分', sort: true},
-                {field: 'status', width: 80, title: '考试状态', templet: function (d) {
+                {field: 'status', width: 110, title: '考试状态', templet: function (d) {
                         var timestamp=new Date().getTime();
                         console.log(d);
                         if(timestamp < d.starttime) {
                             return "<font color='gray'>未开始</font>";
                         }
-                        if(timestamp <=  d.endtime) {
+                        if(timestamp <=  d.stoptime) {
                             return "<font color='green'>进行中</font>";
                         }
-                        if(timestamp > d.endtime) {
+                        if(timestamp > d.stoptime) {
                             return "<font color='black'>已结束</font>";
                         }
                     }
