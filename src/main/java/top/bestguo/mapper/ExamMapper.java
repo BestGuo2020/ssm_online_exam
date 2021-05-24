@@ -19,6 +19,12 @@ public interface ExamMapper extends BaseMapper<Exam> {
      */
     List<Exam> findExamInfoByClassId(@Param("classId") Integer classId);
 
+    /**
+     * 查询最近查询的考试id信息
+     * @return
+     */
+    Integer findExamRecent();
+
 }
 
 
