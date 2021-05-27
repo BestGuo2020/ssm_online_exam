@@ -234,68 +234,128 @@ public class TikuServiceImpl implements TikuService {
                 // 取出表格中的数据，将其放入到实体类中
                 Question question = new Question();
                 // 问题名称
-                question.setQuestionname(row.getCell(0).getStringCellValue());
-                // 题型
-                String type = row.getCell(1).getStringCellValue();
-                // 是否为多选
-                if ("是".equals(type)) {
-                    question.setIsmulti(true);
-                } else if ("否".equals(type)) {
-                    question.setIsmulti(false);
+                Cell cell = row.getCell(0);
+                if(cell != null) {
+                    question.setQuestionname(cell.getStringCellValue());
                 } else {
                     result.setCode(1);
-                    result.setMessage("错误：第" + (i + 1) + "行第2列输入的值不符合要求");
+                    result.setMessage("第" + i + "行问题描述没有填写");
                     return true;
                 }
+                // 题型
+                Cell cell2 = row.getCell(1);
+                if(cell2 != null) {
+                    String type = cell2.getStringCellValue();
+                    // 是否为多选
+                    if ("是".equals(type)) {
+                        question.setIsmulti(true);
+                    } else if ("否".equals(type)) {
+                        question.setIsmulti(false);
+                    } else {
+                        result.setCode(1);
+                        result.setMessage("错误：第" + (i + 1) + "行第2列输入的值不符合要求");
+                        return true;
+                    }
+                } else {
+                    result.setCode(1);
+                    result.setMessage("第" + i + "行题型没有填写");
+                    return true;
+                }
+
                 // A选项
                 Cell cell3 = row.getCell(2);
-                cell3.setCellType(CellType.STRING);
-                String option1 = cell3.getStringCellValue();
-                question.setOption1(option1);
+                if(cell3 != null) {
+                    cell3.setCellType(CellType.STRING);
+                    String option1 = cell3.getStringCellValue();
+                    question.setOption1(option1);
+                } else {
+                    result.setCode(1);
+                    result.setMessage("第" + i + "行A选项没有填写");
+                    return true;
+                }
                 // B选项
                 Cell cell4 = row.getCell(3);
-                cell4.setCellType(CellType.STRING);
-                String option2 = cell3.getStringCellValue();
-                question.setOption2(option2);
+                if(cell4 != null) {
+                    cell4.setCellType(CellType.STRING);
+                    String option2 = cell3.getStringCellValue();
+                    question.setOption2(option2);
+                } else {
+                    result.setCode(1);
+                    result.setMessage("第" + i + "行B选项没有填写");
+                    return true;
+                }
+
                 // C选项
                 Cell cell5 = row.getCell(4);
-                if (cell5.getCellType() != CellType.BLANK) {
-                    cell5.setCellType(CellType.STRING);
-                    String option3 = cell3.getStringCellValue();
-                    question.setOption3(option3);
+                if(cell5 != null) {
+                    if (cell5.getCellType() != CellType.BLANK) {
+                        cell5.setCellType(CellType.STRING);
+                        String option3 = cell3.getStringCellValue();
+                        question.setOption3(option3);
+                    }
                 }
                 // D选项
                 Cell cell6 = row.getCell(5);
-                if (cell6.getCellType() != CellType.BLANK) {
-                    cell6.setCellType(CellType.STRING);
-                    String option4 = cell6.getStringCellValue();
-                    question.setOption4(option4);
+                if(cell6 != null) {
+                    if (cell6.getCellType() != CellType.BLANK) {
+                        cell6.setCellType(CellType.STRING);
+                        String option4 = cell6.getStringCellValue();
+                        question.setOption4(option4);
+                    }
                 }
-                // D选项
+                // E选项
                 Cell cell7 = row.getCell(6);
-                if (cell7.getCellType() != CellType.BLANK) {
-                    cell7.setCellType(CellType.STRING);
-                    String option5 = cell7.getStringCellValue();
-                    question.setOption5(option5);
+                if(cell7 != null) {
+                    if (cell7.getCellType() != CellType.BLANK) {
+                        cell7.setCellType(CellType.STRING);
+                        String option5 = cell7.getStringCellValue();
+                        question.setOption5(option5);
+                    }
                 }
                 // 正确选项
-                String answer = row.getCell(7).getStringCellValue();
-                question.setAnswer(answer);
+                Cell cell8 = row.getCell(7);
+                if(cell8 != null) {
+                    String answer = cell8.getStringCellValue();
+                    question.setAnswer(answer);
+                } else {
+                    result.setCode(1);
+                    result.setMessage("第" + i + "行正确选项没有填写");
+                    return true;
+                }
                 // 答案解析
-                Cell cell8 = row.getCell(8);
-                cell8.setCellType(CellType.STRING);
-                String reason = cell8.getStringCellValue();
-                question.setReason(reason);
+                Cell cell9 = row.getCell(8);
+                if(cell9 != null) {
+                    cell9.setCellType(CellType.STRING);
+                    String reason = cell9.getStringCellValue();
+                    question.setReason(reason);
+                } else {
+                    result.setCode(1);
+                    result.setMessage("第" + i + "行答案解析选项没有填写，如果没有解析请填写无或者暂无即可");
+                    return true;
+                }
                 // 所属班级
                 question.setBelongclass(belongClass);
                 // 难度系数
-                Cell cell9 = row.getCell(9);
-                double level = cell9.getNumericCellValue();
-                question.setLevel((int) level);
+                Cell cell10 = row.getCell(9);
+                if(cell10 != null) {
+                    double level = cell10.getNumericCellValue();
+                    if((int) level >= 1 && (int) level <= 3)
+                        question.setLevel((int) level);
+                    else {
+                        result.setCode(1);
+                        result.setMessage("第" + i + "行难度系数没有填写");
+                        return true;
+                    }
+                } else {
+                    result.setCode(1);
+                    result.setMessage("第" + i + "行难度系数没有填写");
+                    return true;
+                }
+
                 questions.add(question);
             } catch (Exception e) {
                 result.setCode(1);
-                result.setMessage("批量导入失败，请检查表格中的内容是否输入合理");
+                result.setMessage("导入失败，表格中第 " + i + " 行某一单元格出现无效项，请修改excel并重新提交！");
                 return false;
             }
         }
