@@ -25,4 +25,9 @@
     <select id="findExamInfoByClassId" parameterType="integer" resultMap="BaseResultMap">
         select exam.* from exam, exam_class where exam_class.examId = exam.id and classId = #{classId}
     </select>
+
+    <!-- 查询最近插入的考试信息的id -->
+    <select id="findExamRecent" resultType="integer">
+        select id from exam order by id desc limit 1;
+    </select>
 </mapper>

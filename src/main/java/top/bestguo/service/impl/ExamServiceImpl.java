@@ -6,17 +6,18 @@ import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import top.bestguo.entity.Classes;
-import top.bestguo.entity.Exam;
-import top.bestguo.entity.ExamClass;
-import top.bestguo.entity.Student;
+import top.bestguo.entity.*;
 import top.bestguo.mapper.ClassesMapper;
 import top.bestguo.mapper.ExamClassMapper;
 import top.bestguo.mapper.ExamMapper;
+import top.bestguo.mapper.QuestionMapper;
 import top.bestguo.render.BaseResult;
 import top.bestguo.render.MultipleDataResult;
 import top.bestguo.service.ExamService;
+import top.bestguo.util.RandomUtils;
 
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 /**
@@ -31,6 +32,8 @@ public class ExamServiceImpl implements ExamService {
     private ExamClassMapper examClassMapper;
     @Autowired
     private ClassesMapper classesMapper;
+    @Autowired
+    private QuestionMapper questionMapper;
 
     /**
      * 通过班级id查询当前班级的考试信息
@@ -105,6 +108,93 @@ public class ExamServiceImpl implements ExamService {
         } else {
             result.setCode(1);
             result.setMessage("考试信息添加失败");
+        }
+        return result;
+    }
+
+    /**
+     * 录入题目的考试方法
+     *
+     * @param exam 考试实体类
+     * @return 试题录入状态
+     */
+    @Override
+    public BaseResult updateQuestionInExam(Exam exam) {
+        BaseResult result = new BaseResult();
+        // 查询最近的考试信息id
+        Integer recent = examMapper.findExamRecent();
+        exam.setId(recent);
+        // 更新考题
+        int res = examMapper.updateById(exam);
+        if(res > 0) {
+            result.setCode(0);
+            result.setMessage("题目录入成功！");
+        } else {
+            result.setCode(1);
+            result.setMessage("题目录入失败！");
+        }
+        return result;
+    }
+
+    /**
+     * 随机组题方法实现
+     *
+     * @param single 单选题总数
+     * @param multiple 多选题总数
+     * @param classId 班级id
+     * @return
+     */
+    @Override
+    public MultipleDataResult<Question> randomMakeExam(Integer single, Integer multiple, Integer classId) {
+        MultipleDataResult<Question> result = new MultipleDataResult<>();
+        // 新的问题数组
+        List<Question> questionList = new ArrayList<>();
+        // 查询出全部的单选题
+        List<Question> questionSingle = questionMapper
+                .selectList(new QueryWrapper<Question>().eq("belongclass", classId).eq("ismulti", 0));
+        // 查询出全部的多选题
+        List<Question> questionMulti = questionMapper
+                .selectList(new QueryWrapper<Question>().eq("belongclass", classId).eq("ismulti", 1));
+        // 得到单选题和多选题的全部题目数
+        int singleCount = questionSingle.size(), multiCount = questionMulti.size();
+        // 判断单选题和多选题数量之和是否超过10个，未超过10个无法进行随机组卷
+        if(singleCount + multiCount < 10) {
+            result.setCode(1);
+            result.setMessage("随机组题失败，题目数未超过10个");
+        } else {
+            // 单选题组合
+            try {
+                LinkedHashSet<Integer> randomSingle = RandomUtils.getRandomInt(single, singleCount);
+                for (Integer i : randomSingle) {
+                    questionList.add(questionSingle.get(i));
+                }
+            } catch (IllegalArgumentException ex) {
+                result.setCode(1);
+                result.setMessage("随机组题失败，指定生成的单选题数比题库中的单选题数还要多");
+                result.setData(null);
+                result.setTotal(questionList.size());
+                return result;
+            }
+
+            // 多选题组合
+            try {
+                LinkedHashSet<Integer> randomMultiple = RandomUtils.getRandomInt(multiple, multiCount);
+                for (Integer i : randomMultiple) {
+                    questionList.add(questionMulti.get(i));
+                }
+            } catch (IllegalArgumentException ex) {
+                result.setCode(1);
+                result.setMessage("随机组题失败，指定生成的多选题数比题库中的多选题数还要多");
+                result.setData(null);
+                result.setTotal(questionList.size());
+                return result;
+            }
+
+            result.setCode(0);
+            result.setMessage("随机组题成功，等待您的确认！");
+            result.setData(questionList);
+            result.setTotal(questionList.size());
+
         }
         return result;
     }

@@ -234,6 +234,7 @@
                     type: "POST",
                     url: "${pageContext.request.contextPath}/tiku/manageQuestion/" + ${modify.equals('true') ? 2 : 1},
                     data: {
+                        id: (data.field.id === "" || data.field.id === null) ? null : data.field.id,
                         belongclass: data.field.classId,
                         questionname: data.field.question,
                         option1: data.field.optionA,

@@ -27,29 +27,29 @@
                     <div class="layui-carousel" id="stepForm" lay-filter="stepForm" style="margin: 0 auto;">
                         <div carousel-item>
                             <div>
-                                <form class="layui-form" style="margin: 0 auto;max-width: 460px;padding-top: 40px;">
+                                <form class="layui-form" style="margin: 0 auto;max-width: 560px;padding-top: 40px;">
                                     <div class="layui-form-item">
                                         <label class="layui-form-label">试卷名称</label>
                                         <div class="layui-input-block">
-                                            <input type="text" placeholder="请填写试卷名称" class="layui-input" required />
+                                            <input type="text" name="examName" placeholder="请填写考试名称" lay-verify="required" class="layui-input" required />
                                         </div>
                                     </div>
                                     <div class="layui-form-item">
                                         <label class="layui-form-label">考试时间</label>
                                         <div class="layui-input-block">
-                                            <input type="text" id="date_time_range" class="layui-input" placeholder="考试时间">
+                                            <input type="text" id="date_time_range" name="examTime" lay-verify="required" class="layui-input" placeholder="考试时间">
                                         </div>
                                     </div>
                                     <div class="layui-form-item">
-                                        <label class="layui-form-label">选择题分数</label>
+                                        <label class="layui-form-label">单选题分数</label>
                                         <div class="layui-input-block">
-                                            <input type="number" name="title" lay-verify="title" autocomplete="off" placeholder="请输入选择题每题分数" class="layui-input">
+                                            <input type="number" name="single" lay-verify="number" autocomplete="off" placeholder="单选题每题分数" class="layui-input">
                                         </div>
                                     </div>
                                     <div class="layui-form-item">
-                                        <label class="layui-form-label">填空题分数</label>
+                                        <label class="layui-form-label">多选题分数</label>
                                         <div class="layui-input-block">
-                                            <input type="number" name="title" lay-verify="title" autocomplete="off" placeholder="请输入填空题每题分数" class="layui-input">
+                                            <input type="number" name="multiple" lay-verify="number" autocomplete="off" placeholder="多选题每题分数" class="layui-input">
                                         </div>
                                     </div>
                                     <div class="layui-form-item">
@@ -66,12 +66,12 @@
                                     <div class="layui-form-item">
                                         <label class="layui-form-label">选择题目</label>
                                         <div class="layui-input-inline" style="width: 465px;">
-                                            <input type="text" name="questionIds" id="questionIds" placeholder="选择完成的题目题号将显示出来" autocomplete="off" class="layui-input" id="demo" ts-selected="">
+                                            <input type="text" disabled name="questionIds" id="questionIds" placeholder="选择完成的题目题号将显示出来" autocomplete="off" class="layui-input" id="demo" ts-selected="">
                                         </div>
                                     </div>
                                     <div class="layui-form-item">
                                         <div class="layui-input-block">
-                                            <button class="layui-btn" lay-submit lay-filter="formStep">
+                                            <button class="layui-btn" lay-submit lay-filter="formStep2">
                                                 &emsp;选题完成，下一步&emsp;
                                             </button>
                                         </div>
@@ -89,6 +89,7 @@
                                 </div>
                                 <div style="text-align:center; margin-top: 50px;">
                                     <button class="layui-btn next">再次创建</button>
+                                    <button class="layui-btn layui-btn-primary layui-border-green" id="closeSelf">退出</button>
                                 </div>
                             </div>
                         </div>
@@ -131,37 +132,125 @@
             }]
         });
 
-
         form.on('submit(formStep)', function (data) {
-            step.next('#stepForm');
+            console.log("试卷操作", data);
+            layer.confirm('确认考试信息填写无误？', function (index) {
+                $.ajax({
+                    type: "POST",
+                    url: "${pageContext.request.contextPath}/exam/addExam",
+                    data: {
+                        classId: sessionStorage.getItem("examClassId"),
+                        examName: data.field.examName,
+                        examTime: data.field.examTime,
+                        single: data.field.single,
+                        multiple: data.field.multiple
+                    },
+                    traditional: true,
+                    success: function(data){
+                        console.log(data);
+                        // layer.msg(data.message);
+                        // 判断返回的数据是json还是字符串
+                        if(typeof data === 'string') {
+                            data = JSON.parse(data);
+                        }
+                        if(data.code === 0) {
+                            step.next('#stepForm');
+                            layer.close(index);
+                            layer.msg(data.message, {icon: 1});
+                        } else if (data.code === 1) {
+                            layer.msg(data.message, {icon: 2});
+                        } else if (data.code === -1) {
+                            layer.msg(data.message, {icon: 7}, function(){
+                                top.location.href = '${pageContext.request.contextPath}/login';
+                            });
+                        }
+                    }
+                });
+            });
             return false;
         });
 
         form.on('submit(formStep2)', function (data) {
-            step.next('#stepForm');
+            console.log("试题添加");
+            layer.confirm('确认要添加这些题目吗？', function (index) {
+                $.ajax({
+                    type: "POST",
+                    url: "${pageContext.request.contextPath}/exam/addExamQuestion",
+                    data: {
+                        questionIds: data.field.questionIds
+                    },
+                    traditional: true,
+                    success: function(data){
+                        console.log(data);
+                        // layer.msg(data.message);
+                        // 判断返回的数据是json还是字符串
+                        if(typeof data === 'string') {
+                            data = JSON.parse(data);
+                        }
+                        if(data.code === 0) {
+                            step.next('#stepForm');
+                            layer.close(index);
+                            layer.msg(data.message, {icon: 1});
+                        } else if (data.code === 1) {
+                            layer.msg(data.message, {icon: 2});
+                        } else if (data.code === -1) {
+                            layer.msg(data.message, {icon: 7}, function(){
+                                top.location.href = '${pageContext.request.contextPath}/login';
+                            });
+                        }
+                    }
+                });
+            });
             return false;
-        });
-
-        $('.pre').click(function () {
-            step.pre('#stepForm');
-        });
-
-        $('.next').click(function () {
-            step.next('#stepForm');
         });
 
         tableSelect.render({
             elem: '#questionIds',
-            searchKey: 'my',
+            searchType: 'more',
+            searchList: [
+                {searchKey: 'questionname', searchPlaceholder: '搜索用户姓名'},
+                {searchKey: 'belongclass', searchPlaceholder: '班级id'},
+            ],
             checkedKey: 'id',
-            searchPlaceholder: '自定义文字和name',
+            searchPlaceholder: '输入关键字查询你要寻找的题目',
             table: {
-                url: '${pageContext.request.contextPath}/static/backend/api/tableSelect.json',
+                url: '${pageContext.request.contextPath}/tiku/findQuestion',
+                method: "post",
+                parseData: function(res){ //res 即为原始返回的数据
+                    return {
+                        "code": res.code, //解析接口状态
+                        "msg": res.message, //解析提示文本
+                        "count": res.total, //解析数据长度
+                        "data": res.data //解析数据列表
+                    };
+                },
+                where: {
+                    belongclass: sessionStorage.getItem("examClassId")
+                },
                 cols: [[
-                    { type: 'checkbox' },
-                    { field: 'id', title: 'ID', width: 100 },
-                    { field: 'username', title: '姓名', width: 300 },
-                    { field: 'sex', title: '性别', width: 100 }
+                    {type: "checkbox"},
+                    {field: 'id', width: 80, title: '序号', type:'numbers'},
+                    {field: 'questionname', width: 150, title: '问题描述'},
+                    {field: 'ismulti', width: 80, title: '选择题类型', templet: function(d){
+                            if(d.ismulti === 1){
+                                return '多选'
+                            }else{
+                                return '单选'
+                            }
+                        }
+                    },
+                    {field: 'answer', width: 85, title: '答案'},
+                    {field: 'level', width: 85, title: '难度', templet: function(d){
+                            switch (d.level) {
+                                case 1:
+                                    return "简单";
+                                case 2:
+                                    return "一般";
+                                case 3:
+                                    return "困难";
+                            }
+                        }
+                    }
                 ]]
             },
             done: function (elem, data) {
@@ -171,7 +260,13 @@
                 })
                 elem.val(NEWJSON.join(","))
             }
-        })
+        });
+
+        // 关闭窗口
+        $("#closeSelf").click(function () {
+            var index = parent.layer.getFrameIndex(window.name);
+            parent.layer.close(index);
+        });
     })
 </script>
 </body>

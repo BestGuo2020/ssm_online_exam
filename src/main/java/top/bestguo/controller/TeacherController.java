@@ -185,7 +185,10 @@ public class TeacherController {
      * @return
      */
     @RequestMapping("/paperAdd")
-    public String paperAdd() {
+    public String paperAdd(HttpSession session, Model model) {
+        Teacher teacher = (Teacher) session.getAttribute("teacher");
+        List<Classes> data = classesService.findAllClass(teacher.getId()).getData();
+        model.addAttribute("data", data);
         return "teacher/paper_add";
     }
 
@@ -194,7 +197,10 @@ public class TeacherController {
      * @return
      */
     @RequestMapping("/paperAddRandom")
-    public String paperAddRandom() {
+    public String paperAddRandom(HttpSession session, Model model) {
+        Teacher teacher = (Teacher) session.getAttribute("teacher");
+        List<Classes> data = classesService.findAllClass(teacher.getId()).getData();
+        model.addAttribute("data", data);
         return "teacher/paper_add_random";
     }
 

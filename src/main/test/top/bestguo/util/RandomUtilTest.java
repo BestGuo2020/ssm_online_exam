@@ -6,7 +6,7 @@ public class RandomUtilTest {
 
     @Test
     public void test1() {
-        System.out.println(RandomUtils.getRandomInt(10, 100));
+        System.out.println(RandomUtils.getRandomInt(10, 10));
     }
 
     @Test

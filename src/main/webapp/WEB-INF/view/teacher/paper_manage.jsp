@@ -27,7 +27,7 @@
         </fieldset>
 
         <blockquote class="layui-elem-quote layui-text">
-            你需要选择一个班级来查看你所在的班级中的试卷
+            你需要选择一个班级来管理你所在的班级中的试卷、创建试卷
         </blockquote>
 
         <fieldset class="table-search-fieldset">
@@ -38,7 +38,7 @@
                         <div class="layui-inline">
                             <label class="layui-form-label">班级</label>
                             <div class="layui-input-inline">
-                                <select name="classId" lay-verify="required" lay-search="">
+                                <select name="classId" lay-filter="selectClassId" lay-verify="required" lay-search="">
                                     <option value="">选择你的班级</option>
                                     <c:forEach var="cls" items="${data}">
                                         <option value="${cls.id}">${cls.classcode} - ${cls.classname}</option>
@@ -67,7 +67,6 @@
         <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
 
         <script type="text/html" id="currentTableBar">
-            <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="edit">管理试题</a>
             <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="show">查看试卷</a>
             <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除</a>
         </script>
@@ -76,12 +75,20 @@
 </div>
 <jsp:include page="../commons/scripts.jsp"/>
 <script>
+    sessionStorage.setItem("examClassId", null);
     layui.use(['form', 'table', 'layer', 'util'], function () {
         var $ = layui.jquery,
             form = layui.form,
             table = layui.table,
             layer = layui.layer,
             util = layui.util;
+
+        // 监听班级选择事件
+        form.on("select(selectClassId)", function (data) {
+            // console.log(data.value);
+            // 将班级id保存到会话中
+            sessionStorage.setItem("examClassId", data.value);
+        });
 
         table.render({
             elem: '#currentTableId',
@@ -96,13 +103,8 @@
                 };
             },
             text: {
-                none: "请在选择框中选择你的班级，查找班级中的考试"
+                none: "输入单选题或多选题的个数，开始随机抽题"
             },
-            defaultToolbar: ['filter', 'exports', 'print', {
-                title: '提示',
-                layEvent: 'LAYTABLE_TIPS',
-                icon: 'layui-icon-tips'
-            }],
             cols: [[
                 {type: "checkbox", width: 50},
                 {field: 'id', width: 60, title: '序号', type:'numbers'},
@@ -132,7 +134,7 @@
                         }
                     }
                 },
-                {title: '操作', minWidth: 250, toolbar: '#currentTableBar', align: "center"}
+                {title: '操作', minWidth: 150, toolbar: '#currentTableBar', align: "center"}
             ]],
             limits: [10, 15, 20, 25, 50, 100],
             limit: 10,
@@ -165,36 +167,41 @@
          * toolbar监听事件
          */
         table.on('toolbar(currentTableFilter)', function (obj) {
-            if (obj.event === 'add') {  // 监听添加操作
-                var index = layer.open({
-                    title: '自主选题',
-                    type: 2,
-                    shade: 0.2,
-                    maxmin: true,
-                    shadeClose: true,
-                    area: ['100%', '100%'],
-                    content: '/ssm_online_exam/teacher/paperAdd',
-                });
-                $(window).on("resize", function () {
-                    layer.full(index);
-                });
-            } else if (obj.event === 'add_random') {  // 监听添加操作
-                var index = layer.open({
-                    title: '随机抽题',
-                    type: 2,
-                    shade: 0.2,
-                    maxmin: true,
-                    shadeClose: true,
-                    area: ['100%', '100%'],
-                    content: '/ssm_online_exam/teacher/paperAddRandom',
-                });
-                $(window).on("resize", function () {
-                    layer.full(index);
-                });
-            } else if (obj.event === 'delete') {  // 监听删除操作
-                var checkStatus = table.checkStatus('currentTableId')
-                    , data = checkStatus.data;
-                layer.alert(JSON.stringify(data));
+            var cid = sessionStorage.getItem("examClassId");
+            if(cid !== null && cid !== undefined && cid !== "" && cid !== "null") {
+                if (obj.event === 'add') {  // 监听添加操作
+                    var index = layer.open({
+                        title: '自主选题',
+                        type: 2,
+                        shade: 0.2,
+                        maxmin: true,
+                        shadeClose: true,
+                        area: ['100%', '100%'],
+                        content: '/ssm_online_exam/teacher/paperAdd',
+                    });
+                    $(window).on("resize", function () {
+                        layer.full(index);
+                    });
+                } else if (obj.event === 'add_random') {  // 监听添加操作
+                    var index = layer.open({
+                        title: '随机抽题',
+                        type: 2,
+                        shade: 0.2,
+                        maxmin: true,
+                        shadeClose: true,
+                        area: ['100%', '100%'],
+                        content: '/ssm_online_exam/teacher/paperAddRandom',
+                    });
+                    $(window).on("resize", function () {
+                        layer.full(index);
+                    });
+                } else if (obj.event === 'delete') {  // 监听删除操作
+                    var checkStatus = table.checkStatus('currentTableId')
+                        , data = checkStatus.data;
+                    layer.alert(JSON.stringify(data));
+                }
+            } else {
+                layer.msg("你未选择班级，请在上面的选择栏中选一个班级创建试卷", {icon: 2});
             }
         });
 
