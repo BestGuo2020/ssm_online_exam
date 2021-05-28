@@ -68,6 +68,7 @@
 
         <script type="text/html" id="currentTableBar">
             <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="show">查看试卷</a>
+            <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="showGrade">查看成绩</a>
             <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除</a>
         </script>
 
@@ -134,7 +135,7 @@
                         }
                     }
                 },
-                {title: '操作', minWidth: 150, toolbar: '#currentTableBar', align: "center"}
+                {title: '操作', minWidth: 250, toolbar: '#currentTableBar', align: "center"}
             ]],
             limits: [10, 15, 20, 25, 50, 100],
             limit: 10,
@@ -190,7 +191,7 @@
                         maxmin: true,
                         shadeClose: true,
                         area: ['100%', '100%'],
-                        content: '/ssm_online_exam/teacher/paperAddRandom',
+                        content: '${pageContext.request.contextPath}/teacher/paperAddRandom',
                     });
                     $(window).on("resize", function () {
                         layer.full(index);
@@ -198,7 +199,47 @@
                 } else if (obj.event === 'delete') {  // 监听删除操作
                     var checkStatus = table.checkStatus('currentTableId')
                         , data = checkStatus.data;
-                    layer.alert(JSON.stringify(data));
+                    // layer.alert(JSON.stringify(data));
+                    // 将数据保存至数组
+                    var tmp_data = [];
+                    for(var i = 0; i < data.length; i++) {
+                        tmp_data.push(data[i].id);
+                    }
+                    console.log(data);
+                    layer.confirm('真的要删除选中的考试吗？', function (index) {
+                        $.ajax({
+                            type: "POST",
+                            url: "${pageContext.request.contextPath}/exam/deleteExams",
+                            data: {
+                                examIds: tmp_data
+                            },
+                            traditional: true,
+                            success: function(data){
+                                console.log(data);
+                                // layer.msg(data.message);
+                                // 判断返回的数据是json还是字符串
+                                if(typeof data === 'string') {
+                                    data = JSON.parse(data);
+                                }
+                                if(data.code === 0) {
+                                    layer.msg(data.message, {icon: 1}, function(){
+                                        // 重载表格数据
+                                        table.reload("currentTableId", {
+                                            page: {
+                                                curr: 1 //重新从第 1 页开始
+                                            }
+                                        });
+                                    });
+                                } else if (data.code === 1) {
+                                    layer.msg(data.message, {icon: 2});
+                                } else if (data.code === -1) {
+                                    layer.msg(data.message, {icon: 7}, function(){
+                                        top.location.href = '${pageContext.request.contextPath}/login';
+                                    });
+                                }
+                            }
+                        });
+                    });
                 }
             } else {
                 layer.msg("你未选择班级，请在上面的选择栏中选一个班级创建试卷", {icon: 2});
@@ -213,28 +254,54 @@
         });
 
         table.on('tool(currentTableFilter)', function (obj) {
+            console.log(obj);
             var data = obj.data;
-            if (obj.event === 'edit') {
-
+            if (obj.event === 'show') {
+                console.log("查看试卷");
                 var index = layer.open({
-                    title: '管理试题',
+                    title: '查看试卷',
                     type: 2,
                     shade: 0.2,
                     maxmin: true,
                     shadeClose: true,
                     area: ['100%', '100%'],
-                    content: '/ssm_online_exam/teacher/paperAdd?modify=true',
+                    content: '${pageContext.request.contextPath}/exam/paperDetail?id=' + obj.data.id,
                 });
                 $(window).on("resize", function () {
                     layer.full(index);
                 });
                 return false;
-            } else if (obj.event === 'show') {
-                console.log("查看试卷");
+            } else if (obj.event === 'showGrade') {
+                console.log("查看成绩");
             } else if (obj.event === 'delete') {
-                layer.confirm('真的删除行么', function (index) {
-                    obj.del();
-                    layer.close(index);
+                // console.log("examId: ", obj.data.examId);
+                layer.confirm('真的删除该考试么？', function (index) {
+                    $.ajax({
+                        type: "POST",
+                        url: "${pageContext.request.contextPath}/exam/deleteExam",
+                        data: {
+                            examId: obj.data.id
+                        },
+                        success: function(data){
+                            console.log(data);
+                            // layer.msg(data.message);
+                            // 判断返回的数据是json还是字符串
+                            if(typeof data === 'string') {
+                                data = JSON.parse(data);
+                            }
+                            if(data.code === 0) {
+                                layer.msg(data.message, {icon: 1});
+                                obj.del();
+                                layer.close(index);
+                            } else if (data.code === 1) {
+                                layer.msg(data.message, {icon: 2});
+                            } else if (data.code === -1) {
+                                layer.msg(data.message, {icon: 7}, function(){
+                                    top.location.href = '${pageContext.request.contextPath}/login';
+                                });
+                            }
+                        }
+                    });
                 });
             }
         });

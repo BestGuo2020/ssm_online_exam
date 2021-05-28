@@ -1,0 +1,102 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%--
+  Created by IntelliJ IDEA.
+  User: He Guo
+  Date: 2021/5/28
+  Time: 16:44
+  To change this template use File | Settings | File Templates.
+--%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" isELIgnored="false" %>
+<html>
+<head>
+    <title>试卷详情</title>
+    <style>
+        #exportWord {
+            position: absolute;
+            right: 5px;
+            top: 5px;
+        }
+    </style>
+    <script src="${pageContext.request.contextPath}/static/backend/lib/jquery-3.4.1/jquery-3.4.1.min.js" charset="utf-8"></script>
+    <script src="${pageContext.request.contextPath}/static/plugins/Blob.js"></script>
+    <script src="${pageContext.request.contextPath}/static/plugins/FileSaver.js"></script>
+    <script src="${pageContext.request.contextPath}/static/plugins/jquery.wordexport.js"></script>
+</head>
+<body>
+
+    <button id="exportWord" class="layui-btn layui-btn-normal">导出试卷</button>
+    <div id="page-content">
+        <header style="text-align: center;">
+            <h2>${examInfo.get("name")}</h2>
+            考试科目：${examInfo.get("name")}&nbsp;
+            时间：${examInfo.get("time")}分钟&nbsp;
+            总分：${examInfo.get("score")}分<br><br>
+            班级：____________&nbsp;<br>
+            学号：____________&nbsp;<br>
+            姓名：____________<br>
+        </header>
+        <article style="text-align: left; width: 768px; margin: 0 auto;">
+            <h4>一、选择题（每题${examInfo.get("single")}分）</h4>
+            <div style="margin-block-start: 1em;
+                margin-block-end: 1em;
+                margin-inline-start: 0px;
+                margin-inline-end: 0px;
+                padding-inline-start: 40px;">
+                <c:forEach items="${examInfo.get('questions')}" var="question">
+                    <c:if test="${question.ismulti == false}">
+                        <div>
+                            ${multi = multi + 1}、<pre style="display: inline; font-family: initial; font-size: 12pt;">${question.questionname}</pre>
+                            <div style="margin: 10pt 0;">
+                                （A）${question.option1}<br>
+                                （B）${question.option2}<br>
+                                <c:if test="${question.option3 != null && !(question.option3 eq '')}">
+                                    （C）${question.option3}<br>
+                                </c:if>
+                                <c:if test="${question.option4 != null && !(question.option4 eq '')}">
+                                    （D）${question.option4}<br>
+                                </c:if>
+                                <c:if test="${question.option5 != null && !(question.option5 eq '')}">
+                                    （E）${question.option5}<br>
+                                </c:if>
+                            </div>
+                        </div>
+                    </c:if>
+                </c:forEach>
+            </div>
+            <h4>二、多项选择题（每题${examInfo.get("multi")}分）</h4>
+            <div style="margin-block-start: 1em;
+                margin-block-end: 1em;
+                margin-inline-start: 0px;
+                margin-inline-end: 0px;
+                padding-inline-start: 40px;">
+                <c:forEach items="${examInfo.get('questions')}" var="question">
+                    <c:if test="${question.ismulti == true}">
+                        <div>
+
+                            ${multi = multi + 1}、<pre style="display: inline; font-family: initial; font-size: 12pt;">${question.questionname}</pre>
+                            <div style="margin: 10pt 0;">
+                                （A）${question.option1}<br>
+                                （B）${question.option2}<br>
+                                <c:if test="${question.option3 != null && !(question.option3 eq '')}">
+                                    （C）${question.option3}<br>
+                                </c:if>
+                                <c:if test="${question.option4 != null && !(question.option3 eq '')}">
+                                    （D）${question.option4}<br>
+                                </c:if>
+                                <c:if test="${question.option5 != null && !(question.option3 eq '')}">
+                                    （E）${question.option5}<br>
+                                </c:if>
+                            </div>
+                        </div>
+                    </c:if>
+                </c:forEach>
+            </div>
+        </article>
+    </div>
+</body>
+<script>
+    $("#exportWord").click(function(event) {
+        $("#page-content").wordExport("${examInfo.get('name')}");
+    });
+</script>
+</html>

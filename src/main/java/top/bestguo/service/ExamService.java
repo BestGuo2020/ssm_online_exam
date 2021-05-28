@@ -5,6 +5,9 @@ import top.bestguo.entity.Question;
 import top.bestguo.render.BaseResult;
 import top.bestguo.render.MultipleDataResult;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * 考试服务接口类
  */
@@ -46,5 +49,29 @@ public interface ExamService {
      * @return 更新状态
      */
     MultipleDataResult<Question> randomMakeExam(Integer single, Integer multiple, Integer classId);
+
+    /**
+     * 删除考试
+     *
+     * @param examId 考试编号
+     * @return 删除状态
+     */
+    BaseResult deleteExam(Integer examId);
+
+    /**
+     * 删除多个考试
+     *
+     * @param examId 考试编号
+     * @return 删除状态
+     */
+    BaseResult deleteExam(Integer[] examId);
+
+    /**
+     * 展示试卷
+     *
+     * @param id 试卷id
+     * @return 当前考试对应的题目集
+     */
+    Map<String, Object> showExam(Integer id);
 
 }

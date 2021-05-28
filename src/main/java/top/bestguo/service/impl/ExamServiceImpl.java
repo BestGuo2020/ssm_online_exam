@@ -14,11 +14,10 @@ import top.bestguo.mapper.QuestionMapper;
 import top.bestguo.render.BaseResult;
 import top.bestguo.render.MultipleDataResult;
 import top.bestguo.service.ExamService;
+import top.bestguo.util.DateUtils;
 import top.bestguo.util.RandomUtils;
 
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
+import java.util.*;
 
 /**
  * 考试服务实现类
@@ -123,7 +122,29 @@ public class ExamServiceImpl implements ExamService {
         BaseResult result = new BaseResult();
         // 查询最近的考试信息id
         Integer recent = examMapper.findExamRecent();
+        // 查询考试
         exam.setId(recent);
+        // 总分计算
+        String qlist = exam.getQlist();
+        if(qlist != null) {
+            String[] questionIds = qlist.split(",");
+            // 查询选中的题目，判断是不是单选还是多选
+            int single = 0, multi = 0;
+            for (String questionId : questionIds) {
+                Question question = questionMapper.selectById(Integer.parseInt(questionId));
+                // 判断是多选还是单选，并统计其个数
+                if(question.getIsmulti()) {
+                    multi++;
+                } else {
+                    single++;
+                }
+                // 计算总和
+                Exam exam2 = examMapper.selectById(recent);
+                int score = exam2.getSelectone() * single + exam2.getSelectmore() * multi;
+                // 保存总和
+                exam.setScore(score);
+            }
+        }
         // 更新考题
         int res = examMapper.updateById(exam);
         if(res > 0) {
@@ -142,7 +163,7 @@ public class ExamServiceImpl implements ExamService {
      * @param single 单选题总数
      * @param multiple 多选题总数
      * @param classId 班级id
-     * @return
+     * @return 返回随机抽取的题目
      */
     @Override
     public MultipleDataResult<Question> randomMakeExam(Integer single, Integer multiple, Integer classId) {
@@ -184,7 +205,7 @@ public class ExamServiceImpl implements ExamService {
                 }
             } catch (IllegalArgumentException ex) {
                 result.setCode(1);
-                result.setMessage("随机组题失败，指定生成的多选题数比题库中的多选题数还要多");
+                result.setMessage("随机组题失败，指定生成的多选题数多于题库中的多选题数");
                 result.setData(null);
                 result.setTotal(questionList.size());
                 return result;
@@ -197,5 +218,80 @@ public class ExamServiceImpl implements ExamService {
 
         }
         return result;
+    }
+
+    /**
+     * 删除
+     *
+     * @param examId 考试编号
+     * @return 删除状态
+     */
+    @Override
+    public BaseResult deleteExam(Integer examId) {
+        BaseResult result = new BaseResult();
+        // 删除考试表的中考试信息
+        int res = examMapper.deleteById(examId);
+        if(res > 0) {
+            result.setCode(0);
+            result.setMessage("删除成功！");
+        } else {
+            result.setCode(1);
+            result.setMessage("删除失败，该考试已经删除！");
+        }
+        return result;
+    }
+
+    /**
+     * 删除多条考试编号
+     *
+     * @param examId 考试编号
+     * @return 删除状态
+     */
+    @Override
+    public BaseResult deleteExam(Integer[] examId) {
+        BaseResult result = new BaseResult();
+        // 删除考试表的中考试信息
+        int res = examMapper.deleteBatchIds(Arrays.asList(examId));
+        if(res > 0) {
+            result.setCode(0);
+            result.setMessage("选中的考试删除成功！");
+        } else {
+            result.setCode(1);
+            result.setMessage("删除失败，选中的考试已经删除！");
+        }
+        return result;
+    }
+
+    /**
+     * 展示试卷的实现类
+     *
+     * @param id 试卷id
+     * @return 当前考试对应的题目集
+     */
+    @Override
+    public Map<String, Object> showExam(Integer id) {
+        Map<String, Object> map = new HashMap<>();
+        Exam exam = examMapper.selectById(id);
+        // 查询题目集编号
+        String qlist = exam.getQlist();
+        // 题目数组
+        if(qlist != null) {
+            ArrayList<Question> questions = new ArrayList<>();
+            String[] questionIds = qlist.split(",");
+            // 添加试卷到问题集中
+            for (String questionId : questionIds) {
+                // 查询问题
+                Question question = questionMapper.selectById(Integer.parseInt(questionId));
+                questions.add(question);
+            }
+            // 添加试卷信息
+            map.put("questions", questions); // 题目集
+            map.put("single", exam.getSelectone()); // 单选分数
+            map.put("multi", exam.getSelectmore()); // 多选分数
+            map.put("score", exam.getScore()); // 总分
+            map.put("name", exam.getExamname()); // 考试名称
+            map.put("time", DateUtils.timeDistance(exam.getStoptime(), exam.getStarttime())); // 考试时间
+        }
+        return map;
     }
 }

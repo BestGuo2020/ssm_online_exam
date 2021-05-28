@@ -1,5 +1,6 @@
 package top.bestguo.util;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -32,6 +33,19 @@ public class DateUtils {
     public static String dateFormat(String format, Date source){
         SimpleDateFormat sdf = new SimpleDateFormat(format);
         return sdf.format(source);
+    }
+
+    /**
+     * 计算时间差（单位：分钟）
+     *
+     * @param endTime 最后时间
+     * @param startTime 开始时间
+     * @return 时间差（分钟）
+     */
+    public static long timeDistance(Date endTime, Date startTime) {
+        long diff = endTime.getTime() - startTime.getTime();
+        //计算两个时间之间差了多少分钟
+        return diff / (1000 * 60);
     }
 
 }

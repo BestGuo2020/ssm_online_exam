@@ -2,6 +2,7 @@ package top.bestguo.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
@@ -63,7 +64,10 @@ public class TikuServiceImpl implements TikuService {
     @Override
     public BaseResult modifyQuestion(Question question) {
         BaseResult result = new BaseResult();
-        int insert = questionMapper.updateById(question);
+        // 设置更新明细
+        UpdateWrapper<Question> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.setEntity(question);
+        int insert = questionMapper.update(question, updateWrapper);
         if(insert > 0) {
             result.setCode(0);
             result.setMessage("题目修改成功");
@@ -277,7 +281,7 @@ public class TikuServiceImpl implements TikuService {
                 Cell cell4 = row.getCell(3);
                 if(cell4 != null) {
                     cell4.setCellType(CellType.STRING);
-                    String option2 = cell3.getStringCellValue();
+                    String option2 = cell4.getStringCellValue();
                     question.setOption2(option2);
                 } else {
                     result.setCode(1);
@@ -290,7 +294,7 @@ public class TikuServiceImpl implements TikuService {
                 if(cell5 != null) {
                     if (cell5.getCellType() != CellType.BLANK) {
                         cell5.setCellType(CellType.STRING);
-                        String option3 = cell3.getStringCellValue();
+                        String option3 = cell5.getStringCellValue();
                         question.setOption3(option3);
                     }
                 }

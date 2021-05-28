@@ -3,8 +3,10 @@ package top.bestguo.controller;
 import com.fasterxml.jackson.databind.ser.Serializers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import top.bestguo.entity.Exam;
 import top.bestguo.entity.Question;
@@ -15,6 +17,7 @@ import top.bestguo.util.DateUtils;
 
 import java.text.ParseException;
 import java.util.Date;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/exam")
@@ -111,6 +114,47 @@ public class ExamController {
     @ResponseBody
     public MultipleDataResult<Question> addExamRandom(Integer single, Integer multiple, Integer classId) {
         return examService.randomMakeExam(single, multiple, classId);
+    }
+
+    /**
+     * 删除考试信息
+     *
+     * @param examId 考试编号
+     * @return 删除状态
+     */
+    @RequestMapping(value = "/deleteExam", method = RequestMethod.POST)
+    @ResponseBody
+    public BaseResult deleteExam(@RequestParam("examId") Integer examId) {
+        return examService.deleteExam(examId);
+    }
+
+    /**
+     * 删除选中的考试信息
+     *
+     * @param examIds 多个考试编号
+     * @return 删除状态
+     */
+    @RequestMapping(value = "/deleteExams", method = RequestMethod.POST)
+    @ResponseBody
+    public BaseResult deleteExams(@RequestParam("examIds") Integer[] examIds) {
+
+        return examService.deleteExam(examIds);
+    }
+
+    /**
+     * 考试试卷预览
+     *
+     * @param id 考试编号
+     * @param model 模型
+     * @return 试卷信息
+     */
+    @RequestMapping(value = "/paperDetail", method = RequestMethod.GET)
+    public String showExamDetails(Integer id, Model model) {
+        Map<String, Object> showExam = examService.showExam(id);
+        model.addAttribute("examInfo", showExam);
+        model.addAttribute("single", 0);
+        model.addAttribute("multi", 0);
+        return "teacher/paper_detail";
     }
 
 }
