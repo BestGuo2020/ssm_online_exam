@@ -26,16 +26,14 @@
 
     <button id="exportWord" class="layui-btn layui-btn-normal">导出试卷</button>
     <div id="page-content">
-        <header style="text-align: center;">
+        <div style="text-align: center;">
             <h2>${examInfo.get("name")}</h2>
             考试科目：${examInfo.get("name")}&nbsp;
             时间：${examInfo.get("time")}分钟&nbsp;
             总分：${examInfo.get("score")}分<br><br>
-            班级：____________&nbsp;<br>
-            学号：____________&nbsp;<br>
-            姓名：____________<br>
-        </header>
-        <article style="text-align: left; width: 768px; margin: 0 auto;">
+            班级：____________&nbsp; 学号：____________&nbsp; 姓名：____________<br>
+        </div>
+        <div style="text-align: left; width: 768px; margin: 0 auto;">
             <h4>一、选择题（每题${examInfo.get("single")}分）</h4>
             <div style="margin-block-start: 1em;
                 margin-block-end: 1em;
@@ -44,22 +42,20 @@
                 padding-inline-start: 40px;">
                 <c:forEach items="${examInfo.get('questions')}" var="question">
                     <c:if test="${question.ismulti == false}">
-                        <div>
-                            ${multi = multi + 1}、<pre style="display: inline; font-family: initial; font-size: 12pt;">${question.questionname}</pre>
-                            <div style="margin: 10pt 0;">
-                                （A）${question.option1}<br>
-                                （B）${question.option2}<br>
-                                <c:if test="${question.option3 != null && !(question.option3 eq '')}">
-                                    （C）${question.option3}<br>
-                                </c:if>
-                                <c:if test="${question.option4 != null && !(question.option4 eq '')}">
-                                    （D）${question.option4}<br>
-                                </c:if>
-                                <c:if test="${question.option5 != null && !(question.option5 eq '')}">
-                                    （E）${question.option5}<br>
-                                </c:if>
-                            </div>
-                        </div>
+                        <pre style="font-size: 12pt;">${single = single + 1}、${question.questionname}</pre>
+                        <p style="font-family: '宋体',serif">
+                           （A）${question.option1}<br>
+                           （B）${question.option2}<br>
+                            <c:if test="${question.option3 != null && !(question.option3 eq '')}">
+                                （C）${question.option3}<br>
+                            </c:if>
+                            <c:if test="${question.option4 != null && !(question.option4 eq '')}">
+                                （D）${question.option4}<br>
+                            </c:if>
+                            <c:if test="${question.option5 != null && !(question.option5 eq '')}">
+                                （E）${question.option5}<br>
+                            </c:if>
+                        </p>
                     </c:if>
                 </c:forEach>
             </div>
@@ -71,27 +67,24 @@
                 padding-inline-start: 40px;">
                 <c:forEach items="${examInfo.get('questions')}" var="question">
                     <c:if test="${question.ismulti == true}">
-                        <div>
-
-                            ${multi = multi + 1}、<pre style="display: inline; font-family: initial; font-size: 12pt;">${question.questionname}</pre>
-                            <div style="margin: 10pt 0;">
-                                （A）${question.option1}<br>
-                                （B）${question.option2}<br>
-                                <c:if test="${question.option3 != null && !(question.option3 eq '')}">
-                                    （C）${question.option3}<br>
-                                </c:if>
-                                <c:if test="${question.option4 != null && !(question.option3 eq '')}">
-                                    （D）${question.option4}<br>
-                                </c:if>
-                                <c:if test="${question.option5 != null && !(question.option3 eq '')}">
-                                    （E）${question.option5}<br>
-                                </c:if>
-                            </div>
-                        </div>
+                        <pre style="font-size: 12pt;">${multi = multi + 1}、${question.questionname}</pre>
+                        <p style="font-family: '宋体',serif">
+                            （A）${question.option1}<br>
+                            （B）${question.option2}<br>
+                            <c:if test="${question.option3 != null && !(question.option3 eq '')}">
+                                （C）${question.option3}<br>
+                            </c:if>
+                            <c:if test="${question.option4 != null && !(question.option3 eq '')}">
+                                （D）${question.option4}<br>
+                            </c:if>
+                            <c:if test="${question.option5 != null && !(question.option3 eq '')}">
+                                （E）${question.option5}<br>
+                            </c:if>
+                        </p>
                     </c:if>
                 </c:forEach>
             </div>
-        </article>
+        </div>
     </div>
 </body>
 <script>
