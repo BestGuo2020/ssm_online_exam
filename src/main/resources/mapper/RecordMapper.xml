@@ -6,7 +6,7 @@
 
     <resultMap id="BaseResultMap" type="top.bestguo.entity.Record">
             <id property="id" column="id" jdbcType="INTEGER"/>
-            <result property="paperid" column="paperId" jdbcType="INTEGER"/>
+            <result property="examid" column="examId" jdbcType="INTEGER"/>
             <result property="stuid" column="stuId" jdbcType="INTEGER"/>
             <result property="answer" column="answer" jdbcType="VARCHAR"/>
             <result property="wrong" column="wrong" jdbcType="VARCHAR"/>
@@ -15,7 +15,7 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,paperId,stuId,
+        id,examId,stuId,
         answer,wrong,correct,
         score
     </sql>

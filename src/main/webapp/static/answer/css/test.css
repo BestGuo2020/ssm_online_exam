@@ -32,7 +32,7 @@
 
 .option{line-height:32px; display:block; background:#fff;color:#666;}
 .option:hover{background:#e4e4e4;}
-.option input{width:20px; height:20px; display:block; float:left; margin:10px 10px 0 0;}
+.option input{width:20px; height:20px; display:block; float:left; margin:8px 10px 0 0;}
 .option label{height:auto;display:block;}
 
 .test_more_nr_main{width:85%; margin:0 auto; padding:10px 0;}

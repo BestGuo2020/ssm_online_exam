@@ -65,9 +65,7 @@ public class TikuServiceImpl implements TikuService {
     public BaseResult modifyQuestion(Question question) {
         BaseResult result = new BaseResult();
         // 设置更新明细
-        UpdateWrapper<Question> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.setEntity(question);
-        int insert = questionMapper.update(question, updateWrapper);
+        int insert = questionMapper.updateById(question);
         if(insert > 0) {
             result.setCode(0);
             result.setMessage("题目修改成功");

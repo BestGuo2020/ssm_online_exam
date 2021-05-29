@@ -6,11 +6,9 @@ import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 import top.bestguo.entity.*;
-import top.bestguo.mapper.ClassesMapper;
-import top.bestguo.mapper.ExamClassMapper;
-import top.bestguo.mapper.ExamMapper;
-import top.bestguo.mapper.QuestionMapper;
+import top.bestguo.mapper.*;
 import top.bestguo.render.BaseResult;
 import top.bestguo.render.MultipleDataResult;
 import top.bestguo.service.ExamService;
@@ -33,6 +31,10 @@ public class ExamServiceImpl implements ExamService {
     private ClassesMapper classesMapper;
     @Autowired
     private QuestionMapper questionMapper;
+    @Autowired
+    private StudentClassMapper studentClassMapper;
+    @Autowired
+    private RecordMapper recordMapper;
 
     /**
      * 通过班级id查询当前班级的考试信息
@@ -278,20 +280,137 @@ public class ExamServiceImpl implements ExamService {
         if(qlist != null) {
             ArrayList<Question> questions = new ArrayList<>();
             String[] questionIds = qlist.split(",");
+            // 统计单选题和多选题的个数
+            int singleCount = 0, multiCount = 0;
             // 添加试卷到问题集中
             for (String questionId : questionIds) {
                 // 查询问题
                 Question question = questionMapper.selectById(Integer.parseInt(questionId));
+                // 判断选择题是否为多选，如果是，多选+1，否则单选+1。
+                if(question.getIsmulti()) {
+                    multiCount++;
+                } else {
+                    singleCount++;
+                }
                 questions.add(question);
             }
             // 添加试卷信息
             map.put("questions", questions); // 题目集
             map.put("single", exam.getSelectone()); // 单选分数
             map.put("multi", exam.getSelectmore()); // 多选分数
+            map.put("singleCount", singleCount); // 单选总数
+            map.put("multiCount", multiCount); // 多选总数
             map.put("score", exam.getScore()); // 总分
             map.put("name", exam.getExamname()); // 考试名称
+            map.put("stoptime", exam.getStoptime()); // 考试结束时间
             map.put("time", DateUtils.timeDistance(exam.getStoptime(), exam.getStarttime())); // 考试时间
         }
         return map;
+    }
+
+    /**
+     * 判断该学生是否在这个班级中
+     *
+     * @param stuId 学生id
+     * @param examId 考试id
+     * @return 在班上？
+     */
+    @Override
+    public boolean checkStudentInClass(Integer stuId, Integer examId) {
+        // 查询条件
+        QueryWrapper<ExamClass> wrapper = new QueryWrapper<>();
+        wrapper.eq("examid", examId);
+        ExamClass examClass = examClassMapper.selectOne(wrapper);
+        // 获取当前考试所在的班级
+        Integer examClassId = examClass.getClassid();
+
+        // 获取学生所在的班级
+        List<Integer> studentClassList = studentClassMapper.findStuIdByClassesId(stuId);
+        // 判断是否在班级中
+        return studentClassList.contains(examClassId);
+    }
+
+    /**
+     * 保存答案
+     *
+     * @param selectOne 单选题答案
+     * @param selectMore 多选题答案
+     * @param examId 考试id
+     * @param stuId 学生id
+     * @return 返回保存状态
+     */
+    @Override
+    public BaseResult saveAnswer(String selectOne, String selectMore, Integer examId, Integer stuId) {
+        BaseResult result = new BaseResult();
+        // 查询当前考生记录是否存在
+        QueryWrapper<Record> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("examid", examId);
+        queryWrapper.eq("stuid", stuId);
+        Record record1 = recordMapper.selectOne(queryWrapper);
+        // 如果不存在，则插入
+        if(record1 == null) {
+            // 添加记录实体类
+            Record record = new Record();
+            record.setExamid(examId);
+            record.setStuid(stuId);
+            // 单选和多选的结合体
+            record.setAnswer(selectOne + "," + selectMore);
+            int res = recordMapper.insert(record);
+            if(res > 0) {
+                result.setCode(0);
+                result.setMessage("成功保存至服务器");
+            } else {
+                result.setCode(1);
+                result.setMessage("保存失败");
+            }
+        } else {
+            // 否则，更新答题信息
+            record1.setAnswer(selectOne + "," + selectMore);
+            int res = recordMapper.updateById(record1);
+            if(res > 0) {
+                result.setCode(0);
+                result.setMessage("成功保存至服务器");
+            } else {
+                result.setCode(1);
+                result.setMessage("保存失败");
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * 提交试卷并批改
+     *
+     * @param selectOne 单选题答案
+     * @param selectMore 多选题答案
+     * @param examId 考试id
+     * @param stuId 学生id
+     * @return 返回提交状态
+     */
+    @Override
+    public String commitAnswer(String selectOne, String selectMore, Integer examId, Integer stuId) {
+        return null;
+    }
+
+    /**
+     * 查询当前学生对应的答案
+     *
+     * @param examId 考试id
+     * @param stuId 学生id
+     * @return
+     */
+    @Override
+    public void findAnswer(Integer examId, Integer stuId, Model model) {
+        // 查询当前考生记录是否存在
+        QueryWrapper<Record> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("examid", examId);
+        queryWrapper.eq("stuid", stuId);
+        // 查询记录
+        Record record = recordMapper.selectOne(queryWrapper);
+        if(record != null) {
+            // 找出答案
+            model.addAttribute("answer", record.getAnswer().split(","));
+        }
     }
 }

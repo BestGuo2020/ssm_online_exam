@@ -19,4 +19,9 @@
         INSERT INTO student_class (stuId,classId) VALUES (#{stuid},#{classid})
     </insert>
 
+    <!-- 通过学生id查询班级号 -->
+    <select id="findStuIdByClassesId" parameterType="integer" resultType="integer">
+        select classId from student_class where stuId = #{stuId}
+    </select>
+
 </mapper>

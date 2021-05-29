@@ -1,5 +1,6 @@
 package top.bestguo.service;
 
+import org.springframework.ui.Model;
 import top.bestguo.entity.Exam;
 import top.bestguo.entity.Question;
 import top.bestguo.render.BaseResult;
@@ -74,4 +75,42 @@ public interface ExamService {
      */
     Map<String, Object> showExam(Integer id);
 
+    /**
+     * 判断该学生是否在这个班级中
+     *
+     * @param stuId 学生id
+     * @param examId 考试id
+     * @return true-在班上，false-不在班上
+     */
+    boolean checkStudentInClass(Integer stuId, Integer examId);
+
+    /**
+     * 保存答案
+     *
+     * @param selectOne 单选题答案
+     * @param selectMore 多选题答案
+     * @param examId 考试id
+     * @param stuId 学生id
+     */
+    BaseResult saveAnswer(String selectOne, String selectMore, Integer examId, Integer stuId);
+
+    /**
+     * 提交试卷并批改
+     *
+     * @param selectOne 单选题答案
+     * @param selectMore 多选题答案
+     * @param examId 考试id
+     * @param stuId 学生id
+     */
+    String commitAnswer(String selectOne, String selectMore, Integer examId, Integer stuId);
+
+    /**
+     * 加载保存在服务器的答案
+     *
+     * @param examId 考试id
+     * @param stuId 学生id
+     * @param model 视图层模型
+     * @return 保存的答案
+     */
+    void findAnswer(Integer examId, Integer stuId, Model model);
 }

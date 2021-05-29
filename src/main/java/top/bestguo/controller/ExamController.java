@@ -4,12 +4,10 @@ import com.fasterxml.jackson.databind.ser.Serializers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import top.bestguo.entity.Exam;
 import top.bestguo.entity.Question;
+import top.bestguo.entity.Student;
 import top.bestguo.render.BaseResult;
 import top.bestguo.render.MultipleDataResult;
 import top.bestguo.service.ExamService;
@@ -155,6 +153,52 @@ public class ExamController {
         model.addAttribute("single", 0);
         model.addAttribute("multi", 0);
         return "teacher/paper_detail";
+    }
+
+    /**
+     * 考试界面
+     *
+     * @param examId 考试编号
+     * @param stuId 学生编号
+     * @param model page作用域
+     * @return 返回考试页面
+     */
+    @RequestMapping("/answerCard/{examId},{stuId}")
+    public String answerCard(@PathVariable Integer examId, @PathVariable Integer stuId, Model model) {
+        // 判断考生是否在此班级中
+        boolean isExistInClass = examService.checkStudentInClass(stuId, examId);
+        if(isExistInClass) {
+            Map<String, Object> showExam = examService.showExam(examId);
+            model.addAttribute("examInfo", showExam);
+            model.addAttribute("single", 0);
+            model.addAttribute("multi", 0);
+            model.addAttribute("stuId", stuId);
+            examService.findAnswer(examId, stuId, model);
+            // 返回答案
+            return "student/answer_card";
+        } else {
+            model.addAttribute("msg", "你不在这个班级，无法参加考试");
+            model.addAttribute("path", "login");
+            return "status/fail";
+        }
+    }
+
+    /**
+     * 保存答案
+     *
+     * @param selectOne 单选题答案
+     * @param selectMore 多选题答案
+     * @param examId 考试id
+     * @param stuId 学生id
+     * @return 提交状态
+     */
+    @RequestMapping(value = "/saveAnswer", method = RequestMethod.POST)
+    @ResponseBody
+    public BaseResult commitAnswer(String selectOne, String selectMore,
+                                   Integer examId, Integer stuId) {
+
+        return examService.saveAnswer(selectOne, selectMore, examId, stuId);
+
     }
 
 }

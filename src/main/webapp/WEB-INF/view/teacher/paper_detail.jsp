@@ -34,7 +34,7 @@
             班级：____________&nbsp; 学号：____________&nbsp; 姓名：____________<br>
         </div>
         <div style="text-align: left; width: 768px; margin: 0 auto;">
-            <h4>一、选择题（每题${examInfo.get("single")}分）</h4>
+            <h4>一、选择题（每题${examInfo.get("single")}分，共${examInfo.get("singleCount") * examInfo.get("single")}分）</h4>
             <div style="margin-block-start: 1em;
                 margin-block-end: 1em;
                 margin-inline-start: 0px;
@@ -59,7 +59,7 @@
                     </c:if>
                 </c:forEach>
             </div>
-            <h4>二、多项选择题（每题${examInfo.get("multi")}分）</h4>
+            <h4>二、多项选择题（每题${examInfo.get("multi")}分，共${examInfo.get("multiCount") * examInfo.get("multi")}分）</h4>
             <div style="margin-block-start: 1em;
                 margin-block-end: 1em;
                 margin-inline-start: 0px;
