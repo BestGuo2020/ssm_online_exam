@@ -171,7 +171,7 @@
             var cid = sessionStorage.getItem("examClassId");
             if(cid !== null && cid !== undefined && cid !== "" && cid !== "null") {
                 if (obj.event === 'add') {  // 监听添加操作
-                    var index = layer.open({
+                    let index = layer.open({
                         title: '自主选题',
                         type: 2,
                         shade: 0.2,
@@ -184,7 +184,7 @@
                         layer.full(index);
                     });
                 } else if (obj.event === 'add_random') {  // 监听添加操作
-                    var index = layer.open({
+                    let index = layer.open({
                         title: '随机抽题',
                         type: 2,
                         shade: 0.2,
