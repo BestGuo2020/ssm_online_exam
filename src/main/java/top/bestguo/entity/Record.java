@@ -19,9 +19,9 @@ public class Record implements Serializable {
     private Integer id;
 
     /**
-     * 试卷id
+     * 考试id
      */
-    private Integer paperid;
+    private Integer examid;
 
     /**
      * 学生id
@@ -66,17 +66,17 @@ public class Record implements Serializable {
     }
 
     /**
-     * 试卷id
+     * 考试id
      */
-    public Integer getPaperid() {
-        return paperid;
+    public Integer getExamid() {
+        return examid;
     }
 
     /**
-     * 试卷id
+     * 考试id
      */
-    public void setPaperid(Integer paperid) {
-        this.paperid = paperid;
+    public void setExamid(Integer examid) {
+        this.examid = examid;
     }
 
     /**
@@ -162,7 +162,7 @@ public class Record implements Serializable {
         }
         Record other = (Record) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getPaperid() == null ? other.getPaperid() == null : this.getPaperid().equals(other.getPaperid()))
+            && (this.getExamid() == null ? other.getExamid() == null : this.getExamid().equals(other.getExamid()))
             && (this.getStuid() == null ? other.getStuid() == null : this.getStuid().equals(other.getStuid()))
             && (this.getAnswer() == null ? other.getAnswer() == null : this.getAnswer().equals(other.getAnswer()))
             && (this.getWrong() == null ? other.getWrong() == null : this.getWrong().equals(other.getWrong()))
@@ -175,7 +175,7 @@ public class Record implements Serializable {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
-        result = prime * result + ((getPaperid() == null) ? 0 : getPaperid().hashCode());
+        result = prime * result + ((getExamid() == null) ? 0 : getExamid().hashCode());
         result = prime * result + ((getStuid() == null) ? 0 : getStuid().hashCode());
         result = prime * result + ((getAnswer() == null) ? 0 : getAnswer().hashCode());
         result = prime * result + ((getWrong() == null) ? 0 : getWrong().hashCode());
@@ -191,7 +191,7 @@ public class Record implements Serializable {
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(id);
-        sb.append(", paperid=").append(paperid);
+        sb.append(", examid=").append(examid);
         sb.append(", stuid=").append(stuid);
         sb.append(", answer=").append(answer);
         sb.append(", wrong=").append(wrong);
