@@ -3,9 +3,10 @@ package top.bestguo.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.apache.commons.beanutils.ConvertUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import top.bestguo.entity.*;
 import top.bestguo.mapper.*;
@@ -142,7 +143,7 @@ public class ExamServiceImpl implements ExamService {
                 }
                 // 计算总和
                 Exam exam2 = examMapper.selectById(recent);
-                int score = exam2.getSelectone() * single + exam2.getSelectmore() * multi;
+                Double score = exam2.getSelectone() * single + exam2.getSelectmore() * multi;
                 // 保存总和
                 exam.setScore(score);
             }
@@ -341,39 +342,46 @@ public class ExamServiceImpl implements ExamService {
      */
     @Override
     public BaseResult saveAnswer(String selectOne, String selectMore, Integer examId, Integer stuId) {
-        BaseResult result = new BaseResult();
-        // 查询当前考生记录是否存在
-        QueryWrapper<Record> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("examid", examId);
-        queryWrapper.eq("stuid", stuId);
-        Record record1 = recordMapper.selectOne(queryWrapper);
-        // 如果不存在，则插入
-        if(record1 == null) {
-            // 添加记录实体类
-            Record record = new Record();
-            record.setExamid(examId);
-            record.setStuid(stuId);
-            // 单选和多选的结合体
-            record.setAnswer(selectOne + "," + selectMore);
-            int res = recordMapper.insert(record);
-            if(res > 0) {
-                result.setCode(0);
-                result.setMessage("成功保存至服务器");
+        ExamInfo examInfo = new ExamInfo(examId, stuId).invoke();
+        BaseResult result = examInfo.getResult();
+        Record record1 = examInfo.getRecord1();
+        Date stoptime = examInfo.getStoptime();
+        // 如果不存在或者还未到时间
+        if(DateUtils.timeDistance(stoptime, new Date()) >= -1000) {
+            if(record1 == null) {
+                // 添加记录实体类
+                Record record = new Record();
+                record.setExamid(examId);
+                record.setStuid(stuId);
+                // 单选和多选的结合体
+                record.setAnswer(selectOne + "," + selectMore);
+                int res = recordMapper.insert(record);
+                if(res > 0) {
+                    result.setCode(0);
+                    result.setMessage("成功保存至服务器");
+                } else {
+                    result.setCode(1);
+                    result.setMessage("保存失败");
+                }
             } else {
-                result.setCode(1);
-                result.setMessage("保存失败");
+                // 判断考生是否已经交卷或者时间到了
+                if(record1.getScore() == null) {
+                    // 否则，更新答题信息
+                    record1.setAnswer(selectOne + "," + selectMore);
+                    int res = recordMapper.updateById(record1);
+                    if(res > 0) {
+                        result.setCode(0);
+                        result.setMessage("成功保存至服务器");
+                    } else {
+                        result.setCode(1);
+                        result.setMessage("保存失败");
+                    }
+                }
             }
         } else {
-            // 否则，更新答题信息
-            record1.setAnswer(selectOne + "," + selectMore);
-            int res = recordMapper.updateById(record1);
-            if(res > 0) {
-                result.setCode(0);
-                result.setMessage("成功保存至服务器");
-            } else {
-                result.setCode(1);
-                result.setMessage("保存失败");
-            }
+            result.setCode(1);
+            result.setMessage("你的考试已经结束，无法再保存试卷了！");
+            return result;
         }
 
         return result;
@@ -386,11 +394,102 @@ public class ExamServiceImpl implements ExamService {
      * @param selectMore 多选题答案
      * @param examId 考试id
      * @param stuId 学生id
-     * @return 返回提交状态
+     *
      */
     @Override
-    public String commitAnswer(String selectOne, String selectMore, Integer examId, Integer stuId) {
-        return null;
+    public BaseResult commitAnswer(String selectOne, String selectMore, Integer examId, Integer stuId) {
+        BaseResult result = new BaseResult();
+        // 查询当前考生记录是否存在
+        QueryWrapper<Record> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("examid", examId);
+        queryWrapper.eq("stuid", stuId);
+        Record record1 = recordMapper.selectOne(queryWrapper);
+        Exam exam = examMapper.selectById(examId);
+        // 获取考试时间
+        Date stoptime = exam.getStoptime();
+        // 判断考试是否结束
+        if(DateUtils.timeDistance(stoptime, new Date()) >= -1000) {
+            // 如果查询不到数据，则添加数据
+            if (record1 == null) {
+                // 添加记录实体类
+                record1 = new Record();
+                record1.setExamid(examId);
+                record1.setStuid(stuId);
+                // 判断单选题是否为空
+                if (selectOne != null && selectMore != null) {
+                    // 设置单选题
+                    record1.setAnswer(selectOne + "," + selectMore);
+                } else if (selectOne != null) {
+                    record1.setAnswer(selectOne);
+                } else if (selectMore != null) {
+                    record1.setAnswer(selectMore);
+                }
+                // 添加考试记录
+                recordMapper.insert(record1);
+                // 再查一次，得到id
+                record1 = recordMapper.selectOne(queryWrapper);
+            }
+            // 通过得分判断学生是否做了试卷
+            if (record1.getScore() == null) {
+                if (record1.getAnswer() != null) {
+                    //---- 开始批改
+                    // 再次判断是否交白卷
+                    String[] answers = record1.getAnswer().split(",");
+                    // 声明正确的题号集合和错误的题号集合
+                    ArrayList<String> rights = new ArrayList<>(), mistakes = new ArrayList<>();
+                    // 获取本次考试的题号
+                    String[] questionIds = exam.getQlist().split(",");
+                    // 总分
+                    double score = 0;
+                    // 遍历此次考试题号
+                    for (int i = 0; i < questionIds.length; i++) {
+                        Integer questionId = Integer.parseInt(questionIds[i]);
+                        // 查询题目
+                        Question question = questionMapper.selectById(questionId);
+                        // 获取当前题目对应的答案
+                        String answer = question.getAnswer();
+                        // 如果答案正确，放入正确的题号集中，并统计正确
+                        if (answers[i].equals(answer)) {
+                            rights.add(questionIds[i]);
+                            // 统计分数
+                            score += (question.getIsmulti() ? exam.getSelectmore() : exam.getSelectone());
+                        } else {
+                            // 答案错误，则放在错误的题号集
+                            mistakes.add(questionIds[i]);
+                        }
+                    }
+                    // 设置得分
+                    record1.setScore(score);
+                    // 正确的题目
+                    String correct = StringUtils.join(rights, ",");
+                    record1.setCorrect(correct);
+                    // 错误的题目
+                    String wrong = StringUtils.join(mistakes, ",");
+                    record1.setWrong(wrong);
+                } else {
+                    // 0分
+                    record1.setScore(0.0);
+                }
+            } else {
+                result.setCode(1);
+                result.setMessage("你的考试已经结束，无法再次交卷了！");
+                return result;
+            }
+        } else {
+            result.setCode(1);
+            result.setMessage("你的考试已经结束，无法再次交卷了！");
+            return result;
+        }
+        // 保存改卷信息
+        int res = recordMapper.updateById(record1);
+        if(res > 0) {
+            result.setCode(0);
+            result.setMessage("试卷提交成功，无法再次答题了！");
+        } else {
+            result.setCode(1);
+            result.setMessage("试卷提交失败！");
+        }
+        return result;
     }
 
     /**
@@ -398,7 +497,6 @@ public class ExamServiceImpl implements ExamService {
      *
      * @param examId 考试id
      * @param stuId 学生id
-     * @return
      */
     @Override
     public void findAnswer(Integer examId, Integer stuId, Model model) {
@@ -411,6 +509,77 @@ public class ExamServiceImpl implements ExamService {
         if(record != null) {
             // 找出答案
             model.addAttribute("answer", record.getAnswer().split(","));
+        }
+    }
+
+    /**
+     * 查询当前学生对应的答案
+     *
+     * @param examId 考试id
+     * @param stuId 学生id
+     */
+    @Override
+    public void showAnswer(Integer examId, Integer stuId, Model model) {
+        // 判断考生是否交卷或者时间是否到了
+        ExamInfo examInfo = new ExamInfo(examId, stuId).invoke();
+        Date stoptime = examInfo.stoptime;
+        // 如果考试时间到了或者已经交卷了
+        if(examInfo.record1 != null) {
+            if(DateUtils.timeDistance(stoptime, new Date()) < -1000 || examInfo.record1.getScore() != null) {
+                // 查询记录
+                Record record = examInfo.getRecord1();
+                if(record != null) {
+                    // 加载正确题号
+                    String[] correct = record.getCorrect().split(",");
+                    Integer[] convert = (Integer[]) ConvertUtils.convert(correct, Integer.class);
+                    model.addAttribute("correct", Arrays.asList(convert));
+                    // 得分
+                    model.addAttribute("get_score", record.getScore());
+                }
+            }
+        }
+    }
+
+    /**
+     * 公共部分抽取出来
+     */
+    private class ExamInfo {
+
+        private Integer examId;
+        private Integer stuId;
+        private BaseResult result;
+        private Record record1;
+        private Date stoptime;
+        private Exam exam;
+
+        public ExamInfo(Integer examId, Integer stuId) {
+            this.examId = examId;
+            this.stuId = stuId;
+        }
+
+        public BaseResult getResult() {
+            return result;
+        }
+
+        public Record getRecord1() {
+            return record1;
+        }
+
+        public Date getStoptime() {
+            return stoptime;
+        }
+
+        public ExamInfo invoke() {
+            result = new BaseResult();
+            // 查询当前考生记录是否存在
+            QueryWrapper<Record> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("examid", examId);
+            queryWrapper.eq("stuid", stuId);
+            record1 = recordMapper.selectOne(queryWrapper);
+            exam = examMapper.selectById(examId);
+            // 获取考试时间
+            stoptime = exam.getStoptime();
+            return this;
         }
     }
 }

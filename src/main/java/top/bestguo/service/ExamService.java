@@ -102,7 +102,7 @@ public interface ExamService {
      * @param examId 考试id
      * @param stuId 学生id
      */
-    String commitAnswer(String selectOne, String selectMore, Integer examId, Integer stuId);
+    BaseResult commitAnswer(String selectOne, String selectMore, Integer examId, Integer stuId);
 
     /**
      * 加载保存在服务器的答案
@@ -113,4 +113,13 @@ public interface ExamService {
      * @return 保存的答案
      */
     void findAnswer(Integer examId, Integer stuId, Model model);
+
+    /**
+     * 考试结束后将答案和解析展示出来
+     *
+     * @param examId 考试id
+     * @param stuId 学生id
+     * @param model 视图层模型
+     */
+    void showAnswer(Integer examId, Integer stuId, Model model);
 }

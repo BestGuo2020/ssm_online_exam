@@ -9,8 +9,8 @@
             <result property="examname" column="examName" jdbcType="VARCHAR"/>
             <result property="starttime" column="startTime" jdbcType="TIMESTAMP"/>
             <result property="stoptime" column="stopTime" jdbcType="TIMESTAMP"/>
-            <result property="selectone" column="selectOne" jdbcType="INTEGER"/>
-            <result property="selectmore" column="selectMore" jdbcType="INTEGER"/>
+            <result property="selectone" column="selectOne" jdbcType="DOUBLE"/>
+            <result property="selectmore" column="selectMore" jdbcType="DOUBLE"/>
             <result property="score" column="score" jdbcType="INTEGER"/>
             <result property="qlist" column="qList" jdbcType="VARCHAR"/>
     </resultMap>

@@ -11,7 +11,21 @@ import java.util.List;
  */
 public interface QuestionMapper extends BaseMapper<Question> {
 
+    /**
+     * 批量插入
+     *
+     * @param questions 问题实体类
+     * @return true or false
+     */
     Boolean insertBatch(@Param("questions") List<Question> questions);
+
+    /**
+     * 查询问题解析
+     *
+     * @param questionId 问题编号
+     * @return 解析
+     */
+    List<String> selectReasonByIds(@Param("questionId") int[] questionId);
 
 }
 

@@ -11,7 +11,7 @@
             <result property="answer" column="answer" jdbcType="VARCHAR"/>
             <result property="wrong" column="wrong" jdbcType="VARCHAR"/>
             <result property="correct" column="correct" jdbcType="VARCHAR"/>
-            <result property="score" column="score" jdbcType="VARCHAR"/>
+            <result property="score" column="score" jdbcType="DOUBLE"/>
     </resultMap>
 
     <sql id="Base_Column_List">

@@ -46,7 +46,7 @@ public class Record implements Serializable {
     /**
      * 分数
      */
-    private String score;
+    private Double score;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
@@ -138,14 +138,14 @@ public class Record implements Serializable {
     /**
      * 分数
      */
-    public String getScore() {
+    public Double getScore() {
         return score;
     }
 
     /**
      * 分数
      */
-    public void setScore(String score) {
+    public void setScore(Double score) {
         this.score = score;
     }
 

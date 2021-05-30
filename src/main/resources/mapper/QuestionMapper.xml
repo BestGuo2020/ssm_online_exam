@@ -35,4 +35,10 @@
             #{question.option4},#{question.option5},#{question.answer},#{question.reason},#{question.belongclass},#{question.level})
         </foreach>
     </insert>
+    <select id="selectReasonByIds" resultType="java.lang.String">
+        select reason from question where id in
+        <foreach collection="questionIds" separator="," open="(" close=")">
+            #{questionId}
+        </foreach>
+    </select>
 </mapper>

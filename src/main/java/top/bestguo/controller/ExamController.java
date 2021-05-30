@@ -51,7 +51,7 @@ public class ExamController {
     @RequestMapping(value = "/addExam", method = RequestMethod.POST)
     @ResponseBody
     public BaseResult addExam(Integer classId, String examName, String examTime,
-                              Integer single, Integer multiple) {
+                              Double single, Double multiple) {
         BaseResult result = new BaseResult();
         // 考试时间处理
         String[] startAndStop = examTime.split(" - ");
@@ -174,6 +174,8 @@ public class ExamController {
             model.addAttribute("multi", 0);
             model.addAttribute("stuId", stuId);
             examService.findAnswer(examId, stuId, model);
+            // 展示答案
+            examService.showAnswer(examId, stuId, model);
             // 返回答案
             return "student/answer_card";
         } else {
@@ -194,10 +196,28 @@ public class ExamController {
      */
     @RequestMapping(value = "/saveAnswer", method = RequestMethod.POST)
     @ResponseBody
-    public BaseResult commitAnswer(String selectOne, String selectMore,
+    public BaseResult saveAnswer(String selectOne, String selectMore,
                                    Integer examId, Integer stuId) {
 
         return examService.saveAnswer(selectOne, selectMore, examId, stuId);
+
+    }
+
+    /**
+     * 提交答案
+     *
+     * @param selectOne 单选题答案
+     * @param selectMore 多选题答案
+     * @param examId 考试id
+     * @param stuId 学生id
+     * @return 提交状态
+     */
+    @RequestMapping(value = "/commitAnswer", method = RequestMethod.POST)
+    @ResponseBody
+    public BaseResult commitAnswer(String selectOne, String selectMore,
+                                   Integer examId, Integer stuId) {
+
+        return examService.commitAnswer(selectOne, selectMore, examId, stuId);
 
     }
 

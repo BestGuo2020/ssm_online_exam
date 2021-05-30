@@ -4,8 +4,6 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 import java.io.Serializable;
 import java.util.Date;
 
@@ -39,17 +37,17 @@ public class Exam implements Serializable {
     /**
      * 单选题分数
      */
-    private Integer selectone;
+    private Double selectone;
 
     /**
      * 多选题分数
      */
-    private Integer selectmore;
+    private Double selectmore;
 
     /**
      * 总分
      */
-    private Integer score;
+    private Double score;
 
     /**
      * 题目列表，题号之间是用逗号隔开
@@ -118,54 +116,54 @@ public class Exam implements Serializable {
     /**
      * 单选题分数
      */
-    public Integer getSelectone() {
+    public Double getSelectone() {
         return selectone;
     }
 
     /**
      * 单选题分数
      */
-    public void setSelectone(Integer selectone) {
+    public void setSelectone(Double selectone) {
         this.selectone = selectone;
     }
 
     /**
      * 多选题分数
      */
-    public Integer getSelectmore() {
+    public Double getSelectmore() {
         return selectmore;
     }
 
     /**
      * 多选题分数
      */
-    public void setSelectmore(Integer selectmore) {
+    public void setSelectmore(Double selectmore) {
         this.selectmore = selectmore;
     }
 
     /**
      * 总分
      */
-    public Integer getScore() {
+    public Double getScore() {
         return score;
     }
 
     /**
      * 总分
      */
-    public void setScore(Integer score) {
+    public void setScore(Double score) {
         this.score = score;
     }
 
     /**
-     * 题目列表
+     * 题目列表，题号之间是用逗号隔开
      */
     public String getQlist() {
         return qlist;
     }
 
     /**
-     * 题目列表
+     * 题目列表，题号之间是用逗号隔开
      */
     public void setQlist(String qlist) {
         this.qlist = qlist;

@@ -45,6 +45,19 @@
         .reading h2 a:hover {
             color: #2183f1;
         }
+
+        .test_content_nr_answer {
+            width: 85%;
+            margin: 0 auto;
+        }
+
+        .test_content_nr_answer > p {
+            margin: 10px 0;
+        }
+
+        .test_content_nr_answer > pre {
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 
@@ -181,6 +194,23 @@
                                                 </c:if>
                                             </ul>
                                         </div>
+                                        <%-- 答案解析 --%>
+                                        <c:if test="${get_score != null}">
+                                            <div class="test_content_nr_answer">
+                                                <p>
+                                                    <c:choose>
+                                                        <c:when test="${correct.contains(question.id)}">
+                                                            <span style="color: red;">答案正确</span>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <span style="color: #00aa00; padding-right: 10px">答案错误</span>
+                                                            <span>正确答案：${question.answer}</span>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </p>
+                                                <pre>解析：<br>${question.reason}</pre>
+                                            </div>
+                                        </c:if>
                                     </li>
                                 </c:if>
                             </c:forEach>
@@ -301,6 +331,23 @@
                                                 </c:if>
                                             </ul>
                                         </div>
+                                        <%-- 答案解析 --%>
+                                        <c:if test="${get_score != null}">
+                                            <div class="test_content_nr_answer">
+                                                <p>
+                                                    <c:choose>
+                                                        <c:when test="${correct.contains(answer[single - 1])}">
+                                                            <span style="color: red;">答案正确</span>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <span style="color: #00aa00; padding-right: 10px">答案错误</span>
+                                                            <span>正确答案：${question.answer}</span>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </p>
+                                                <pre>解析：<br>${question.reason}</pre>
+                                            </div>
+                                        </c:if>
                                     </li>
                                 </c:if>
                             </c:forEach>
@@ -325,12 +372,12 @@
                         <div class="rt_content_tt">
                             <h2>单选题</h2>
                             <p>
-                                <span>共</span><i class="content_lit">${single}</i><span>题</span>
+                                <span>共</span><i class="content_lit">${single - multi}</i><span>题</span>
                             </p>
                         </div>
                         <div class="rt_content_nr answerSheet">
                             <ul>
-                                <c:forEach var="index" begin="0" end="${single - 1}" step="1">
+                                <c:forEach var="index" begin="0" end="${single - multi - 1}" step="1">
                                     <li><a href="#qu_0_${index}">${index + 1}</a></li>
                                 </c:forEach>
                             </ul>
@@ -370,7 +417,8 @@
         // 答题点击事件
         $('li.option').click(function () {
             // debugger;
-            var examId = $(this).closest('.test_content_nr_main').closest('li').attr('id'); // 得到题目ID
+            var exam = $(this).closest('.test_content_nr_main').closest('li'); // 得到题目ID
+            var examId = exam.attr('id')
             var cardLi = $('a[href="#' + examId + '"]'); // 根据题目ID找到对应答题卡
             // 设置已答题
             if (!cardLi.hasClass('hasBeenAnswer')) {
@@ -541,6 +589,9 @@
                     data = JSON.parse(data);
                 }
                 if(data.code === 0) {
+                    if(data.message.indexOf("无法再次") !== -1) {
+                        disabledAllSelect();
+                    }
                     layer.msg(data.message, {icon: 1});
                 } else if (data.code === 1) {
                     layer.msg(data.message, {icon: 2});
@@ -559,6 +610,16 @@
         }
         $.ajax(request);
     }
+
+    function disabledAllSelect() {
+        // 禁止选择
+        $('li.option').click(null);
+        $("input").attr("disabled", true);
+        // 禁止提交
+        $("button").attr("disabled", true);
+    }
+
+    <c:if test="${get_score != null}">disabledAllSelect();</c:if>
 
     // 页面加载完成，再执行重载答案
     window.onload = function () {
