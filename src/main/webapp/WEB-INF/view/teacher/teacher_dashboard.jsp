@@ -77,53 +77,6 @@
                 <div class="layui-row layui-col-space15">
                     <div class="layui-col-md6">
                         <div class="layui-card">
-                            <div class="layui-card-header"><i class="fa fa-warning icon"></i>基本数据统计</div>
-                            <div class="layui-card-body">
-                                <div class="welcome-module">
-                                    <div class="layui-row layui-col-space10">
-                                        <div class="layui-col-xs4">
-                                            <div class="panel layui-bg-number">
-                                                <div class="panel-body">
-                                                    <div class="panel-title">
-                                                        <h5>班级统计</h5>
-                                                    </div>
-                                                    <div class="panel-content">
-                                                        <h1 class="no-margins">1234</h1>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="layui-col-xs4">
-                                            <div class="panel layui-bg-number">
-                                                <div class="panel-body">
-                                                    <div class="panel-title">
-                                                        <h5>学生统计</h5>
-                                                    </div>
-                                                    <div class="panel-content">
-                                                        <h1 class="no-margins">1234</h1>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="layui-col-xs4">
-                                            <div class="panel layui-bg-number">
-                                                <div class="panel-body">
-                                                    <div class="panel-title">
-                                                        <h5>试卷总数</h5>
-                                                    </div>
-                                                    <div class="panel-content">
-                                                        <h1 class="no-margins">1234</h1>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="layui-col-md6">
-                        <div class="layui-card">
                             <div class="layui-card-header"><i class="fa fa-credit-card icon icon-blue"></i>快捷入口</div>
                             <div class="layui-card-body">
                                 <div class="welcome-module">
@@ -137,7 +90,7 @@
                                         <div class="layui-col-xs3 layuimini-qiuck-module">
                                             <a href="javascript:;" layuimini-content-href="page/setting.html" data-title="系统设置" data-icon="fa fa-gears">
                                                 <i class="fa fa-gears"></i>
-                                                <cite>成绩分析</cite>
+                                                <cite>题库管理</cite>
                                             </a>
                                         </div>
                                         <div class="layui-col-xs3 layuimini-qiuck-module">
