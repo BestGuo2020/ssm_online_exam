@@ -539,6 +539,60 @@ public class ExamServiceImpl implements ExamService {
             }
         }
     }
+    /**
+     * 查询学生的考试成绩
+     *
+     * @param studentId 学生id
+     * @return 返回状态和成绩数据
+     */
+    @Override
+    public MultipleDataResult<Map<String, Object>> findExamPassed(Integer studentId) {
+        // 创建一个列表，用户保存查询到的成绩和考试信息
+        List<Map<String, Object>> data = new ArrayList<>();
+        // 查询成绩
+        List<Record> examList=recordMapper.findExamPassed(studentId);
+        // 遍历出查询到的成绩
+        for (int i=0;i<examList.size();i++){
+            // 创建 Map 对象，保存成绩和考试信息
+            Map<String, Object> map=new HashMap<>();
+            Record record=examList.get(i);
+            Exam exam=examMapper.findExam(record.getExamid());
+            map.put("examcode", record.getExamid());
+            map.put("examname",exam.getExamname());
+            map.put("totalscore", exam.getScore());
+            map.put("myscore",record.getScore());
+            map.put("starttime",exam.getStarttime());
+            map.put("stoptime",exam.getStoptime());
+//            map.put("classcount", classesMapper.findClassesCount(classes.getId()));
+            // 添加到 list 里面
+            data.add(map);
+        }
+
+        // 返回数据
+        MultipleDataResult<Map<String, Object>> dataResult = new MultipleDataResult<>();
+
+        dataResult.setCode(0);
+        dataResult.setData(data);
+        dataResult.setTotal(examList.size());
+        return dataResult;
+    }
+
+    /**
+     *
+     * 通过学生id找考试 id
+     * @param stuId
+     * @return
+     */
+
+    @Override
+    public int findExamId(Integer stuId) {
+        QueryWrapper<Record> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("stuid", stuId);
+        // 查询记录
+        Record record = recordMapper.selectOne(queryWrapper);
+        return record.getExamid();
+
+    }
 
     /**
      * 公共部分抽取出来

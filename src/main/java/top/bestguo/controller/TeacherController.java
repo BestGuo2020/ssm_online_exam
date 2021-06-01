@@ -177,6 +177,7 @@ public class TeacherController {
         Teacher teacher = (Teacher) session.getAttribute("teacher");
         List<Classes> data = classesService.findAllClass(teacher.getId()).getData();
         model.addAttribute("data", data);
+
         return "teacher/paper_manage";
     }
 

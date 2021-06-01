@@ -10,13 +10,18 @@ import top.bestguo.entity.Student;
 import top.bestguo.entity.StudentClass;
 import top.bestguo.entity.Teacher;
 import top.bestguo.render.BaseResult;
+import top.bestguo.render.MultipleDataResult;
 import top.bestguo.render.SingleDataResult;
 import top.bestguo.service.ClassesService;
+import top.bestguo.service.ExamService;
 import top.bestguo.service.StudentService;
 import top.bestguo.service.TeacherService;
 import top.bestguo.vo.ClassInfo;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * 学生端页面
@@ -29,6 +34,8 @@ public class  StudentController {
     private StudentService studentService;
     @Autowired
     private ClassesService classesService;
+    @Autowired
+    private ExamService examService;
 
     /**
      * 学生端主页
@@ -39,7 +46,7 @@ public class  StudentController {
         Student student= (Student) session.getAttribute("student");
         // 得到id
         Integer id = student.getId();
-//         查询教师信息
+//         查询学生信息
         model.addAttribute("student",studentService.selectStudentById(id) );
         return "student/student_index";
     }
@@ -53,7 +60,7 @@ public class  StudentController {
        Student student = (Student) session.getAttribute("student");
         // 得到id
         Integer id = student.getId();
-        // 查询教师信息
+        // 查询学生信息
         model.addAttribute("student", studentService.selectStudentById(id));
         return "student/student_setting";
     }
@@ -121,9 +128,75 @@ public class  StudentController {
         // 得到id
         Integer id = student.getId();
         // 查询学生信息
-        model.addAttribute("student", student);
+
+        model.addAttribute("student", studentService.selectStudentById(id));
+
         return "student/student_dashboard";
     }
+
+    /**
+     *
+     * @param session
+     * @param model
+     * @return
+     */
+    @RequestMapping("/student_exam")
+public String student_exam(HttpSession session, Model model) {
+    Student student = (Student) session.getAttribute("student");
+    // 得到id
+    Integer id = student.getId();
+    // 查询学生信息
+    model.addAttribute("student", studentService.selectStudentById(id));
+        MultipleDataResult<?> data = classesService.findJoinClass(id);
+        model.addAttribute("data", data.getData());
+        System.out.println("11111");
+        System.out.println(data.getData());
+        System.out.println("11111");
+    return "student/student_exam";
+}
+
+    /**
+     * 学生参加考试
+     *
+     */
+
+    @RequestMapping(value = "/myexam", method = RequestMethod.POST)
+    public void myExam(@RequestParam("examId") Integer examId,HttpSession session, Model model, HttpServletResponse resp) {
+        Student student = (Student) session.getAttribute("student");
+        // 得到id
+        Integer studentId = student.getId();
+        // 查询学生信息
+        model.addAttribute("student", studentService.selectStudentById(studentId ));
+        //得到考试id
+        System.out.println("xxxxx");
+        System.out.println(studentId);
+        System.out.println(examId);
+        System.out.println("xxxxx");
+        String url="http://localhost:8080/ssm_online_exam/exam/answerCard/"+examId+","+studentId;
+        String url2="https://www.baidu.com/";
+        try {
+            resp.sendRedirect(url2);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+    /**
+ * 学生查看成绩页面
+ *
+ */
+@RequestMapping("/studentexam_passed")
+    public String studentExamPassed(HttpSession session, Model model) {
+        Student student = (Student) session.getAttribute("student");
+        // 得到id
+        Integer id = student.getId();
+        // 查询学生信息
+        model.addAttribute("student", studentService.selectStudentById(id));
+        return "student/studentexam_passed";
+    }
+
 
     /**
      * 查看我参加的班级界面

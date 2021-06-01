@@ -41,13 +41,13 @@
           ]
         },{
           "title": "我的考试",
-          "href": "/ssm_online_exam/student/class_attend",
+          "href": "/ssm_online_exam/student/student_exam",
           "icon": "fa fa-file-text",
           "target": "_self"
 
         },{
           "title": "我考过的试卷",
-          "href": "/ssm_online_exam/student/class_attend",
+          "href": "/ssm_online_exam/student/studentexam_passed",
           "icon": "fa fa-file-text",
           "target": "_self"
         }

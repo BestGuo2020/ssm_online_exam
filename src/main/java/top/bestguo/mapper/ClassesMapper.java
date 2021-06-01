@@ -31,8 +31,8 @@ public interface ClassesMapper extends BaseMapper<Classes> {
      * @param classId 课程id
      * @return 班级人数
      */
-   Integer findClassesCount(@Param("classId") Integer classId);
-    /**
+     Integer findClassesCount(@Param("classId") Integer classId);
+     /**
      * 学生退出班级处理
      *
      * @param studentId 学生id

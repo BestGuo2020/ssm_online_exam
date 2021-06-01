@@ -24,7 +24,13 @@ public interface ExamMapper extends BaseMapper<Exam> {
      * @return
      */
     Integer findExamRecent();
-
+    /**
+     * 查询考试信息
+     *
+     * @param  examId  考试id
+     * @return 考试信息
+     */
+    Exam findExam(@Param("id") Integer examId);
 }
 
 

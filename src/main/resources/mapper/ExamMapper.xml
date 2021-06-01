@@ -30,4 +30,7 @@
     <select id="findExamRecent" resultType="integer">
         select id from exam order by id desc limit 1;
     </select>
+    <select id="findExam" parameterType="integer" resultType="Exam">
+        select *from Exam where id =#{id}
+    </select>
 </mapper>

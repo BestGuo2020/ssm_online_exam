@@ -220,5 +220,17 @@ public class ExamController {
         return examService.commitAnswer(selectOne, selectMore, examId, stuId);
 
     }
+    /**
+     * 查询当前学生的考试成绩
+     *
+     * @param studentId
+     * @return
+     */
+    @RequestMapping(value = "/studentExamPassed/{studentId}")
+    @ResponseBody
+    public MultipleDataResult<?> studentExamPassed(@PathVariable Integer studentId) {
+
+        return examService.findExamPassed(studentId);
+    }
 
 }

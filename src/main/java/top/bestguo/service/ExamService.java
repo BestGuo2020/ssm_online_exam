@@ -122,4 +122,18 @@ public interface ExamService {
      * @param model 视图层模型
      */
     void showAnswer(Integer examId, Integer stuId, Model model);
+    /**
+     * 查询学生的考试成绩
+     *
+     * @param studentId 学生id
+     * @return 返回状态和成绩数据
+     */
+    MultipleDataResult<?> findExamPassed(Integer studentId);
+
+    /**
+     *通过学生id查找考试id
+     * @param studentId
+     * @return
+     */
+    int findExamId(Integer studentId);
 }

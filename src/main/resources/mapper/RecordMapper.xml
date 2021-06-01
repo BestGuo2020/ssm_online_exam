@@ -19,4 +19,8 @@
         answer,wrong,correct,
         score
     </sql>
+    <!-- 学生查询考试成绩 -->
+    <select id="findExamPassed" parameterType="Integer" resultType="Record">
+    select * from Record where  stuId =#{stuId}
+</select>
 </mapper>
