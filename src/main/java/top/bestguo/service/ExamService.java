@@ -122,6 +122,7 @@ public interface ExamService {
      * @param model 视图层模型
      */
     void showAnswer(Integer examId, Integer stuId, Model model);
+
     /**
      * 查询学生的考试成绩
      *
@@ -136,4 +137,13 @@ public interface ExamService {
      * @return
      */
     int findExamId(Integer studentId);
+
+    /**
+     * 输出考试成绩
+     *
+     * @param examId 考试id
+     * @param model 视图层模型
+     * @param isDesc 是否逆序  1-是，0-不是
+     */
+    void printExamScore(Integer classId, Integer examId, Model model, Integer isDesc);
 }

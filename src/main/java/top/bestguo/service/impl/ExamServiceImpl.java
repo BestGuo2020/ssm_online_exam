@@ -15,6 +15,7 @@ import top.bestguo.render.MultipleDataResult;
 import top.bestguo.service.ExamService;
 import top.bestguo.util.DateUtils;
 import top.bestguo.util.RandomUtils;
+import top.bestguo.vo.GradeTable;
 
 import java.util.*;
 
@@ -36,13 +37,15 @@ public class ExamServiceImpl implements ExamService {
     private StudentClassMapper studentClassMapper;
     @Autowired
     private RecordMapper recordMapper;
+    @Autowired
+    private StudentMapper studentMapper;
 
     /**
      * 通过班级id查询当前班级的考试信息
      *
      * @param classId 班级号
-     * @param page 当前页
-     * @param limit 当前页展示的数据条数
+     * @param page    当前页
+     * @param limit   当前页展示的数据条数
      * @return 学生信息
      */
     @Override
@@ -59,7 +62,7 @@ public class ExamServiceImpl implements ExamService {
         // 设置返回结果
         result.setData(pageInfo.getList());
         // 设置状态码和消息
-        if(pageInfo.getList().size() > 0) {
+        if (pageInfo.getList().size() > 0) {
             result.setCode(0);
             result.setMessage("查询成功");
         } else {
@@ -73,7 +76,7 @@ public class ExamServiceImpl implements ExamService {
     /**
      * 考试添加的实现方法
      *
-     * @param exam 考试实体类
+     * @param exam    考试实体类
      * @param classId 班级id
      * @return 添加状态
      */
@@ -87,17 +90,17 @@ public class ExamServiceImpl implements ExamService {
         // 插入考试信息
         int examRes = examMapper.insert(exam);
         // 判断是否插入成功
-        if(examRes > 0) {
+        if (examRes > 0) {
             // 查询最近的考试信息id
             Integer examId = examMapper.findExamRecent();
             // 查询当前班级信息
             Classes classes = classesMapper.selectById(classId);
             // 判断班级是否存在
-            if(classes != null) {
+            if (classes != null) {
                 // 设置考试id
                 examClass.setExamid(examId);
                 int insert = examClassMapper.insert(examClass);
-                if(insert > 0) {
+                if (insert > 0) {
                     result.setCode(0);
                     result.setMessage("考试信息添加成功，接下来可以开始选题了");
                 }
@@ -129,14 +132,14 @@ public class ExamServiceImpl implements ExamService {
         exam.setId(recent);
         // 总分计算
         String qlist = exam.getQlist();
-        if(qlist != null) {
+        if (qlist != null) {
             String[] questionIds = qlist.split(",");
             // 查询选中的题目，判断是不是单选还是多选
             int single = 0, multi = 0;
             for (String questionId : questionIds) {
                 Question question = questionMapper.selectById(Integer.parseInt(questionId));
                 // 判断是多选还是单选，并统计其个数
-                if(question.getIsmulti()) {
+                if (question.getIsmulti()) {
                     multi++;
                 } else {
                     single++;
@@ -150,7 +153,7 @@ public class ExamServiceImpl implements ExamService {
         }
         // 更新考题
         int res = examMapper.updateById(exam);
-        if(res > 0) {
+        if (res > 0) {
             result.setCode(0);
             result.setMessage("题目录入成功！");
         } else {
@@ -163,9 +166,9 @@ public class ExamServiceImpl implements ExamService {
     /**
      * 随机组题方法实现
      *
-     * @param single 单选题总数
+     * @param single   单选题总数
      * @param multiple 多选题总数
-     * @param classId 班级id
+     * @param classId  班级id
      * @return 返回随机抽取的题目
      */
     @Override
@@ -182,7 +185,7 @@ public class ExamServiceImpl implements ExamService {
         // 得到单选题和多选题的全部题目数
         int singleCount = questionSingle.size(), multiCount = questionMulti.size();
         // 判断单选题和多选题数量之和是否超过10个，未超过10个无法进行随机组卷
-        if(singleCount + multiCount < 10) {
+        if (singleCount + multiCount < 10) {
             result.setCode(1);
             result.setMessage("随机组题失败，题目数未超过10个");
         } else {
@@ -234,7 +237,7 @@ public class ExamServiceImpl implements ExamService {
         BaseResult result = new BaseResult();
         // 删除考试表的中考试信息
         int res = examMapper.deleteById(examId);
-        if(res > 0) {
+        if (res > 0) {
             result.setCode(0);
             result.setMessage("删除成功！");
         } else {
@@ -255,7 +258,7 @@ public class ExamServiceImpl implements ExamService {
         BaseResult result = new BaseResult();
         // 删除考试表的中考试信息
         int res = examMapper.deleteBatchIds(Arrays.asList(examId));
-        if(res > 0) {
+        if (res > 0) {
             result.setCode(0);
             result.setMessage("选中的考试删除成功！");
         } else {
@@ -278,7 +281,7 @@ public class ExamServiceImpl implements ExamService {
         // 查询题目集编号
         String qlist = exam.getQlist();
         // 题目数组
-        if(qlist != null) {
+        if (qlist != null) {
             ArrayList<Question> questions = new ArrayList<>();
             String[] questionIds = qlist.split(",");
             // 统计单选题和多选题的个数
@@ -288,7 +291,7 @@ public class ExamServiceImpl implements ExamService {
                 // 查询问题
                 Question question = questionMapper.selectById(Integer.parseInt(questionId));
                 // 判断选择题是否为多选，如果是，多选+1，否则单选+1。
-                if(question.getIsmulti()) {
+                if (question.getIsmulti()) {
                     multiCount++;
                 } else {
                     singleCount++;
@@ -312,7 +315,7 @@ public class ExamServiceImpl implements ExamService {
     /**
      * 判断该学生是否在这个班级中
      *
-     * @param stuId 学生id
+     * @param stuId  学生id
      * @param examId 考试id
      * @return 在班上？
      */
@@ -334,10 +337,10 @@ public class ExamServiceImpl implements ExamService {
     /**
      * 保存答案
      *
-     * @param selectOne 单选题答案
+     * @param selectOne  单选题答案
      * @param selectMore 多选题答案
-     * @param examId 考试id
-     * @param stuId 学生id
+     * @param examId     考试id
+     * @param stuId      学生id
      * @return 返回保存状态
      */
     @Override
@@ -347,8 +350,8 @@ public class ExamServiceImpl implements ExamService {
         Record record1 = examInfo.getRecord1();
         Date stoptime = examInfo.getStoptime();
         // 如果不存在或者还未到时间
-        if(DateUtils.timeDistance(stoptime, new Date()) >= -1000) {
-            if(record1 == null) {
+        if (DateUtils.timeDistance(stoptime, new Date()) >= -10000) {
+            if (record1 == null) {
                 // 添加记录实体类
                 Record record = new Record();
                 record.setExamid(examId);
@@ -356,7 +359,7 @@ public class ExamServiceImpl implements ExamService {
                 // 单选和多选的结合体
                 record.setAnswer(selectOne + "," + selectMore);
                 int res = recordMapper.insert(record);
-                if(res > 0) {
+                if (res > 0) {
                     result.setCode(0);
                     result.setMessage("成功保存至服务器");
                 } else {
@@ -365,11 +368,11 @@ public class ExamServiceImpl implements ExamService {
                 }
             } else {
                 // 判断考生是否已经交卷或者时间到了
-                if(record1.getScore() == null) {
+                if (record1.getScore() == null) {
                     // 否则，更新答题信息
                     record1.setAnswer(selectOne + "," + selectMore);
                     int res = recordMapper.updateById(record1);
-                    if(res > 0) {
+                    if (res > 0) {
                         result.setCode(0);
                         result.setMessage("成功保存至服务器");
                     } else {
@@ -390,11 +393,10 @@ public class ExamServiceImpl implements ExamService {
     /**
      * 提交试卷并批改
      *
-     * @param selectOne 单选题答案
+     * @param selectOne  单选题答案
      * @param selectMore 多选题答案
-     * @param examId 考试id
-     * @param stuId 学生id
-     *
+     * @param examId     考试id
+     * @param stuId      学生id
      */
     @Override
     public BaseResult commitAnswer(String selectOne, String selectMore, Integer examId, Integer stuId) {
@@ -408,7 +410,7 @@ public class ExamServiceImpl implements ExamService {
         // 获取考试时间
         Date stoptime = exam.getStoptime();
         // 判断考试是否结束
-        if(DateUtils.timeDistance(stoptime, new Date()) >= -1000) {
+        if (DateUtils.timeDistance(stoptime, new Date()) >= -10000) {
             // 如果查询不到数据，则添加数据
             if (record1 == null) {
                 // 添加记录实体类
@@ -482,7 +484,7 @@ public class ExamServiceImpl implements ExamService {
         }
         // 保存改卷信息
         int res = recordMapper.updateById(record1);
-        if(res > 0) {
+        if (res > 0) {
             result.setCode(0);
             result.setMessage("试卷提交成功，无法再次答题了！");
         } else {
@@ -496,7 +498,7 @@ public class ExamServiceImpl implements ExamService {
      * 查询当前学生对应的答案
      *
      * @param examId 考试id
-     * @param stuId 学生id
+     * @param stuId  学生id
      */
     @Override
     public void findAnswer(Integer examId, Integer stuId, Model model) {
@@ -506,7 +508,7 @@ public class ExamServiceImpl implements ExamService {
         queryWrapper.eq("stuid", stuId);
         // 查询记录
         Record record = recordMapper.selectOne(queryWrapper);
-        if(record != null) {
+        if (record != null) {
             // 找出答案
             model.addAttribute("answer", record.getAnswer().split(","));
         }
@@ -516,7 +518,7 @@ public class ExamServiceImpl implements ExamService {
      * 查询当前学生对应的答案
      *
      * @param examId 考试id
-     * @param stuId 学生id
+     * @param stuId  学生id
      */
     @Override
     public void showAnswer(Integer examId, Integer stuId, Model model) {
@@ -524,11 +526,11 @@ public class ExamServiceImpl implements ExamService {
         ExamInfo examInfo = new ExamInfo(examId, stuId).invoke();
         Date stoptime = examInfo.stoptime;
         // 如果考试时间到了或者已经交卷了
-        if(examInfo.record1 != null) {
-            if(DateUtils.timeDistance(stoptime, new Date()) < -1000 || examInfo.record1.getScore() != null) {
+        if (examInfo.record1 != null) {
+            if (DateUtils.timeDistance(stoptime, new Date()) < -10000 || examInfo.record1.getScore() != null) {
                 // 查询记录
                 Record record = examInfo.getRecord1();
-                if(record != null) {
+                if (record != null) {
                     // 加载正确题号
                     String[] correct = record.getCorrect().split(",");
                     Integer[] convert = (Integer[]) ConvertUtils.convert(correct, Integer.class);
@@ -592,6 +594,51 @@ public class ExamServiceImpl implements ExamService {
         Record record = recordMapper.selectOne(queryWrapper);
         return record.getExamid();
 
+    }
+
+    /**
+     * 输出考试成绩
+     *
+     * @param examId 考试id
+     * @param model  视图层模型
+     * @param desc 是否逆序  1-是，0-不是
+     */
+    @Override
+    public void printExamScore(Integer classId, Integer examId, Model model, Integer desc) {
+        // 查询考试信息
+        Exam exam = examMapper.selectById(examId);
+        // 查询成绩
+        List<GradeTable> gradeTables = recordMapper.getRecordByClassId(classId, examId, desc);
+        // 总分
+        double totalScore = 0;
+        // 已考人数
+        int examCount = 0;
+        // 循环遍历考试记录
+        for (GradeTable record : gradeTables) {
+            // 判断是否已考，但未交卷
+            if (record.getAnswer() != null &&
+                    DateUtils.timeDistance(exam.getStoptime(), new Date()) >= 0 && record.getScore() == null) {
+                record.setStatus("考试中");
+            }
+            // 判断已交卷
+            else if (record.getScore() != null) {
+                record.setStatus("已交卷");
+                totalScore += record.getScore();
+                examCount++;
+            }
+            // 未考
+            else if (DateUtils.timeDistance(exam.getStoptime(), new Date()) >= 0) {
+                record.setStatus("未考");
+            }
+            // 缺考
+            else {
+                record.setStatus("缺考");
+            }
+        }
+        model.addAttribute("students", gradeTables);
+        model.addAttribute("exam", exam);
+        // 仅已考平均分
+        model.addAttribute("avg1", totalScore / examCount);
     }
 
     /**
