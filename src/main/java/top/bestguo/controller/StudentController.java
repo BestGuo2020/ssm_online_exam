@@ -160,7 +160,7 @@ public String student_exam(HttpSession session, Model model) {
      *
      */
 
-    @RequestMapping(value = "/myexam", method = RequestMethod.POST)
+    /*@RequestMapping(value = "/myexam", method = RequestMethod.POST)
     public void myExam(@RequestParam("examId") Integer examId,HttpSession session, Model model, HttpServletResponse resp) {
         Student student = (Student) session.getAttribute("student");
         // 得到id
@@ -179,7 +179,7 @@ public String student_exam(HttpSession session, Model model) {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
 
 
