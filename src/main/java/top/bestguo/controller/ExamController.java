@@ -221,4 +221,19 @@ public class ExamController {
 
     }
 
+    /**
+     * 展示当前考生的成绩
+     *
+     * @param examId 考试id
+     * @param classId 班级id
+     * @param model 加载模型
+     * @return
+     */
+    @RequestMapping(value = "/showGrades/{examId},{classId}")
+    public String showGrades(@PathVariable Integer examId, @PathVariable Integer classId, Model model, Integer desc) {
+        examService.printExamScore(examId, classId, model, desc);
+        model.addAttribute("id", 0);
+        return "teacher/scores_manage";
+    }
+
 }

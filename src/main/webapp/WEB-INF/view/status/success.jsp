@@ -9,7 +9,7 @@
 <html>
 <head>
     <jsp:include page="../commons/metas.jsp" />
-    <title>Title</title>
+    <title>提示</title>
     <jsp:include page="../commons/styles.jsp" />
 </head>
 <body>

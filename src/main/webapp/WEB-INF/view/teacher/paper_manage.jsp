@@ -255,10 +255,10 @@
 
         table.on('tool(currentTableFilter)', function (obj) {
             console.log(obj);
-            var data = obj.data;
+            var data = obj.data, cid = sessionStorage.getItem("examClassId");
             if (obj.event === 'show') {
                 console.log("查看试卷");
-                var index = layer.open({
+                let index = layer.open({
                     title: '查看试卷',
                     type: 2,
                     shade: 0.2,
@@ -270,9 +270,20 @@
                 $(window).on("resize", function () {
                     layer.full(index);
                 });
-                return false;
             } else if (obj.event === 'showGrade') {
                 console.log("查看成绩");
+                let index = layer.open({
+                    title: '查看成绩',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin: true,
+                    shadeClose: true,
+                    area: ['100%', '100%'],
+                    content: '${pageContext.request.contextPath}/exam/showGrades/' + cid + "," + obj.data.id,
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
             } else if (obj.event === 'delete') {
                 // console.log("examId: ", obj.data.examId);
                 layer.confirm('真的删除该考试么？', function (index) {
@@ -304,6 +315,7 @@
                     });
                 });
             }
+            return false;
         });
 
     });

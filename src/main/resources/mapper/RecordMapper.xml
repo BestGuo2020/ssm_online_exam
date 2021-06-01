@@ -19,4 +19,20 @@
         answer,wrong,correct,
         score
     </sql>
+
+    <!-- 通过班级id、试卷id查询学生成绩，并且对学生成绩进行排序 -->
+    <select id="getRecordByClassId" resultType="top.bestguo.vo.GradeTable">
+        select stu.stuId, stu.username, stu.gender, record.score, record.answer
+        from student stu
+                 left join student_class sc on sc.stuId = stu.id
+                 left join record on stu.id = record.stuId
+                 left join exam on record.examId = exam.id
+        where classId = #{classId} and (examId = #{examId} or examId is null)
+        <if test="desc == 1">
+            order by record.score is null, record.score desc
+        </if>
+        <if test="desc == 0">
+            order by record.score is null, record.score asc
+        </if>
+    </select>
 </mapper>

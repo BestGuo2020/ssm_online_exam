@@ -72,10 +72,10 @@
                         <p class="test_time">
                             <b class="alt-1">01:40</b>
                         </p>
-                        <font>
+                        <font id="commitFont">
                             <input type="button" id="commitBtn" value="交卷">
                         </font>
-                        <font>
+                        <font id="saveFont">
                             <input type="button" style="background: #66ccff" id="saveBtn" value="保存">
                         </font>
                     </div>
@@ -432,23 +432,38 @@
         <%-- 结束日期 --%>
         <fmt:formatDate value="${examInfo.get('stoptime')}" type="both" dateStyle="long" pattern="yyyy-MM-dd HH:mm:ss" var="end"/>
 
-        var endTime = new Date("${end}").getTime() //假设为结束日期
-            ,serverTime = new Date("${cur_date}").getTime(); //假设为当前服务器时间，这里采用的是本地时间，实际使用一般是取服务端的
+        <c:choose>
+            <c:when test="${get_score == null}">
+                var endTime = new Date("${end}").getTime() //假设为结束日期
+                    ,serverTime = new Date("${cur_date}").getTime(); //假设为当前服务器时间，这里采用的是本地时间，实际使用一般是取服务端的
 
-        util.countdown(endTime, serverTime, function(date, serverTime, timer){
-            let current = endTime - serverTime; // 时间差
-            // 判断时间是否到了
-            if(current === 0) {
-                // 强制提交试卷答案
-                // 关闭提交按钮
-                // 给出提示
-            } else {
-                let strDate = util.toDateString(current, "dd:HH:mm:ss"); // 格式化
-                // console.log(strDate);
-                $(".alt-1").text(strDate);
-            }
-
-        });
+                util.countdown(endTime, serverTime, function(date, serverTime, timer){
+                    let current = endTime - serverTime; // 时间差
+                    // 判断时间是否到了
+                    if(current === 0) {
+                        // 强制提交试卷答案
+                        submitAnswer(1);
+                        // 关闭提交按钮
+                        // 给出提示
+                    } else {
+                        let strDate = util.toDateString(current, "dd:HH:mm:ss"); // 格式化
+                        // console.log(strDate);
+                        $(".alt-1").text(strDate);
+                    }
+                });
+            </c:when>
+            <c:otherwise>
+                $(".alt-1").text("00:00:00:00");
+                $("#saveFont").remove();
+                var sss = $("#commitFont");
+                sss.css({
+                    width: "256px",
+                    fontSize: "17px",
+                    fontWeight: 700
+                });
+                sss.html("考试结束，你的得分：${get_score}分");
+            </c:otherwise>
+        </c:choose>
 
         // 保存答案
         $("#saveBtn").click(function (e) {
@@ -568,6 +583,7 @@
         }
     }
 
+    <c:if test="${get_score == null}">
     // 提交答案到服务器
     function submitAnswer(type) {
         // 参数内容
@@ -591,8 +607,12 @@
                 if(data.code === 0) {
                     if(data.message.indexOf("无法再次") !== -1) {
                         disabledAllSelect();
+                        layer.msg(data.message, {icon: 1}, function () {
+                            location.reload();
+                        });
+                    } else {
+                        layer.msg(data.message, {icon: 1});
                     }
-                    layer.msg(data.message, {icon: 1});
                 } else if (data.code === 1) {
                     layer.msg(data.message, {icon: 2});
                 } else if (data.code === -1) {
@@ -610,6 +630,7 @@
         }
         $.ajax(request);
     }
+    </c:if>
 
     function disabledAllSelect() {
         // 禁止选择
