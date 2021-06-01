@@ -336,7 +336,7 @@
                                             <div class="test_content_nr_answer">
                                                 <p>
                                                     <c:choose>
-                                                        <c:when test="${correct.contains(answer[single - 1])}">
+                                                        <c:when test="${correct.contains(question.id)}">
                                                             <span style="color: red;">答案正确</span>
                                                         </c:when>
                                                         <c:otherwise>
@@ -522,8 +522,8 @@
             multiAns[i] = multiAnsItemArr.join("");
         }
         // 将当前考生的单选答案和多选答案保存至localStorage中
-        localStorage.setItem("singleAns_${stuId}", JSON.stringify(singleAns));
-        localStorage.setItem("multiAns_${stuId}", JSON.stringify(multiAns));
+        localStorage.setItem("singleAns_${stuId}_${examId}", JSON.stringify(singleAns));
+        localStorage.setItem("multiAns_${stuId}_${examId}", JSON.stringify(multiAns));
     }
 
     // 出现意外情况时，重新加载
@@ -534,7 +534,7 @@
         let singleSelectOptions = allSelect[0].getElementsByClassName("test_content_nr_main"),
             multiSelectOptions = allSelect[1].getElementsByClassName("test_content_nr_main");
         // 单选答案和多选答案的json格式
-        let singleAnsStr = localStorage.getItem("singleAns_${stuId}"), multiAnsStr = localStorage.getItem("multiAns_${stuId}");
+        let singleAnsStr = localStorage.getItem("singleAns_${stuId}_${examId}"), multiAnsStr = localStorage.getItem("multiAns_${stuId}_${examId}");
         // 如果当前考生的本地存储已存在
         if(singleAnsStr !== null && singleAnsStr !== "") {
             let singleAns = JSON.parse(singleAnsStr);
@@ -593,8 +593,8 @@
             data: {
                 stuId: ${stuId},
                 examId: ${examId},
-                selectOne: JSON.parse(localStorage.getItem("singleAns_${stuId}")).join(","),
-                selectMore: JSON.parse(localStorage.getItem("multiAns_${stuId}")).join(",")
+                selectOne: JSON.parse(localStorage.getItem("singleAns_${stuId}_${examId}")).join(","),
+                selectMore: JSON.parse(localStorage.getItem("multiAns_${stuId}_${examId}")).join(",")
             },
             traditional: true,
             success: function(data){
@@ -647,7 +647,12 @@
         // 不知为啥，需要渲染加载两次才能正确显示已完成的题目
         reloadAnswer();
         reloadAnswer();
-    }
+    };
+
+    // 创建定时任务，每隔5秒保存到本地
+    setInterval(function () {
+        saveAnswer();
+    }, 1000 * 5);
 </script>
 
 

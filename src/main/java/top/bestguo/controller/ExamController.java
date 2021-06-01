@@ -180,7 +180,7 @@ public class ExamController {
             return "student/answer_card";
         } else {
             model.addAttribute("msg", "你不在这个班级，无法参加考试");
-            model.addAttribute("path", "login");
+            model.addAttribute("path", "student/student_exam");
             return "status/fail";
         }
     }
