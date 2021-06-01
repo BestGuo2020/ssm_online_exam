@@ -22,7 +22,7 @@
           "target": "_self"
         }, {
           "title": "我的班级",
-          "href": "/ssm_online_exam/student/class_attended",
+          "href": "",
           "icon": "fa fa-window-maximize",
           "target": "_self",
           "child":[

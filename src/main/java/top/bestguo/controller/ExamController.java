@@ -167,8 +167,16 @@ public class ExamController {
     public String answerCard(@PathVariable Integer examId, @PathVariable Integer stuId, Model model) {
         // 判断考生是否在此班级中
         boolean isExistInClass = examService.checkStudentInClass(stuId, examId);
+
         if(isExistInClass) {
             Map<String, Object> showExam = examService.showExam(examId);
+            // 判断考试是否已经开始
+            Date startdate = (Date) showExam.get("starttime");
+            if(DateUtils.timeDistance(new Date(), startdate) <= 0) {
+                model.addAttribute("msg", "考试未开始");
+                model.addAttribute("path", "student/student_exam");
+                return "status/fail";
+            }
             model.addAttribute("examInfo", showExam);
             model.addAttribute("single", 0);
             model.addAttribute("multi", 0);

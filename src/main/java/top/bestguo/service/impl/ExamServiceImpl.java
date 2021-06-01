@@ -306,6 +306,7 @@ public class ExamServiceImpl implements ExamService {
             map.put("multiCount", multiCount); // 多选总数
             map.put("score", exam.getScore()); // 总分
             map.put("name", exam.getExamname()); // 考试名称
+            map.put("starttime", exam.getStarttime()); // 考试开始时间
             map.put("stoptime", exam.getStoptime()); // 考试结束时间
             map.put("time", DateUtils.timeDistance(exam.getStoptime(), exam.getStarttime())); // 考试时间
         }
@@ -532,7 +533,12 @@ public class ExamServiceImpl implements ExamService {
                 Record record = examInfo.getRecord1();
                 if (record != null) {
                     // 加载正确题号
-                    String[] correct = record.getCorrect().split(",");
+                    String correct1 = record.getCorrect();
+                    // 判断正确题号是否为空
+                    if(correct1 == null) {
+                        correct1 = "";
+                    }
+                    String[] correct = correct1.split(",");
                     Integer[] convert = (Integer[]) ConvertUtils.convert(correct, Integer.class);
                     model.addAttribute("correct", Arrays.asList(convert));
                     // 得分

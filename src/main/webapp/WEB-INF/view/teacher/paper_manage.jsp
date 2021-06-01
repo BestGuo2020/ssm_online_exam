@@ -122,16 +122,20 @@
                 {field: 'selectmore', width: 140, title: '多选每题分数'},
                 {field: 'score', width: 80, title: '总分', sort: true},
                 {field: 'status', width: 110, title: '考试状态', templet: function (d) {
-                        var timestamp=new Date().getTime();
-                        console.log(d);
-                        if(timestamp < d.starttime) {
-                            return "<font color='gray'>未开始</font>";
-                        }
-                        if(timestamp <=  d.stoptime) {
-                            return "<font color='green'>进行中</font>";
-                        }
-                        if(timestamp > d.stoptime) {
-                            return "<font color='black'>已结束</font>";
+                        if(d.score === null) {
+                            return "<font color='red'>无效</font>"
+                        } else {
+                            var timestamp=new Date().getTime();
+                            console.log(d);
+                            if(timestamp < d.starttime) {
+                                return "<font color='gray'>未开始</font>";
+                            }
+                            if(timestamp <=  d.stoptime) {
+                                return "<font color='green'>进行中</font>";
+                            }
+                            if(timestamp > d.stoptime) {
+                                return "<font color='black'>已结束</font>";
+                            }
                         }
                     }
                 },
@@ -258,6 +262,10 @@
             var data = obj.data, cid = sessionStorage.getItem("examClassId");
             if (obj.event === 'show') {
                 console.log("查看试卷");
+                if(obj.data.score === null) {
+                    layer.msg("该考试是无效考试，请删除重新创建", {icon: 2});
+                    return false;
+                }
                 let index = layer.open({
                     title: '查看试卷',
                     type: 2,
@@ -271,6 +279,10 @@
                     layer.full(index);
                 });
             } else if (obj.event === 'showGrade') {
+                if(obj.data.score === null) {
+                    layer.msg("该考试是无效考试，请删除重新创建", {icon: 2});
+                    return false;
+                }
                 console.log("查看成绩");
                 let index = layer.open({
                     title: '查看成绩',

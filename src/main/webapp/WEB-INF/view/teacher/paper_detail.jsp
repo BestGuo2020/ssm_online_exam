@@ -42,19 +42,31 @@
                 padding-inline-start: 40px;">
                 <c:forEach items="${examInfo.get('questions')}" var="question">
                     <c:if test="${question.ismulti == false}">
-                        <pre style="font-size: 12pt;">${single = single + 1}、${question.questionname}</pre>
+                        <pre style="font-size: 12pt;
+                        word-wrap: break-word;
+                        white-space: pre-wrap;">${single = single + 1}、${question.questionname}</pre>
                         <p style="font-family: '宋体',serif">
-                           （A）${question.option1}<br>
-                           （B）${question.option2}<br>
-                            <c:if test="${question.option3 != null && !(question.option3 eq '')}">
-                                （C）${question.option3}<br>
-                            </c:if>
-                            <c:if test="${question.option4 != null && !(question.option4 eq '')}">
-                                （D）${question.option4}<br>
-                            </c:if>
-                            <c:if test="${question.option5 != null && !(question.option5 eq '')}">
-                                （E）${question.option5}<br>
-                            </c:if>
+                        <pre style="font-size: 10pt;
+                        word-wrap: break-word;
+                        white-space: pre-wrap;">（A）${question.option1}</pre>
+                        <pre style="font-size: 10pt;
+                        word-wrap: break-word;
+                        white-space: pre-wrap;">（B）${question.option2}</pre>
+                        <c:if test="${question.option3 != null && !(question.option3 eq '')}">
+                            <pre style="font-size: 10pt;
+                                word-wrap: break-word;
+                                white-space: pre-wrap;">（C）${question.option3}</pre>
+                        </c:if>
+                        <c:if test="${question.option4 != null && !(question.option3 eq '')}">
+                            <pre style="font-size: 10pt;
+                                word-wrap: break-word;
+                                white-space: pre-wrap;">（D）${question.option4}</pre>
+                        </c:if>
+                        <c:if test="${question.option5 != null && !(question.option3 eq '')}">
+                            <pre style="font-size: 10pt;
+                                word-wrap: break-word;
+                                white-space: pre-wrap;">（E）${question.option5}</pre>
+                        </c:if>
                         </p>
                     </c:if>
                 </c:forEach>
@@ -67,20 +79,30 @@
                 padding-inline-start: 40px;">
                 <c:forEach items="${examInfo.get('questions')}" var="question">
                     <c:if test="${question.ismulti == true}">
-                        <pre style="font-size: 12pt;">${multi = multi + 1}、${question.questionname}</pre>
-                        <p style="font-family: '宋体',serif">
-                            （A）${question.option1}<br>
-                            （B）${question.option2}<br>
-                            <c:if test="${question.option3 != null && !(question.option3 eq '')}">
-                                （C）${question.option3}<br>
-                            </c:if>
-                            <c:if test="${question.option4 != null && !(question.option3 eq '')}">
-                                （D）${question.option4}<br>
-                            </c:if>
-                            <c:if test="${question.option5 != null && !(question.option3 eq '')}">
-                                （E）${question.option5}<br>
-                            </c:if>
-                        </p>
+                        <pre style="font-size: 12pt;
+                        word-wrap: break-word;
+                        white-space: pre-wrap;">${multi = multi + 1}、${question.questionname}</pre>
+                        <pre style="font-size: 10pt;
+                        word-wrap: break-word;
+                        white-space: pre-wrap;">（A）${question.option1}</pre>
+                        <pre style="font-size: 10pt;
+                        word-wrap: break-word;
+                        white-space: pre-wrap;">（B）${question.option2}</pre>
+                        <c:if test="${question.option3 != null && !(question.option3 eq '')}">
+                            <pre style="font-size: 10pt;
+                                word-wrap: break-word;
+                                white-space: pre-wrap;">（C）${question.option3}</pre>
+                        </c:if>
+                        <c:if test="${question.option4 != null && !(question.option3 eq '')}">
+                            <pre style="font-size: 10pt;
+                                word-wrap: break-word;
+                                white-space: pre-wrap;">（D）${question.option4}</pre>
+                        </c:if>
+                        <c:if test="${question.option5 != null && !(question.option3 eq '')}">
+                            <pre style="font-size: 10pt;
+                                word-wrap: break-word;
+                                white-space: pre-wrap;">（E）${question.option5}</pre>
+                        </c:if>
                     </c:if>
                 </c:forEach>
             </div>

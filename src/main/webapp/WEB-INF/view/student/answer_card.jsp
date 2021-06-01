@@ -251,7 +251,7 @@
 
                                                     <label for="1_answer_${multi}_option_1">
                                                         A.
-                                                        <pre class="ue" style="display: inline; font-family: initial; font-size: 12pt;">${question.option1}</pre>
+                                                        <pre class="ue" style="display: inline; font-family: initial; font-size: 12pt; word-wrap: break-word; white-space: pre-wrap;">${question.option1}</pre>
                                                     </label>
                                                 </li>
 
@@ -436,20 +436,20 @@
             <c:when test="${get_score == null}">
                 var endTime = new Date("${end}").getTime() //假设为结束日期
                     ,serverTime = new Date("${cur_date}").getTime(); //假设为当前服务器时间，这里采用的是本地时间，实际使用一般是取服务端的
-
+                var flag = true;
                 util.countdown(endTime, serverTime, function(date, serverTime, timer){
-                    let current = endTime - serverTime; // 时间差
-                    // 判断时间是否到了
-                    if(current === 0) {
+                    let days = date[0] < 10 ? "0" + date[0] : date[0];
+                    let hours = date[1] < 10 ? "0" + date[1] : date[1];
+                    let minutes = date[2] < 10 ? "0" + date[2] : date[2];
+                    let seconds = date[3] < 10 ? "0" + date[3] : date[3];
+                    if (days < 0 && hours < 0 && minutes < 0 && seconds < 0) {
                         // 强制提交试卷答案
-                        submitAnswer(1);
-                        // 关闭提交按钮
-                        // 给出提示
-                    } else {
-                        let strDate = util.toDateString(current, "dd:HH:mm:ss"); // 格式化
-                        // console.log(strDate);
-                        $(".alt-1").text(strDate);
+                        if(flag){
+                            submitAnswer(1);
+                            flag = false;
+                        }
                     }
+                    $(".alt-1").text(days + ":" + hours + ":" + minutes + ":" + seconds);
                 });
             </c:when>
             <c:otherwise>
@@ -505,6 +505,10 @@
                     singleAns[i] = select_items[j];
                 }
             }
+            // 判断是否单选题是否未选
+            if(singleAns[i] == null) {
+                singleAns[i] = " "; // 放入空选项
+            }
         }
         // 循环遍历多选题，遍历单选题的每一个题目
         for(let i = 0; i < multiSelectOptions.length; i++) {
@@ -518,8 +522,14 @@
                     multiAnsItemArr.push(select_items[j]);
                 }
             }
-            // 将数组组成字符串，添加到多选数组中
-            multiAns[i] = multiAnsItemArr.join("");
+            // 判断多选题是否未选
+            if(multiAnsItemArr.length === 0) {
+                // 多选框未选则填入空格字符串
+                multiAns[i] = " ";
+            } else {
+                // 将数组组成字符串，添加到多选数组中
+                multiAns[i] = multiAnsItemArr.join("");
+            }
         }
         // 将当前考生的单选答案和多选答案保存至localStorage中
         localStorage.setItem("singleAns_${stuId}_${examId}", JSON.stringify(singleAns));
