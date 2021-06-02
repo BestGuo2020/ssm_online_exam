@@ -24,25 +24,25 @@
         {
           "title": "班级管理",
           "href": "/ssm_online_exam/teacher/classManage",
-          "icon": "fa fa-window-maximize",
+          "icon": "fa fa-braille",
           "target": "_self"
         },
         {
           "title": "学生管理",
           "href": "/ssm_online_exam/teacher/studentManage",
-          "icon": "fa fa-file-text",
+          "icon": "fa fa-group",
           "target": "_self"
         },
         {
           "title": "试卷管理",
           "href": "/ssm_online_exam/teacher/paperManage",
-          "icon": "fa fa-gears",
+          "icon": "fa fa-file-text",
           "target": "_self"
         },
         {
           "title": "题库管理",
           "href": "/ssm_online_exam/teacher/tikuManage",
-          "icon": "fa fa-gears",
+          "icon": "fa fa-database",
           "target": "_self"
         }
       ]

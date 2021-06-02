@@ -82,25 +82,25 @@
                                 <div class="welcome-module">
                                     <div class="layui-row layui-col-space10 layuimini-qiuck">
                                         <div class="layui-col-xs3 layuimini-qiuck-module">
-                                            <a href="javascript:;" layuimini-content-href="page/menu.html" data-title="菜单管理" data-icon="fa fa-window-maximize">
-                                                <i class="fa fa-window-maximize"></i>
+                                            <a href="javascript:;" layuimini-content-href="${pageContext.request.contextPath}/teacher/paperManage" data-title="试卷管理" data-icon="fa fa-file-text">
+                                                <i class="fa fa-file-text"></i>
                                                 <cite>试卷管理</cite>
                                             </a>
                                         </div>
                                         <div class="layui-col-xs3 layuimini-qiuck-module">
-                                            <a href="javascript:;" layuimini-content-href="page/setting.html" data-title="系统设置" data-icon="fa fa-gears">
-                                                <i class="fa fa-gears"></i>
+                                            <a href="javascript:;" layuimini-content-href="${pageContext.request.contextPath}/teacher/tikuManage" data-title="题库管理" data-icon="fa fa-database">
+                                                <i class="fa fa-database"></i>
                                                 <cite>题库管理</cite>
                                             </a>
                                         </div>
                                         <div class="layui-col-xs3 layuimini-qiuck-module">
-                                            <a href="javascript:;" layuimini-content-href="page/table.html" data-title="表格示例" data-icon="fa fa-file-text">
-                                                <i class="fa fa-file-text"></i>
+                                            <a href="javascript:;" layuimini-content-href="${pageContext.request.contextPath}/teacher/classManage" data-title="班级管理" data-icon="fa fa-braille">
+                                                <i class="fa fa-braille"></i>
                                                 <cite>班级管理</cite>
                                             </a>
                                         </div>
                                         <div class="layui-col-xs3 layuimini-qiuck-module">
-                                            <a href="javascript:;" layuimini-content-href="page/icon.html" data-title="图标列表" data-icon="fa fa-dot-circle-o">
+                                            <a href="javascript:;" layuimini-content-href="${pageContext.request.contextPath}/teacher/teacherInfo" data-title="信息修改" data-icon="fa fa-dot-circle-o">
                                                 <i class="fa fa-dot-circle-o"></i>
                                                 <cite>信息修改</cite>
                                             </a>
@@ -120,7 +120,11 @@
 <script>
     layui.use(['layer', 'miniTab','echarts'], function () {
         var $ = layui.jquery,
-            layer = layui.layer;
+            layer = layui.layer,
+            miniTab = layui.miniTab;
+
+        // 监听
+        miniTab.listen();
     });
 </script>
 </body>
