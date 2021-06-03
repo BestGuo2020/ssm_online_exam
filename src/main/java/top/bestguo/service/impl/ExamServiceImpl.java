@@ -650,23 +650,24 @@ public class ExamServiceImpl implements ExamService {
         // 循环遍历考试记录
         for (GradeTable record : gradeTables) {
             // 判断是否已考，但未交卷
-            if (record.getAnswer() != null &&
+            if (record.getExamId() != null &&
                     DateUtils.timeDistance(exam.getStoptime(), new Date()) >= 0 && record.getScore() == null) {
                 record.setStatus("考试中");
             }
             // 判断已交卷
-            else if (record.getScore() != null) {
+            else if (record.getExamId() != null && record.getScore() != null) {
                 record.setStatus("已交卷");
                 totalScore += record.getScore();
                 examCount++;
             }
             // 未考
-            else if (DateUtils.timeDistance(exam.getStoptime(), new Date()) >= 0) {
+            else if (record.getExamId() == null && DateUtils.timeDistance(exam.getStoptime(), new Date()) >= 0) {
                 record.setStatus("未考");
             }
             // 缺考
             else {
                 record.setStatus("缺考");
+                record.setScore(null);
             }
         }
         model.addAttribute("students", gradeTables);

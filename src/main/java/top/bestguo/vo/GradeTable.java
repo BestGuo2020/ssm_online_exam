@@ -26,6 +26,11 @@ public class GradeTable {
     private Double score;
 
     /**
+     * 考试编号
+     */
+    private String examId;
+
+    /**
      * 答案
      */
     private String answer;
@@ -81,5 +86,13 @@ public class GradeTable {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getExamId() {
+        return examId;
+    }
+
+    public void setExamId(String examId) {
+        this.examId = examId;
     }
 }
