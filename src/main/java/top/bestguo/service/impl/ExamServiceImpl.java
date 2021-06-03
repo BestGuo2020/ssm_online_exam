@@ -272,7 +272,7 @@ public class ExamServiceImpl implements ExamService {
     }
 
     /**
-     * 删除多条考试编号
+     * 删除多条考试编号，同时删除考试记录
      *
      * @param examId 考试编号
      * @return 删除状态
@@ -282,6 +282,8 @@ public class ExamServiceImpl implements ExamService {
         BaseResult result = new BaseResult();
         // 删除考试表的中考试信息
         int res = examMapper.deleteBatchIds(Arrays.asList(examId));
+        // 删除考试记录
+        recordMapper.delete(new QueryWrapper<Record>().in("examId", Arrays.asList(examId)));
         if (res > 0) {
             result.setCode(0);
             result.setMessage("选中的考试删除成功！");

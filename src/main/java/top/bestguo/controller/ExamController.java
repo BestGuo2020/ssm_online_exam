@@ -149,7 +149,7 @@ public class ExamController {
      * @return 试卷信息
      */
     @RequestMapping(value = "/paperDetail", method = RequestMethod.GET)
-    public String showExamDetails(Integer id, Model model) {
+    public String showExamDetails(Integer id, Model model, Integer preview) {
         Map<String, Object> showExam;
         try {
             showExam = examService.showExam(id);
@@ -188,9 +188,7 @@ public class ExamController {
             } catch (ExamNotCompleteException e) {
                 e.printStackTrace(); // 打印异常信息到控制台
                 model.addAttribute("msg", e.getMessage());
-                model.addAttribute("path", "teacher/paper_manage");
-                // 关闭layui弹出层
-                model.addAttribute("islayuilayer", true);
+                model.addAttribute("path", "student/student_exam");
                 return "status/fail";
             }
             // 判断考试是否已经开始
