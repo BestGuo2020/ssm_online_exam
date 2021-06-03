@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import top.bestguo.entity.*;
+import top.bestguo.exception.ExamNotCompleteException;
 import top.bestguo.mapper.*;
 import top.bestguo.render.BaseResult;
 import top.bestguo.render.MultipleDataResult;
@@ -121,17 +122,40 @@ public class ExamServiceImpl implements ExamService {
      * 录入题目的考试方法
      *
      * @param exam 考试实体类
+     * @param isRandom 判断是否为随机的？1-是，0-不是
      * @return 试题录入状态
      */
     @Override
-    public BaseResult updateQuestionInExam(Exam exam) {
+    public BaseResult updateQuestionInExam(Exam exam, Integer isRandom) {
+        // 题目编号拆分
+        String qlist = exam.getQlist();
+        // 如果不是随机组卷，则单选和多选分开
+        if(isRandom != 1) {
+            // 自主选题的题目集
+            String[] questionIds = qlist.split(",");
+            // 单选题列表和多选题列表
+            List<String> questionSingle = new ArrayList<>(), questionMulti = new ArrayList<>();
+            for (String questionId : questionIds) {
+                Question question = questionMapper.selectById(Integer.parseInt(questionId));
+                // 判断是多选还是单选
+                if (question.getIsmulti()) {
+                    questionMulti.add(questionId);
+                } else {
+                    questionSingle.add(questionId);
+                }
+                // 多选题的数组合并到单选中
+                questionSingle.addAll(questionMulti);
+            }
+            // 分开的题目将保存到考试中
+            String qlist2 = StringUtils.join(questionSingle, ",");
+            exam.setQlist(qlist2);
+        }
         BaseResult result = new BaseResult();
         // 查询最近的考试信息id
         Integer recent = examMapper.findExamRecent();
         // 查询考试
         exam.setId(recent);
         // 总分计算
-        String qlist = exam.getQlist();
         if (qlist != null) {
             String[] questionIds = qlist.split(",");
             // 查询选中的题目，判断是不是单选还是多选
@@ -275,7 +299,7 @@ public class ExamServiceImpl implements ExamService {
      * @return 当前考试对应的题目集
      */
     @Override
-    public Map<String, Object> showExam(Integer id) {
+    public Map<String, Object> showExam(Integer id) throws ExamNotCompleteException {
         Map<String, Object> map = new HashMap<>();
         Exam exam = examMapper.selectById(id);
         // 查询题目集编号
@@ -290,6 +314,10 @@ public class ExamServiceImpl implements ExamService {
             for (String questionId : questionIds) {
                 // 查询问题
                 Question question = questionMapper.selectById(Integer.parseInt(questionId));
+                // 判断试卷题目是否完整
+                if(question == null) {
+                    throw new ExamNotCompleteException("试卷中的试题，有一部分已经不存在，该考试无效");
+                }
                 // 判断选择题是否为多选，如果是，多选+1，否则单选+1。
                 if (question.getIsmulti()) {
                     multiCount++;

@@ -198,6 +198,7 @@
                                         <c:if test="${get_score != null}">
                                             <div class="test_content_nr_answer">
                                                 <p>
+                                                        ${question.answer} -- ${correct} -- ${question.id}
                                                     <c:choose>
                                                         <c:when test="${correct.contains(question.id)}">
                                                             <span style="color: red;">答案正确</span>
@@ -341,7 +342,7 @@
                                                         </c:when>
                                                         <c:otherwise>
                                                             <span style="color: #00aa00; padding-right: 10px">答案错误</span>
-                                                            <span>正确答案：${question.answer}</span>
+                                                            <span>正确答案：${question.answer} -- ${correct} -- ${question.id}</span>
                                                         </c:otherwise>
                                                     </c:choose>
                                                 </p>

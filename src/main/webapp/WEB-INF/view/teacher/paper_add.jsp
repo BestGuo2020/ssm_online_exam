@@ -66,7 +66,7 @@
                                     <div class="layui-form-item">
                                         <label class="layui-form-label">选择题目</label>
                                         <div class="layui-input-inline" style="width: 465px;">
-                                            <input type="text" disabled name="questionIds" id="questionIds" placeholder="选择完成的题目题号将显示出来" autocomplete="off" class="layui-input" id="demo" ts-selected="">
+                                            <input type="text" name="questionIds" id="questionIds" placeholder="选择完成的题目题号将显示出来" autocomplete="off" class="layui-input" id="demo" ts-selected="">
                                         </div>
                                     </div>
                                     <div class="layui-form-item">

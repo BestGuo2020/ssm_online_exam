@@ -8,11 +8,13 @@ import org.springframework.web.bind.annotation.*;
 import top.bestguo.entity.Exam;
 import top.bestguo.entity.Question;
 import top.bestguo.entity.Student;
+import top.bestguo.exception.ExamNotCompleteException;
 import top.bestguo.render.BaseResult;
 import top.bestguo.render.MultipleDataResult;
 import top.bestguo.service.ExamService;
 import top.bestguo.util.DateUtils;
 
+import javax.servlet.http.HttpSession;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.Map;
@@ -93,11 +95,11 @@ public class ExamController {
      */
     @RequestMapping(value = "/addExamQuestion", method = RequestMethod.POST)
     @ResponseBody
-    public BaseResult addExamQuestion(String questionIds) {
+    public BaseResult addExamQuestion(String questionIds, Integer isRandom) {
         // 创建考试实体类
         Exam exam = new Exam();
         exam.setQlist(questionIds);
-        return examService.updateQuestionInExam(exam);
+        return examService.updateQuestionInExam(exam, isRandom == null ? 0 : isRandom);
     }
 
     /**
@@ -148,10 +150,20 @@ public class ExamController {
      */
     @RequestMapping(value = "/paperDetail", method = RequestMethod.GET)
     public String showExamDetails(Integer id, Model model) {
-        Map<String, Object> showExam = examService.showExam(id);
-        model.addAttribute("examInfo", showExam);
-        model.addAttribute("single", 0);
-        model.addAttribute("multi", 0);
+        Map<String, Object> showExam;
+        try {
+            showExam = examService.showExam(id);
+            model.addAttribute("examInfo", showExam);
+            model.addAttribute("single", 0);
+            model.addAttribute("multi", 0);
+        } catch (ExamNotCompleteException e) {
+            e.printStackTrace(); // 打印异常信息到控制台
+            model.addAttribute("msg", e.getMessage());
+            model.addAttribute("path", "teacher/paperManage");
+            // 关闭layui弹出层
+            model.addAttribute("islayuilayer", true);
+            return "status/fail";
+        }
         return "teacher/paper_detail";
     }
 
@@ -164,16 +176,40 @@ public class ExamController {
      * @return 返回考试页面
      */
     @RequestMapping("/answerCard/{examId},{stuId}")
-    public String answerCard(@PathVariable Integer examId, @PathVariable Integer stuId, Model model) {
+    public String answerCard(@PathVariable Integer examId, @PathVariable Integer stuId, Model model, HttpSession session) {
+        // 得到学生的session
+        Student student = (Student) session.getAttribute("student");
         // 判断考生是否在此班级中
         boolean isExistInClass = examService.checkStudentInClass(stuId, examId);
-
         if(isExistInClass) {
-            Map<String, Object> showExam = examService.showExam(examId);
+            Map<String, Object> showExam;
+            try {
+                showExam = examService.showExam(examId);
+            } catch (ExamNotCompleteException e) {
+                e.printStackTrace(); // 打印异常信息到控制台
+                model.addAttribute("msg", e.getMessage());
+                model.addAttribute("path", "teacher/paper_manage");
+                // 关闭layui弹出层
+                model.addAttribute("islayuilayer", true);
+                return "status/fail";
+            }
             // 判断考试是否已经开始
             Date startdate = (Date) showExam.get("starttime");
+            // 判断考试是否有效
+            if(startdate == null) {
+                model.addAttribute("msg", "此次考试老师没有设置题目和试卷总分，因此该考试无效！");
+                model.addAttribute("path", "student/student_exam");
+                return "status/fail";
+            }
+            // 判断考试是否已开始
             if(DateUtils.timeDistance(new Date(), startdate) <= 0) {
                 model.addAttribute("msg", "考试未开始");
+                model.addAttribute("path", "student/student_exam");
+                return "status/fail";
+            }
+            // 判断学生是否偷看其他学生的试卷
+            if(stuId.intValue() == student.getId().intValue()) {
+                model.addAttribute("msg", "禁止查看其它考生的试卷！");
                 model.addAttribute("path", "student/student_exam");
                 return "status/fail";
             }

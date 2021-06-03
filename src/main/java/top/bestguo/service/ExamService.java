@@ -3,6 +3,7 @@ package top.bestguo.service;
 import org.springframework.ui.Model;
 import top.bestguo.entity.Exam;
 import top.bestguo.entity.Question;
+import top.bestguo.exception.ExamNotCompleteException;
 import top.bestguo.render.BaseResult;
 import top.bestguo.render.MultipleDataResult;
 
@@ -39,7 +40,7 @@ public interface ExamService {
      * @param exam 考试实体类
      * @return 更新状态
      */
-    BaseResult updateQuestionInExam(Exam exam);
+    BaseResult updateQuestionInExam(Exam exam, Integer isRandom);
 
     /**
      * 更新试卷题目，随机组题
@@ -73,7 +74,7 @@ public interface ExamService {
      * @param id 试卷id
      * @return 当前考试对应的题目集
      */
-    Map<String, Object> showExam(Integer id);
+    Map<String, Object> showExam(Integer id) throws ExamNotCompleteException;
 
     /**
      * 判断该学生是否在这个班级中

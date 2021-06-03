@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
   User: 1
@@ -19,7 +20,16 @@
     layui.use(['layer'], function () {
         var layer = layui.layer;
         layer.msg('${msg}', {icon: 2}, function(){
-            location.href = '${pageContext.request.contextPath}/${path}'
+            <c:choose>
+                <c:when test="${islayuilayer == true}">
+                    <%-- 如果这个错误是在layer的弹出层出现，关闭该弹出层即可 --%>
+                    var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                    parent.layer.close(index);
+                </c:when>
+                <c:otherwise>
+                    location.href = '${pageContext.request.contextPath}/${path}';
+                </c:otherwise>
+            </c:choose>
         });
     });
 </script>

@@ -230,7 +230,7 @@
             layer.confirm('确认要添加这些题目吗？', function (index) {
                 $.ajax({
                     type: "POST",
-                    url: "${pageContext.request.contextPath}/exam/addExamQuestion",
+                    url: "${pageContext.request.contextPath}/exam/addExamQuestion?isRandom=1",
                     data: {
                         questionIds: data.field.questionIds
                     },
