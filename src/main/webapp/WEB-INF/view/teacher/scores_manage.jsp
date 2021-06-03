@@ -90,7 +90,7 @@
             </tr>
         </c:forEach>
         <tr>
-            <td id="tt" colspan="6">总计：${students.size()}人，平均分（不含未考、缺考）：${avg1}</td>
+            <td id="tt" colspan="6">总计：${students.size()}人，平均分（不含未考、缺考）：${avg1.toString() eq 'NaN' ? '' : avg1}</td>
         </tr>
         </tbody>
     </table>
