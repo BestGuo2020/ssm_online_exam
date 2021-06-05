@@ -143,9 +143,9 @@ public class ExamServiceImpl implements ExamService {
                 } else {
                     questionSingle.add(questionId);
                 }
-                // 多选题的数组合并到单选中
-                questionSingle.addAll(questionMulti);
             }
+            // 多选题的数组合并到单选中
+            questionSingle.addAll(questionMulti);
             // 分开的题目将保存到考试中
             String qlist2 = StringUtils.join(questionSingle, ",");
             exam.setQlist(qlist2);
@@ -356,6 +356,9 @@ public class ExamServiceImpl implements ExamService {
         QueryWrapper<ExamClass> wrapper = new QueryWrapper<>();
         wrapper.eq("examid", examId);
         ExamClass examClass = examClassMapper.selectOne(wrapper);
+        if(examClass == null) {
+            throw new RuntimeException("该考试莫名其妙被删除！");
+        }
         // 获取当前考试所在的班级
         Integer examClassId = examClass.getClassid();
 
@@ -380,6 +383,11 @@ public class ExamServiceImpl implements ExamService {
         BaseResult result = examInfo.getResult();
         Record record1 = examInfo.getRecord1();
         Date stoptime = examInfo.getStoptime();
+        if(stoptime == null) {
+            result.setCode(1);
+            result.setMessage("保存失败，该考试莫名其妙被删除！");
+            return result;
+        }
         // 如果不存在或者还未到时间
         if (DateUtils.timeDistance(stoptime, new Date()) >= -10000) {
             if (record1 == null) {
@@ -438,6 +446,11 @@ public class ExamServiceImpl implements ExamService {
         queryWrapper.eq("stuid", stuId);
         Record record1 = recordMapper.selectOne(queryWrapper);
         Exam exam = examMapper.selectById(examId);
+        if(exam == null) {
+            result.setCode(1);
+            result.setMessage("提交失败，该考试莫名其妙被删除");
+            return result;
+        }
         // 获取考试时间
         Date stoptime = exam.getStoptime();
         // 判断考试是否结束
@@ -556,6 +569,10 @@ public class ExamServiceImpl implements ExamService {
         // 判断考生是否交卷或者时间是否到了
         ExamInfo examInfo = new ExamInfo(examId, stuId).invoke();
         Date stoptime = examInfo.stoptime;
+        if(stoptime == null) {
+            model.addAttribute("msg", "该考试莫名其妙被删除！");
+            return;
+        }
         // 如果考试时间到了或者已经交卷了
         if (examInfo.record1 != null) {
             if (DateUtils.timeDistance(stoptime, new Date()) < -10000 || examInfo.record1.getScore() != null) {
@@ -580,7 +597,7 @@ public class ExamServiceImpl implements ExamService {
     /**
      * 查询学生的考试成绩
      *
-     * @param studentId 学生id
+     * @param studentId 学生id2
      * @return 返回状态和成绩数据
      */
     @Override
@@ -716,7 +733,7 @@ public class ExamServiceImpl implements ExamService {
             record1 = recordMapper.selectOne(queryWrapper);
             exam = examMapper.selectById(examId);
             // 获取考试时间
-            stoptime = exam.getStoptime();
+            stoptime = exam == null ? null : exam.getStoptime();
             return this;
         }
     }

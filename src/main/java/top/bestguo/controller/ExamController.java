@@ -180,7 +180,14 @@ public class ExamController {
         // 得到学生的session
         Student student = (Student) session.getAttribute("student");
         // 判断考生是否在此班级中
-        boolean isExistInClass = examService.checkStudentInClass(stuId, examId);
+        boolean isExistInClass;
+        try {
+            isExistInClass = examService.checkStudentInClass(stuId, examId);
+        } catch (RuntimeException e) {
+            model.addAttribute("msg", e.getMessage());
+            model.addAttribute("path", "student/student_exam");
+            return "status/fail";
+        }
         if(isExistInClass) {
             Map<String, Object> showExam;
             try {
@@ -206,7 +213,7 @@ public class ExamController {
                 return "status/fail";
             }
             // 判断学生是否偷看其他学生的试卷
-            if(stuId.intValue() == student.getId().intValue()) {
+            if(stuId.intValue() != student.getId().intValue()) {
                 model.addAttribute("msg", "禁止查看其它考生的试卷！");
                 model.addAttribute("path", "student/student_exam");
                 return "status/fail";
@@ -218,6 +225,11 @@ public class ExamController {
             examService.findAnswer(examId, stuId, model);
             // 展示答案
             examService.showAnswer(examId, stuId, model);
+            String msg = (String) model.getAttribute("msg");
+            if(msg != null && msg.contains("失败")){
+                model.addAttribute("path", "student/student_exam");
+                return "status/fail";
+            }
             // 返回答案
             return "student/answer_card";
         } else {
