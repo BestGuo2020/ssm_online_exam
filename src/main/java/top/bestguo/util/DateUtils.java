@@ -48,4 +48,16 @@ public class DateUtils {
         return diff / (1000 * 60);
     }
 
+    /**
+     * 计算时间差（单位：毫秒）
+     *
+     * @param endTime 最后时间
+     * @param startTime 开始时间
+     * @return 时间差（分钟）
+     */
+    public static long timeDistanceMillionSeconds(Date endTime, Date startTime) {
+        //计算两个时间之间差了多少分钟
+        return endTime.getTime() - startTime.getTime();
+    }
+
 }

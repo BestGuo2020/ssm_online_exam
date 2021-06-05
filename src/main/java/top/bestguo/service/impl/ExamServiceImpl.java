@@ -389,7 +389,7 @@ public class ExamServiceImpl implements ExamService {
             return result;
         }
         // 如果不存在或者还未到时间
-        if (DateUtils.timeDistance(stoptime, new Date()) >= -10000) {
+        if (DateUtils.timeDistanceMillionSeconds(stoptime, new Date()) >= -10000) {
             if (record1 == null) {
                 // 添加记录实体类
                 Record record = new Record();
@@ -454,7 +454,7 @@ public class ExamServiceImpl implements ExamService {
         // 获取考试时间
         Date stoptime = exam.getStoptime();
         // 判断考试是否结束
-        if (DateUtils.timeDistance(stoptime, new Date()) >= -10000) {
+        if (DateUtils.timeDistanceMillionSeconds(stoptime, new Date()) >= -10000) {
             // 如果查询不到数据，则添加数据
             if (record1 == null) {
                 // 添加记录实体类
@@ -575,7 +575,7 @@ public class ExamServiceImpl implements ExamService {
         }
         // 如果考试时间到了或者已经交卷了
         if (examInfo.record1 != null) {
-            if (DateUtils.timeDistance(stoptime, new Date()) < -10000 || examInfo.record1.getScore() != null) {
+            if (DateUtils.timeDistanceMillionSeconds(stoptime, new Date()) < -10000 || examInfo.record1.getScore() != null) {
                 // 查询记录
                 Record record = examInfo.getRecord1();
                 if (record != null) {
