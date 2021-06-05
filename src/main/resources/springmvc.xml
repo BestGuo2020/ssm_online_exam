@@ -36,6 +36,8 @@
         <!-- 学生端登陆拦截器 -->
         <mvc:interceptor>
             <mvc:mapping path="/student/**"/>
+            <!-- 答题卡界面拦截器 -->
+            <mvc:mapping path="/exam/answerCard/**"/>
             <!-- 设置学生端拦截器类 -->
             <bean class="top.bestguo.interceptor.StudentLoginInterceptor" />
         </mvc:interceptor>

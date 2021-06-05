@@ -8,7 +8,8 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" isELIgnored="false" %>
-
+<%-- 获取当前时间 --%>
+<jsp:useBean id="now" class="java.util.Date" />
 
 <!DOCTYPE html>
 <html>
@@ -195,10 +196,11 @@
                                             </ul>
                                         </div>
                                         <%-- 答案解析 --%>
-                                        <c:if test="${get_score != null}">
+
+                                        <c:if test="${get_score != null || examInfo.get('stoptime').before(now)}">
                                             <div class="test_content_nr_answer">
                                                 <p>
-                                                        ${question.answer} -- ${correct} -- ${question.id}
+<%--                                                    ${question.answer} -- ${correct} -- ${question.id}--%>
                                                     <c:choose>
                                                         <c:when test="${correct.contains(question.id)}">
                                                             <span style="color: red;">答案正确</span>
@@ -333,7 +335,7 @@
                                             </ul>
                                         </div>
                                         <%-- 答案解析 --%>
-                                        <c:if test="${get_score != null}">
+                                        <c:if test="${get_score != null || examInfo.get('stoptime').before(now)}">
                                             <div class="test_content_nr_answer">
                                                 <p>
                                                     <c:choose>
@@ -342,7 +344,7 @@
                                                         </c:when>
                                                         <c:otherwise>
                                                             <span style="color: #00aa00; padding-right: 10px">答案错误</span>
-                                                            <span>正确答案：${question.answer} -- ${correct} -- ${question.id}</span>
+                                                            <span>正确答案：${question.answer}</span>
                                                         </c:otherwise>
                                                     </c:choose>
                                                 </p>
@@ -412,6 +414,9 @@
 
 <jsp:include page="../commons/scripts.jsp" />
 <script>
+
+    <%-- console.log("${now} --- ${examInfo.get("stoptime")} -- ${examInfo.get("stoptime").before(now)}"); --%>
+
     layui.use('util', function(){
         var util = layui.util;
 
@@ -427,14 +432,14 @@
             }
         });
 
-        <%-- 获取当前时间 --%>
-        <jsp:useBean id="now" class="java.util.Date" />
         <fmt:formatDate value="${now}" type="both" dateStyle="long" pattern="yyyy-MM-dd HH:mm:ss" var="cur_date"/>
         <%-- 结束日期 --%>
         <fmt:formatDate value="${examInfo.get('stoptime')}" type="both" dateStyle="long" pattern="yyyy-MM-dd HH:mm:ss" var="end"/>
 
+        var alt_1 = $(".alt-1"), saveFont = $("#saveFont"), commitFont = $("#commitFont");
         <c:choose>
-            <c:when test="${get_score == null}">
+            <%-- 如果没分数且时间未到，在考试 --%>
+            <c:when test="${get_score == null && examInfo.get('stoptime').after(now)}">
                 var endTime = new Date("${end}").getTime() //假设为结束日期
                     ,serverTime = new Date("${cur_date}").getTime(); //假设为当前服务器时间，这里采用的是本地时间，实际使用一般是取服务端的
                 var flag = true;
@@ -453,10 +458,23 @@
                     $(".alt-1").text(days + ":" + hours + ":" + minutes + ":" + seconds);
                 });
             </c:when>
+            <%-- 如果时间已到，且没有分数，则缺考 --%>
+            <c:when test="${get_score == null && examInfo.get('stoptime').before(now)}">
+                alt_1.text("00:00:00:00");
+                saveFont.remove();
+                var sss1 = commitFont;
+                sss1.css({
+                    width: "256px",
+                    fontSize: "17px",
+                    fontWeight: 700
+                });
+                sss1.html("考试结束，本场考试你缺考");
+                disabledAllSelect(); // 禁用各种输入框
+            </c:when>
             <c:otherwise>
-                $(".alt-1").text("00:00:00:00");
-                $("#saveFont").remove();
-                var sss = $("#commitFont");
+                alt_1.text("00:00:00:00");
+                saveFont.remove();
+                var sss = commitFont;
                 sss.css({
                     width: "256px",
                     fontSize: "17px",
