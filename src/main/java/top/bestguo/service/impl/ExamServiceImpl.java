@@ -211,7 +211,7 @@ public class ExamServiceImpl implements ExamService {
         // 判断单选题和多选题数量之和是否超过10个，未超过10个无法进行随机组卷
         if (singleCount + multiCount < 10) {
             result.setCode(1);
-            result.setMessage("随机组题失败，题目数未超过10个");
+            result.setMessage("随机组题失败，当前班级题库中的题目数未超过10个。如果仍要组题，请通过自主选题进行组题！");
         } else {
             // 单选题组合
             try {
