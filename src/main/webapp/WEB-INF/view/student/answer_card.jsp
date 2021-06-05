@@ -21,6 +21,7 @@
     <link href="${pageContext.request.contextPath}/static/answer/css/main.css" rel="stylesheet" type="text/css" />
     <link href="${pageContext.request.contextPath}/static/answer/css/iconfont.css" rel="stylesheet" type="text/css" />
     <link href="${pageContext.request.contextPath}/static/answer/css/test.css" rel="stylesheet" type="text/css" />
+    <link href="${pageContext.request.contextPath}/static/answer/css/buttons.css" rel="stylesheet" type="text/css" />
 
     <style>
         .hasBeenAnswer {
@@ -402,6 +403,8 @@
                             </ul>
                         </div>
                     </div>
+
+                    <a type="button" class="btn-outline btn-outline-small primary" style="display: block; height: 30px; font-size: 14px; line-height: 30px" href="${pageContext.request.contextPath}/student/student_exam">回到“我的考试界面”</a
 
                 </div>
 
