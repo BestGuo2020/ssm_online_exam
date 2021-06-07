@@ -35,7 +35,7 @@
         {
           "title": "申请加入班级",
           "href": "/ssm_online_exam/student/class_attend",
-          "icon": "fa fa-file-text",
+          "icon": "fa fa-window-maximize",
           "target": "_self"
         }
           ]
