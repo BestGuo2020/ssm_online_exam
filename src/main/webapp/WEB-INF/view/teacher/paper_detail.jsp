@@ -45,7 +45,6 @@
                         <pre style="font-size: 12pt;
                         word-wrap: break-word;
                         white-space: pre-wrap;">${single = single + 1}、${question.questionname}</pre>
-                        <p style="font-family: '宋体',serif">
                         <pre style="font-size: 10pt;
                         word-wrap: break-word;
                         white-space: pre-wrap;">（A）${question.option1}</pre>
@@ -57,17 +56,16 @@
                                 word-wrap: break-word;
                                 white-space: pre-wrap;">（C）${question.option3}</pre>
                         </c:if>
-                        <c:if test="${question.option4 != null && !(question.option3 eq '')}">
+                        <c:if test="${question.option4 != null && !(question.option4 eq '')}">
                             <pre style="font-size: 10pt;
                                 word-wrap: break-word;
                                 white-space: pre-wrap;">（D）${question.option4}</pre>
                         </c:if>
-                        <c:if test="${question.option5 != null && !(question.option3 eq '')}">
+                        <c:if test="${question.option5 != null && !(question.option5 eq '')}">
                             <pre style="font-size: 10pt;
                                 word-wrap: break-word;
                                 white-space: pre-wrap;">（E）${question.option5}</pre>
                         </c:if>
-                        </p>
                     </c:if>
                 </c:forEach>
             </div>
@@ -93,12 +91,12 @@
                                 word-wrap: break-word;
                                 white-space: pre-wrap;">（C）${question.option3}</pre>
                         </c:if>
-                        <c:if test="${question.option4 != null && !(question.option3 eq '')}">
+                        <c:if test="${question.option4 != null && !(question.option4 eq '')}">
                             <pre style="font-size: 10pt;
                                 word-wrap: break-word;
                                 white-space: pre-wrap;">（D）${question.option4}</pre>
                         </c:if>
-                        <c:if test="${question.option5 != null && !(question.option3 eq '')}">
+                        <c:if test="${question.option5 != null && !(question.option5 eq '')}">
                             <pre style="font-size: 10pt;
                                 word-wrap: break-word;
                                 white-space: pre-wrap;">（E）${question.option5}</pre>

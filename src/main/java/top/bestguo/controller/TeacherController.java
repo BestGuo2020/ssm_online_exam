@@ -253,13 +253,4 @@ public class TeacherController {
         }
     }
 
-    /**
-     * 成绩管理界面
-     * @return
-     */
-    @RequestMapping("/scoresManage")
-    public String scoresManage() {
-        return "teacher/scores_manage";
-    }
-
 }

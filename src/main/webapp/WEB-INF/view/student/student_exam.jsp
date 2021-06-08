@@ -28,6 +28,10 @@
 
         <blockquote class="layui-elem-quote layui-text">
             你需要选择一个您加入的班级来进行考试
+            <li style="list-style: initial;"><span style="color: gray">未开始</span> -- 考试还没有开始</li>
+            <li style="list-style: initial;"><span style="color: green">进行中</span> -- 考试正在进行中</li>
+            <li style="list-style: initial;"><span style="color: black;">已结束</span> -- 考试时间已结束</li>
+            <li style="list-style: initial;"><span style="color: red;">无效</span> -- 教师在创建考试的过程中，在创建过程中由于老师误操作导致试卷创建被中止，导致当前考试试题没有总分。该考试视为无效考试</li>
         </blockquote>
 
         <fieldset class="table-search-fieldset">
@@ -103,7 +107,7 @@
                 };
             },
             text: {
-                none: "输入单选题或多选题的个数，开始随机抽题"
+                none: "请选择一个班级，参与考试"
             },
             cols: [[
                 {field: 'id', width: 60, title: '序号', type:'numbers'},

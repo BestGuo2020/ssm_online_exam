@@ -53,7 +53,7 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label">问题关键字</label>
                         <div class="layui-input-block">
-                            <input type="text" name="questionname" autocomplete="off" placeholder="请输入选项B" class="layui-input">
+                            <input type="text" name="questionname" autocomplete="off" placeholder="请输入查询问题关键字" class="layui-input">
                         </div>
                     </div>
                     <div class="layui-form-item">

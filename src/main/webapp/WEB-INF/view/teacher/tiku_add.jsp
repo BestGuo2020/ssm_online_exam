@@ -209,8 +209,8 @@
                 }
                 if(res.code === 0) {
                     layer.msg(res.message, {icon: 1, offset: '200px'}, function() {
-                        // 重载表格数据
-                        top.location.reload();
+                        var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                        parent.layer.close(index);
                     });
                 } else if (res.code === 1) {
                     layer.msg(res.message, {icon: 2, offset: '200px'});
@@ -257,7 +257,8 @@
                         }
                         if(data.code === 0) {
                             layer.msg(data.message, {icon: 1, offset: '200px'}, function() {
-                                top.location.reload();
+                                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                                parent.layer.close(index);
                             });
                         } else if (data.code === 1) {
                             layer.msg(data.message, {icon: 2, offset: '200px'});
