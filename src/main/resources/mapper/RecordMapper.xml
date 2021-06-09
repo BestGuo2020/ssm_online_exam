@@ -33,11 +33,5 @@
             left join record on stu.id = record.stuId
             left join exam on record.examId = exam.id
         where classId = #{classId}) as gradetable where (examId = #{examId} or examId is null)
-        <if test="desc == 1">
-            order by gradetable.score is null, gradetable.score desc
-        </if>
-        <if test="desc == 0">
-            order by gradetable.score is null, gradetable.score asc
-        </if>
     </select>
 </mapper>

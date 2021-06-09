@@ -1,5 +1,7 @@
 package top.bestguo.vo;
 
+import java.util.Objects;
+
 /**
  * 成绩表
  */
@@ -94,5 +96,19 @@ public class GradeTable {
 
     public void setExamId(String examId) {
         this.examId = examId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        GradeTable that = (GradeTable) o;
+        return stuId.equals(that.stuId) &&
+                Objects.equals(score == null ? 0.0 : score, that.score == null ? 0.0 : that.score);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(stuId, score == null ? 0.0 : score);
     }
 }

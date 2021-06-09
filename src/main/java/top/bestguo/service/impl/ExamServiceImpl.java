@@ -682,6 +682,7 @@ public class ExamServiceImpl implements ExamService {
             // 未考
             else if (record.getExamId() == null && DateUtils.timeDistance(exam.getStoptime(), new Date()) >= 0) {
                 record.setStatus("未考");
+                record.setScore(null);
             }
             // 缺考
             else {
@@ -689,10 +690,34 @@ public class ExamServiceImpl implements ExamService {
                 record.setScore(null);
             }
         }
+        // 排序
+        GradeComparator comparator = new GradeComparator();
+        if(desc != null && desc == 1) {
+            // 设置为逆序
+            gradeTables.sort(comparator.reversed());
+        } else {
+            // 设置为正序
+            gradeTables.sort(comparator);
+        }
         model.addAttribute("students", gradeTables);
         model.addAttribute("exam", exam);
         // 仅已考平均分
         model.addAttribute("avg1", totalScore / examCount);
+    }
+
+    // 成绩排序方法
+    private static class GradeComparator implements Comparator<GradeTable> {
+
+        @Override
+        public int compare(GradeTable o1, GradeTable o2) {
+            Double grade1 = o1.getScore() == null ? 0.0 : o1.getScore();
+            Double grade2 = o2.getScore() == null ? 0.0 : o2.getScore();
+            if(!grade1.equals(grade2))
+                return (int) (grade1 - grade2);
+            else
+                return o1.getStuId() - o2.getStuId();
+        }
+
     }
 
     /**
