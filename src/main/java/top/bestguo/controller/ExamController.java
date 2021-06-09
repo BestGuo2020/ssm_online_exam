@@ -230,7 +230,7 @@ public class ExamController {
                 model.addAttribute("path", "student/student_exam");
                 return "status/fail";
             }
-            // 返回答案
+            // 返回答题卡
             return "student/answer_card";
         } else {
             model.addAttribute("msg", "你不在这个班级，无法参加考试");
@@ -288,7 +288,7 @@ public class ExamController {
     }
 
     /**
-     * 展示当前考生的成绩
+     * 展示当前考试的全部成绩
      *
      * @param examId 考试id
      * @param classId 班级id

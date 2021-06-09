@@ -30,12 +30,31 @@
         <!-- 教师端登陆拦截器 -->
         <mvc:interceptor>
             <mvc:mapping path="/teacher/**"/>
+            <mvc:mapping path="/exam/paperDetail/**"/>
+            <mvc:mapping path="/exam/findExam"/>
+            <mvc:mapping path="/exam/addExam"/>
+            <mvc:mapping path="/exam/addExamQuestion"/>
+            <mvc:mapping path="/exam/showRandom"/>
+            <mvc:mapping path="/exam/deleteExam*"/>
+            <mvc:mapping path="/exam/showGrades/**"/>
+            <mvc:mapping path="/classes/classManager_do/**"/>
+            <mvc:mapping path="/classes/classManager_delMany"/>
+            <mvc:mapping path="/classes/loadAllClasses/**"/>
+            <mvc:mapping path="/classes/loadStudentByClass/**"/>
+            <mvc:mapping path="/classes/kickOut"/>
+            <mvc:mapping path="/classes/kickOutMany"/>
+            <mvc:mapping path="/tiku/**"/>
             <!-- 设置教师端拦截器类 -->
             <bean class="top.bestguo.interceptor.TeacherLoginInterceptor" />
         </mvc:interceptor>
         <!-- 学生端登陆拦截器 -->
         <mvc:interceptor>
             <mvc:mapping path="/student/**"/>
+            <mvc:mapping path="/classes/loadJoinedClasses/**"/>
+            <mvc:mapping path="/classes/loadJoinedClasses/**"/>
+            <mvc:mapping path="/classes/deleteClass_do/**"/>
+            <mvc:mapping path="/classes/deleteClassMany/**"/>
+            <mvc:mapping path="/exam/findExam"/>
             <!-- 答题卡界面拦截器 -->
             <mvc:mapping path="/exam/answerCard/**"/>
             <!-- 设置学生端拦截器类 -->
