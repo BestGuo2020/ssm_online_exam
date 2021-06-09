@@ -705,7 +705,9 @@ public class ExamServiceImpl implements ExamService {
         model.addAttribute("avg1", totalScore / examCount);
     }
 
-    // 成绩排序方法
+    /**
+     * 成绩排序方法
+     */
     private static class GradeComparator implements Comparator<GradeTable> {
 
         @Override
