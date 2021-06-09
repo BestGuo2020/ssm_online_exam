@@ -715,19 +715,14 @@ public class ExamServiceImpl implements ExamService {
          *
          * @param o1 前一个学生
          * @param o2 后一个学生
-         * @return 小于0，则交换位置，大于0，则不交换位置
+         * @return 小于0，则交换位置，大于等于0，则不交换位置
          */
         @Override
         public int compare(GradeTable o1, GradeTable o2) {
             int grade1 = o1.getScore() == null ? 0 : (int) (o1.getScore() * 10); // 得到第一个分数
             int grade2 = o2.getScore() == null ? 0 : (int) (o2.getScore() * 10); // 得到第二个分数
-            // 如果前一个成绩不等于后一个成绩
-            if(grade1 != grade2)
-                // 小于0，则交换位置，大于0，则不交换位置
-                return grade1 - grade2;
-            else
-                // 如果两个成绩相等，则按照id来排序
-                return o1.getStuId() - o2.getStuId();
+            // 小于0，则交换位置，大于等于0，则不交换位置
+            return grade1 - grade2;
         }
 
     }
