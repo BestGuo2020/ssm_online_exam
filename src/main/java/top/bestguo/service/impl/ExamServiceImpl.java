@@ -684,6 +684,7 @@ public class ExamServiceImpl implements ExamService {
             // 未考
             else if (record.getExamId() == null && DateUtils.timeDistance(exam.getStoptime(), new Date()) >= 0) {
                 record.setStatus("未考");
+                record.setScore(null);
             }
             // 缺考
             else {

@@ -27,8 +27,8 @@
         </fieldset>
 
         <blockquote class="layui-elem-quote layui-text">
-            你需要选择一个您加入的班级来进行考试，考试分为三种状态。
-            <ol>
+            你需要选择一个您加入的班级来进行考试。考试状态分为3类
+            <ol style="margin: 10px 0 0 25px;">
                 <li style="list-style: initial;"><span style="color: gray">未开始</span> -- 考试还没有开始</li>
                 <li style="list-style: initial;"><span style="color: green">进行中</span> -- 考试正在进行中</li>
                 <li style="list-style: initial;"><span style="color: black;">已结束</span> -- 考试时间已结束</li>
