@@ -30,9 +30,9 @@
         select * from (select stu.stuId, stu.username, stu.gender, sc.classId, exam.id examId, record.score
         from student stu
             join student_class sc on sc.stuId = stu.id
-            left join record on stu.id = record.stuId
+            left join record on stu.id = record.stuId and examId = #{examId}
             left join exam on record.examId = exam.id
-        where classId = #{classId}) as gradetable where (examId = #{examId} or examId is null)
+        where classId = #{classId}) as gradetable
         <if test="desc == 1">
             order by gradetable.score is null, gradetable.score desc
         </if>

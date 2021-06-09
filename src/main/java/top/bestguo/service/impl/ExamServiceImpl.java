@@ -180,6 +180,8 @@ public class ExamServiceImpl implements ExamService {
         if (res > 0) {
             result.setCode(0);
             result.setMessage("题目录入成功！");
+            // 将学生的考试数据保存到考试记录中
+            Integer id = exam.getId();
         } else {
             result.setCode(1);
             result.setMessage("题目录入失败！");
@@ -686,7 +688,6 @@ public class ExamServiceImpl implements ExamService {
             // 缺考
             else {
                 record.setStatus("缺考");
-                record.setScore(null);
             }
         }
         model.addAttribute("students", gradeTables);
