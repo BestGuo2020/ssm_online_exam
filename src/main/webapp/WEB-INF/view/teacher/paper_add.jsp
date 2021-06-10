@@ -88,7 +88,6 @@
                                     <div style="font-size: 14px;color: #666;margin-top: 20px;">考试将会在考试开始时生效</div>
                                 </div>
                                 <div style="text-align:center; margin-top: 50px;">
-                                    <button class="layui-btn next">再次创建</button>
                                     <button class="layui-btn layui-btn-primary layui-border-green" id="closeSelf">退出</button>
                                 </div>
                             </div>
@@ -208,7 +207,7 @@
             elem: '#questionIds',
             searchType: 'more',
             searchList: [
-                {searchKey: 'questionname', searchPlaceholder: '搜索用户姓名'},
+                {searchKey: 'questionname', searchPlaceholder: '输入关键字查询你要寻找的题目'},
                 {searchKey: 'belongclass', searchPlaceholder: '班级id'},
             ],
             checkedKey: 'id',
@@ -232,7 +231,8 @@
                     {field: 'id', width: 80, title: '序号', type:'numbers'},
                     {field: 'questionname', width: 150, title: '问题描述'},
                     {field: 'ismulti', width: 80, title: '选择题类型', templet: function(d){
-                            if(d.ismulti === 1){
+                            // console.log(d);
+                            if(d.ismulti){
                                 return '多选'
                             }else{
                                 return '单选'

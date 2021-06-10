@@ -238,12 +238,11 @@
                 success: function (result) {
 
                     if (result == "ok") {
-                        layer.msg(result);
+                        layer.msg("注册成功");
                         window.location.href = "index.jsp";
                     }
                     if (result == "fail") {
-                        layer.msg("登录失败");
-
+                        layer.msg("注册失败");
                     }
 
                 },

@@ -102,7 +102,6 @@
                                     <div style="font-size: 14px;color: #666;margin-top: 20px;">考试将会在考试开始时生效</div>
                                 </div>
                                 <div style="text-align:center; margin-top: 50px;">
-                                    <button class="layui-btn next">再次创建</button>
                                     <button class="layui-btn layui-btn-primary layui-border-green" id="closeSelf">退出</button>
                                 </div>
                             </div>

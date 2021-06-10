@@ -12,6 +12,7 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import top.bestguo.entity.Question;
 import top.bestguo.mapper.QuestionMapper;
 import top.bestguo.render.BaseResult;
@@ -30,6 +31,7 @@ import java.util.List;
  * 题库服务实现类
  */
 @Service("tikuService")
+@Transactional(rollbackFor = Exception.class)
 public class TikuServiceImpl implements TikuService {
 
     @Autowired

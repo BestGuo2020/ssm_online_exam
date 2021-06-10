@@ -1,5 +1,6 @@
 package top.bestguo.controller;
 
+import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,12 +30,14 @@ private RegisterService registerService;
             student.setUsername(username);
             student.setPassword(password);
             student.setGender(gender);
-
-            int rows = registerService.addStudent(student);
-            if(rows>0){
-                return "ok" ;
+            try {
+                int rows = registerService.addStudent(student);
+                if(rows>0){
+                    return "ok" ;
+                }
+            } catch (Exception e) {
+                return "fail";
             }
-            return  "fail";
 
         }
 
@@ -45,13 +48,15 @@ private RegisterService registerService;
             teacher.setUsername(username);
             teacher.setPassword(password);
             teacher.setGender(gender);
-
-            int rows = registerService.addTeacher(teacher);
-            if(rows>0){
-                return "ok" ;
+            try {
+                int rows = registerService.addTeacher(teacher);
+                if(rows>0){
+                    return "ok" ;
+                }
+            } catch (Exception e) {
+                return "fail";
             }
             return  "fail";
-
         }
 
         return "fail";

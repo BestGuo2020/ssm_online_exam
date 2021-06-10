@@ -7,6 +7,7 @@ import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import top.bestguo.entity.*;
 import top.bestguo.exception.ExamNotCompleteException;
@@ -24,6 +25,7 @@ import java.util.*;
  * 考试服务实现类
  */
 @Service("examService")
+@Transactional(rollbackFor = Exception.class)
 public class ExamServiceImpl implements ExamService {
 
     @Autowired
@@ -682,7 +684,7 @@ public class ExamServiceImpl implements ExamService {
                 examCount++;
             }
             // 未考
-            else if (record.getExamId() == null && DateUtils.timeDistance(exam.getStoptime(), new Date()) >= 0) {
+            else if (record.getExamId() == null && DateUtils.timeDistanceMillionSeconds(exam.getStoptime(), new Date()) >= 0) {
                 record.setStatus("未考");
             }
             // 缺考
@@ -693,7 +695,8 @@ public class ExamServiceImpl implements ExamService {
         model.addAttribute("students", gradeTables);
         model.addAttribute("exam", exam);
         // 仅已考平均分
-        model.addAttribute("avg1", totalScore / examCount);
+        double d = totalScore / examCount;
+        model.addAttribute("avg1", Double.isNaN(d) ? "" : String.format("%.2f", d));
     }
 
     /**

@@ -125,7 +125,7 @@
                 {field: 'id', width: 80, title: '序号', type:'numbers'},
                 {field: 'questionname', width: 150, title: '问题描述'},
                 {field: 'ismulti', width: 80, title: '选择题类型', templet: function(d){
-                        if(d.ismulti === 1){
+                        if(d.ismulti){
                             return '多选'
                         }else{
                             return '单选'
