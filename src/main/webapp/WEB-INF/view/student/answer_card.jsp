@@ -96,7 +96,7 @@
                                 <c:if test="${!question.ismulti}">
                                     <li id="qu_0_${single}">
                                         <div class="test_content_nr_tt">
-                                            <i>${single = single + 1}</i><span style="font-size: 10.5pt;">(${examInfo.get("single")}分)</span><pre style="display: inline; font-family: initial; font-size: 12pt;">${question.questionname}</pre>
+                                            <i>${single = single + 1}</i><span style="font-size: 10.5pt;">(${examInfo.get("single")}分)</span><pre style="display: inline; font-family: initial; font-size: 12pt; white-space: pre-wrap;">${question.questionname}</pre>
                                         </div>
 
                                         <div class="test_content_nr_main">
@@ -236,7 +236,7 @@
                                     <li id="qu_1_${multi}">
                                         <div style="display: none;">${single = single + 1}</div>
                                         <div class="test_content_nr_tt">
-                                            <i>${multi = multi + 1}</i><span style="font-size: 10.5pt;">(${examInfo.get("single")}分)</span><pre style="display: inline; font-family: initial; font-size: 12pt;">${question.questionname}</pre>
+                                            <i>${multi = multi + 1}</i><span style="font-size: 10.5pt;">(${examInfo.get("single")}分)</span><pre style="display: inline; font-family: initial; font-size: 12pt;  white-space: pre-wrap;">${question.questionname}</pre>
                                         </div>
 
                                         <div class="test_content_nr_main">
@@ -404,7 +404,7 @@
                         </div>
                     </div>
 
-                    <a type="button" class="btn-outline btn-outline-small primary" style="display: block; height: 30px; font-size: 14px; line-height: 30px" href="${pageContext.request.contextPath}/student/student_exam">回到“我的考试界面”</a
+                    <a type="button" class="btn-outline btn-outline-small primary" style="display: block; height: 30px; font-size: 14px; line-height: 30px" href="${pageContext.request.contextPath}/student/student_exam">回到“我的考试界面”</a>
 
                 </div>
 
@@ -666,7 +666,7 @@
 
     function disabledAllSelect() {
         // 禁止选择
-        $('li.option').click(null);
+        $('li.option').unbind("click");
         $("input").attr("disabled", true);
         // 禁止提交
         $("button").attr("disabled", true);
@@ -681,10 +681,10 @@
         reloadAnswer();
     };
 
-    // 创建定时任务，每隔5秒保存到本地
+    // 创建定时任务，每隔0.1秒保存到本地
     setInterval(function () {
         saveAnswer();
-    }, 1000 * 5);
+    }, 100);
 </script>
 
 

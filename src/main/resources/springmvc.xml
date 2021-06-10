@@ -31,7 +31,6 @@
         <mvc:interceptor>
             <mvc:mapping path="/teacher/**"/>
             <mvc:mapping path="/exam/paperDetail/**"/>
-            <mvc:mapping path="/exam/findExam"/>
             <mvc:mapping path="/exam/addExam"/>
             <mvc:mapping path="/exam/addExamQuestion"/>
             <mvc:mapping path="/exam/showRandom"/>
@@ -54,7 +53,6 @@
             <mvc:mapping path="/classes/loadJoinedClasses/**"/>
             <mvc:mapping path="/classes/deleteClass_do/**"/>
             <mvc:mapping path="/classes/deleteClassMany/**"/>
-            <mvc:mapping path="/exam/findExam"/>
             <!-- 答题卡界面拦截器 -->
             <mvc:mapping path="/exam/answerCard/**"/>
             <!-- 设置学生端拦截器类 -->
