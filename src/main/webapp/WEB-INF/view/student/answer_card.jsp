@@ -17,7 +17,7 @@
     <meta http-equiv="content-type" content="text/html;charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>jQuery在线考试倒计时界面</title>
+    <title>考试界面</title>
     <link href="${pageContext.request.contextPath}/static/answer/css/main.css" rel="stylesheet" type="text/css" />
     <link href="${pageContext.request.contextPath}/static/answer/css/iconfont.css" rel="stylesheet" type="text/css" />
     <link href="${pageContext.request.contextPath}/static/answer/css/test.css" rel="stylesheet" type="text/css" />
