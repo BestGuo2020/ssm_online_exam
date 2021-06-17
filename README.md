@@ -1,5 +1,5 @@
 <blockquote style="border-left-color: #ff0000">
-个人主页： https://www.bestguo.top。
+个人主页： https://www.bestguo.top
 
 注意：
 
