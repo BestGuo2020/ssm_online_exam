@@ -1,3 +1,13 @@
+<blockquote style="border-left-color: #ff0000">
+个人主页： https://www.bestguo.top。
+
+注意：
+
+如果您通过付费方式获取该项目，那么很抱歉，本人不负任何责任，请务必举报卖家并申请退款。
+
+商用请邮件私聊。
+</blockquote>
+
 > 完结撒花，期末项目终于结束啦 🎉🎉🎉
 
 ## 所需技术
