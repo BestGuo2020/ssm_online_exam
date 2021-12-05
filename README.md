@@ -57,7 +57,7 @@ git checkout dev01
 
 接下来就是配置开发者的邮箱和用户名，配置用户名和邮箱可以参考以下链接
 
-[如何管理你的多个 SSH key - 项目配置](https://www.bestguo.top/2021/04/19/How-do-you-configure-ssh-in-your-pc/#%E9%A1%B9%E7%9B%AE%E9%85%8D%E7%BD%AE)
+[如何管理你的多个 SSH key - 项目配置](https://www.bestguo.top/journal/How-do-you-configure-ssh-in-your-pc/#%E9%A1%B9%E7%9B%AE%E9%85%8D%E7%BD%AE)
 
 以下配置完成之后就可以继续愉快的写代码了。
 
@@ -141,7 +141,7 @@ git push origin dev01
 
 本次在线考试系统的系统用例图如下（越画越离谱）
 
-![](https://www.bestguo.top/2021/04/06/ssm-online-exam/QQ%E6%88%AA%E5%9B%BE20210417222207.png)
+![](https://www.bestguo.top/journal/ssm-online-exam/QQ%E6%88%AA%E5%9B%BE20210417222207.png)
 
 在线考试参与者说明如下
 
@@ -368,4 +368,4 @@ git push origin dev01
 
 该系统中的数据库表和表之间的关系，以及单个表中的字段和属性
 
-![](https://www.bestguo.top/2021/04/06/ssm-online-exam/Diagram_1.png)
+![](https://www.bestguo.top/journal/ssm-online-exam/Diagram_1.png)
